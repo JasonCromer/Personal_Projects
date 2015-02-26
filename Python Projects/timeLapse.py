@@ -19,8 +19,8 @@ def timelapseIt():
         if cv2.waitKey(1) == ord('q'):
             sys.exit()
 
-    cv2.destroyAllWindows()
     videoSrc.release()
+    cv2.destroyAllWindows()
     
     
 
