@@ -1,4 +1,4 @@
-## Personal_Projects 
+## My Personal Projects 
 
 ### Directories Include:
 	1. C# and Unity Projects
