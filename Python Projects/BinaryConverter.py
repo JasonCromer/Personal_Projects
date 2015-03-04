@@ -1,4 +1,4 @@
-#Program that converts numbers to Binary and hex
+#Program that converts numbers to Binary and hex from an input 
 
 def binaryConvert(binaryNumberInput):
     binNum = bin(binaryNumberInput)
