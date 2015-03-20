@@ -1,6 +1,11 @@
-import cv2, argparse
-from matplotlib import pyplot as plt
+import cv2, argparse, smtplib, os, getpass
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
+
+
+SMTP_SERVER = 'smtp.gmail.com:587'
 
 DEFAULT_CASCADE_INPUT_PATH = 'haarcascade_frontalface_alt.xml'
 DEFAULT_OUTPUT_PATH = 'FaceCaptureImages\/'
@@ -41,7 +46,7 @@ class VideoCapture:
             )
 
             # Display the resulting frame
-            cv2.imshow('Video', frame)
+            cv2.imshow('Video', screenColor)
 
             # If length of faces is 0, there have been no faces detected
             if len(faces) == 0:
@@ -51,21 +56,17 @@ class VideoCapture:
             if len(faces) > 0:
                 print('Face Detected')
                 # Graph the face and draw a rectangle around it
-                GetGraphVertices(frame, faces)
+                for (x, y, w, h) in faces:
+                    cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
-                # Once the image has been graphed and the face has a shape around it, and store the image array
-                plt.imshow(frame, 'gray')
 
-                # Write the image. dpi is the dots per inch resolution
-                plt.savefig(DEFAULT_OUTPUT_PATH + frameNumber + '.png', dpi=200)
-                pass
-
+                cv2.imwrite(DEFAULT_OUTPUT_PATH + frameNumber + '.png', frame)
+                
             # Increment count so we get a unique name for each frame
             self.count += 1
 
             #If 'esc' is hit and held for a second, the video is closed
             if cv2.waitKey(1) == 27:
-                plt.close()
                 break
 
 
@@ -76,11 +77,6 @@ class VideoCapture:
         cv2.waitKey(1)
 
 
-
-def GetGraphVertices(frame, faces):
-    # Draw a rectangle around the faces
-    for (x, y, w, h) in faces:
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
     
 
 def Parse():
@@ -89,15 +85,67 @@ def Parse():
     parser.add_argument('-o', '--output_path', type=str, default=DEFAULT_OUTPUT_PATH, help='Output path for pictures taken')
     args = parser.parse_args()
     return args
+
+
+def SendEmail(sender, receiver, password):
+    # Create the container (outer) email message.
+    msg = MIMEMultipart()
+    msg['Subject'] = 'Picture Demo'
+    msg['From'] = sender
+    msg['To'] = receiver
+    msg.preamble = 'DEMO!'
+
+    for fileName in os.listdir(DEFAULT_OUTPUT_PATH):
+        if '.db' in fileName:
+            continue
+        if '.png' in fileName:
+            pictureFile = open(DEFAULT_OUTPUT_PATH + fileName, 'rb')
+            img = MIMEImage(pictureFile.read())
+            pictureFile.close()
+            msg.attach(img)
+        else:
+            continue
+
+    textBody = MIMEText('<p>These are the images of a person(s) captured by your camera.</p>', _subtype='html')
+    msg.attach(textBody)
+    
+    server = smtplib.SMTP(SMTP_SERVER)
+    server.starttls()
+    server.login(sender, password)
+    problems = server.sendmail(sender, receiver, msg.as_string())
+    server.quit()
+
+
+
+def GetEmailsAndPassword():
+    senderEmail = raw_input('Your Email: ')
+    receivingEmail = raw_input('Receiving Email: ')
+    password = getpass.getpass('Password: ')
+    return senderEmail, receivingEmail, password
     
 
 
+def ClearImageCache():
+    for files in os.listdir(DEFAULT_OUTPUT_PATH):
+        filePath = os.path.join(DEFAULT_OUTPUT_PATH, files)
+        if os.path.isfile(filePath):
+            os.unlink(filePath)
+        
+
 def main():
+    ClearImageCache()
+
+    senderEmail, receivingEmail, password = GetEmailsAndPassword()
+    
     #Instantiate Class object
     faceDetectImplementation = VideoCapture()
 
     #Call CaptureFrames from class to begin face detection
     faceDetectImplementation.CaptureFrames()
+
+    cv2.waitKey(5)
+    #Send email with all pictures in directory
+    SendEmail(senderEmail, receivingEmail, password)
 
 
 
