@@ -1,4 +1,5 @@
 from jira.client import JIRA
+import re
 
 def authent():
    #Get Jira Reflexion url
@@ -38,6 +39,27 @@ def product_requirements():
    text_file.close()
 
 
+def GetPriorities():
+   priorityList = []
+   jiraDatabase = authent()
+
+   jiraPrioritiesList = jiraDatabase.priorities()
+   for priority in jiraPrioritiesList:
+      priorityList.append(priority.name)
+
+   print priorityList
+
+def GetTypes():
+   typesList = []
+   jiraDatabase = authent()
+
+   jiraIssueTypeList = jiraDatabase.issue_types()
+   for issueType in jiraIssueTypeList:
+      typesList.append(issueType.name)
+
+   print typesList
+
 if __name__ == '__main__':
-   authent()
-   product_requirements()
+   GetPriorities()
+   GetTypes()
+   #product_requirements()

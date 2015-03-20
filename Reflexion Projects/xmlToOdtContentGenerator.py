@@ -1,6 +1,6 @@
 ''' -*- coding: cp1252 -*-
                                                    How This Script Works
-                                        ------------------------------------------
+                                    --------------------------------------------------
 
                                                           Purpose
                                                       ---------------
@@ -29,10 +29,11 @@
                                                   ----------------------------
     In Jira, each team has a structure pertaining to all of the requirements in their application. This structure can be exported as an excel document.
     Exporting it is exactly what you want to do. Once exported, open the excel document and save it as an XML Spreadsheet 2003 (*.xml). This will enable
-    this script to use it properly. You must replicate this process for each Jira Structure that the user wants in the Srs. 
+    this script to use it properly. You must replicate this process for each Jira Structure that the user wants in the Srs.
+    
 
                                                    How To Use This Script
-                                                   ----------------------    
+                                                  ------------------------    
     This script functions by taking in an exported Jira Structure XML file as input, reading its contents for styling ID's pertaining
     to indent levels, and a list of summaries from the Jira Structure. It then uses these styling ID's to dynamically sort the summaries
     into an ordered list. This is where ListOfLists comes to play. By appending into a list each time a summary is entered, we can keep track
@@ -45,6 +46,16 @@
     table of contents, tables, and all other information regarding the generated SRS document is writen. Content.xml, along with meta.xml,
     settings.xml, styles.xml, mimetype, META-INF, and media files are all required to be in the same folder, as they will be zipped into a
     .zip archive, transforming them into an odf file. This will allow the user to left click on the .zip archive, and open with Microsoft Word.
+
+
+
+                                                    The Jira Client Class
+                                                   -----------------------
+    This class logs into the Reflexion Health Jira server (https://projects.reflexionhealth.com), and pulls the Issue Priorities and Issue Types
+    so that we can weed those out when parsing through the xml file. There are two constants, declared JIRA_USERNAME and JIRA_PASSWORD that must
+    match an accepted Jira account. Once logged in, the JiraClient class will instantiate two empty lists to input the names of each Issue Priority
+    and Issue Type into by the SetIssuePrioritiesAndIssueTypes function. It will then return these lists by the GetIssuePriorities and GetIssueTypes
+    function.
 
                                                     Using the Command Prompt
                                                   ---------------------------
@@ -59,24 +70,39 @@
 
 import xml.etree.ElementTree as etree
 import argparse, re
+from jira.client import JIRA
+from jira.exceptions import raise_on_error, JIRAError
 
 
 
+#Constants for JiraClient Class
+JIRA_USERNAME = 'Jason'
+JIRA_PASSWORD = 'Doorsshut1'
+LOGIN_WAIT_STRING = 'Logging into Jira Server, please wait...'
+LOGIN_SUCCESS_STRING = 'Login Successful!'
+
+#Constants for the information contained within the data cells of the xml file
 DATA_CELL = '{urn:schemas-microsoft-com:office:spreadsheet}Data'
 TICKET_CELL = '{urn:schemas-microsoft-com:office:spreadsheet}HRef'
 INDENT_LEVEL_ID = '{urn:schemas-microsoft-com:office:spreadsheet}StyleID'
 ROW_CELL = '{urn:schemas-microsoft-com:office:spreadsheet}Row'
-DEFAULT_INPUT_PATH = 'srsXml.xml'
+
+#Input, Output, and data folder containing the heading file path
+DEFAULT_INPUT_PATH = 'Vera_srs.xml'
 DEFAULT_OUTPUT_PATH = 'content.xml'
 DEFAULT_HEADING_FILE_PATH = 'defaultContentHeading.txt'
+
+
+
+#Constants for the contents of the ODT file
 DEFAULT_TABLE_OF_CONTENTS_INTRODUCTION_ITEMS = '''<text:h text:style-name="P38" text:outline-level="1">Table of Contents</text:h>\n
                     <text:p text:style-name="Normal"><text:s text:c="4"/><text:a xlink:href="#Introduction" office:target-frame-name="_top" xlink:show="replace">I. Introduction</text:a></text:p>\n
-                    <text:p text:style-name="Normal"><text:s text:c="4"/><text:a xlink:href="#Purpose" office:target-frame-name="_top" xlink:show="replace">A. Purpose</text:a></text:p>\n
-                    <text:p text:style-name="Normal"><text:s text:c="4"/><text:a xlink:href="#Scope" office:target-frame-name="_top" xlink:show="replace">B. Scope</text:a></text:p>\n
-                    <text:p text:style-name="Normal"><text:s text:c="4"/><text:a xlink:href="#References" office:target-frame-name="_top" xlink:show="replace">C. References</text:a></text:p>\n
-                    <text:p text:style-name="Normal"><text:s text:c="4"/><text:a xlink:href="#Acronyms&amp;Definitions" office:target-frame-name="_top" xlink:show="replace">D. Acronyms &amp; Definitions</text:a></text:p>\n
-                    <text:p text:style-name="Normal"><text:s text:c="4"/><text:a xlink:href="#Users" office:target-frame-name="_top" xlink:show="replace">E. Users</text:a></text:p>\n
-                    <text:p text:style-name="Normal"><text:s text:c="4"/><text:a xlink:href="#Applications" office:target-frame-name="_top" xlink:show="replace">F. Applications</text:a></text:p>\n
+                    <text:p text:style-name="Normal"><text:s text:c="8"/><text:a xlink:href="#Purpose" office:target-frame-name="_top" xlink:show="replace">A. Purpose</text:a></text:p>\n
+                    <text:p text:style-name="Normal"><text:s text:c="8"/><text:a xlink:href="#Scope" office:target-frame-name="_top" xlink:show="replace">B. Scope</text:a></text:p>\n
+                    <text:p text:style-name="Normal"><text:s text:c="8"/><text:a xlink:href="#References" office:target-frame-name="_top" xlink:show="replace">C. References</text:a></text:p>\n
+                    <text:p text:style-name="Normal"><text:s text:c="8"/><text:a xlink:href="#Acronyms&amp;Definitions" office:target-frame-name="_top" xlink:show="replace">D. Acronyms &amp; Definitions</text:a></text:p>\n
+                    <text:p text:style-name="Normal"><text:s text:c="8"/><text:a xlink:href="#Users" office:target-frame-name="_top" xlink:show="replace">E. Users</text:a></text:p>\n
+                    <text:p text:style-name="Normal"><text:s text:c="8"/><text:a xlink:href="#Applications" office:target-frame-name="_top" xlink:show="replace">F. Applications</text:a></text:p>\n
                     <text:p text:style-name="Normal"><text:s text:c="4"/><text:a xlink:href="#PatientApplicationRequirements" office:target-frame-name="_top" xlink:show="replace">II. Patient Application Requirements</text:a></text:p>\n'''
 DEFAULT_CONTENT_ENDING = '</office:text></office:body></office:document-content>'
 
@@ -146,7 +172,8 @@ table:style-name="TableCell347"><text:p text:style-name="P348">Addition of Clini
 text:style-name="P350">5-09-14</text:p></table:table-cell></table:table-row></table:table>'''
 
 
-#String formatting for titles
+
+#String formatting for titles within the ODT file
 TABLE_OF_CONTENTS_TITLE_STRING = '''<text:p text:style-name="Normal"><text:s text:c="{0}"/><text:a xlink:href="#{1}" office:target-frame-name="_top"
                                     xlink:show="replace">{2}. {3}</text:a></text:p>\n'''
 
@@ -226,6 +253,8 @@ class RequirementIdentifierStringGenerator:
 
 
 
+
+
 class IndentCodeList:
     '''A sequential list of the stylesheet codes that correspond to an
        "indent level", which should be both the number of tabs before a
@@ -269,6 +298,48 @@ class IndentCodeList:
 
 
 
+
+class JiraClient:
+    '''This class accesses Reflexion Health's Jira server to retrieve information about Issue Types and Properties.
+        This is done by logging in through Jira's Basic Authentication (basic_auth), and using that object to get
+        a list of Priority Resources as well as a list of Issue Type Resources from the Jira server.
+    '''
+
+    def __init__(self):
+        self.jiraOptions = {'server' : 'https://projects.reflexionhealth.com'}
+        self.authent = JIRA(options = self.jiraOptions, basic_auth = (JIRA_USERNAME, JIRA_PASSWORD))
+        self.priorityTypeList = []
+        self.issueTypeList = []
+
+
+    def SetIssuePrioritiesAndIssueTypes(self):
+        jiraDatabase = self.authent
+
+        #Get Priority resource types from Jira Server (i.e. "1 - Highest Priority")
+        jiraPrioritiesList= jiraDatabase.priorities()
+        
+        #Get Issue resource types from Jira Server (i.e. 'Bug', 'Requirement', ect)
+        jiraIssueTypeList = jiraDatabase.issue_types()
+
+        for priority in jiraPrioritiesList:
+            self.priorityTypeList.append(priority.name)
+
+        for issueType in jiraIssueTypeList:
+            self.issueTypeList.append(issueType.name)
+
+    
+    def GetIssuePriorities(self):
+        return self.priorityTypeList
+
+
+    def GetIssueTypes(self):
+        return self.issueTypeList
+
+
+
+
+
+
 def ReadContentHeading(argsobj):
     '''This function reads an external (and very long) text file called defaultContentHeading.txt, which contains
     information regarding the tags and hyperlink information correlating to the ordered list, table of contents
@@ -291,38 +362,71 @@ def CreateAlphaList():
 
 
 
-def WriteTableOfContents(rowElement, RequirementIdentifierStringGenerator, indentCodeListIdentifierObject, odfDocument):
+def WriteTableOfContents(rowElement, RequirementIdentifierStringGenerator, indentCodeListIdentifierObject, odfDocument, jiraIssueType, jiraIssuePriorities):
     '''Generates a list of hyperlinked table of contents linking to Main and Secondary titles within the numbered list found in the
         WriteNumberedList Function.
     '''
     for child in rowElement:
         #Get Jira ticket number as object to exclude when writing
-        jiraTicketID = child.attrib.get(TICKET_CELL)
+        jiraTicketLink = child.attrib.get(TICKET_CELL)
+        
         #Get indent level of summaries
-        indentID = child.attrib.get(INDENT_LEVEL_ID)
+        xmlIndentValueString = child.attrib.get(INDENT_LEVEL_ID)
+
+        #Create Jira List objects for the Issue Types (i.e. Requirement, Bug, ect) and Priority Types (i.e. 1 - Highest Priority, ect)
+        jiraIssueTypeList =  jiraIssueType
+        jiraIssuePriorityList =  jiraIssuePriorities
+        
         #Exclude ticket number when writing list of srs tickets
-        if jiraTicketID:
-            continue
-        #Exlude 'Key', 'Summary' and blank header in list of srs tickets    
-        if indentID == 's62' or indentID == 's63' or indentID == 's64':
+        if jiraTicketLink:
             continue
 
+        #If a cell in the xml does not contain empty, continue, otherwise it will return NoneType and break
+        if child.find(DATA_CELL) == None:
+            continue
+
+
+        #Child.find(DATA_CELL).text contains the text for each requirement
+        requirementTextInDataCell = child.find(DATA_CELL).text
+        
         #Main titles have no indents
-        if indentID is None:
-            RequirementIdentifierStringGenerator.SetNextRequirementIndentLevel(0)
-            odfDocument.write(TABLE_OF_CONTENTS_TITLE_STRING.format(4, child.find(DATA_CELL).text.replace(' ',''), RequirementIdentifierStringGenerator.GetCurrentIdentifierString(), child.find(DATA_CELL).text))
+        if xmlIndentValueString is None:
+            if requirementTextInDataCell in jiraIssueTypeList:
+                continue
+
+            elif requirementTextInDataCell in jiraIssuePriorityList:
+                continue
+
+            else:
+                RequirementIdentifierStringGenerator.SetNextRequirementIndentLevel(0)
+                odfDocument.write(TABLE_OF_CONTENTS_TITLE_STRING.format(8, requirementTextInDataCell.replace(' ',''), RequirementIdentifierStringGenerator.GetCurrentIdentifierString(), requirementTextInDataCell))
+                continue
+
+
+        #If the indentValue is not in idList, it was intentionally excluded, and therefore not necessary. Most likely an empty link, or a link containing data
+        #that is not pertinent
+        if xmlIndentValueString not in indentCodeListIdentifierObject.idList:
             continue
 
-
-        indentLevel = indentCodeListIdentifierObject.GetIndentLevelFromIndentCode(indentID)
+        #Get indentLevel (i.e. '1', '2', '3', ect)
+        indentLevel = indentCodeListIdentifierObject.GetIndentLevelFromIndentCode(xmlIndentValueString)
 
         #Secondary titles appear as 4th element in idList (idList[3])
         if indentLevel == 1:
-            RequirementIdentifierStringGenerator.SetNextRequirementIndentLevel(indentLevel)
-            odfDocument.write(TABLE_OF_CONTENTS_TITLE_STRING.format(8, child.find(DATA_CELL).text.replace(' ',''), RequirementIdentifierStringGenerator.GetCurrentIdentifierString(), child.find(DATA_CELL).text))
-        else:
-            if indentLevel != 1 or indentID != None:
+            if requirementTextInDataCell in jiraIssueTypeList:
                 continue
+
+            elif requirementTextInDataCell in jiraIssuePriorityList:
+                continue
+
+            else:
+                RequirementIdentifierStringGenerator.SetNextRequirementIndentLevel(indentLevel)
+                odfDocument.write(TABLE_OF_CONTENTS_TITLE_STRING.format(12, requirementTextInDataCell.replace(' ',''), RequirementIdentifierStringGenerator.GetCurrentIdentifierString(), requirementTextInDataCell))
+                continue
+        else:
+            if indentLevel != 1 or xmlIndentValueString != None:
+                continue
+            
             else:
                 print ('Error writing table of Contents')
 
@@ -333,6 +437,7 @@ def WriteIntroduction(odfDocument, alphaList):
         Also included in this section are two tables via the References and Acronyms & Definitions sections
     '''
     introductionItems = ['Purpose', 'Scope', 'References', 'Acronyms &amp; Definitions', 'Users', 'Applications']
+    
     #Hard code Introduction title
     odfDocument.write(INTRODUCTION_TITLE_STRING)
     
@@ -355,27 +460,52 @@ def WriteIntroduction(odfDocument, alphaList):
     
 
 
-def WriteNumberedList(rowElement, RequirementIdentifierStringGenerator, indentCodeListIdentifierObject, odfDocument):
+def WriteNumberedList(rowElement, RequirementIdentifierStringGenerator, indentCodeListIdentifierObject, odfDocument, jiraIssueType, jiraIssuePriorities):
     '''This function takes in a row/cell from the xml (rowElement), the RequirementIdentifierStringGenerator which gets the current prefix for each title (i.e. A. , A.1 , A.2.1 , ect.)
         It also takes in odfDocument, which is the document that is being written into, and codeListClassObject which is the
     '''
     for child in rowElement:
-        jiraTicketID = child.attrib.get(TICKET_CELL)
-        indentID = child.attrib.get(INDENT_LEVEL_ID)
+        jiraTicketLink = child.attrib.get(TICKET_CELL)
+        xmlIndentValueString = child.attrib.get(INDENT_LEVEL_ID)
+
+        #Create Jira List objects for the Issue Types (i.e. Requirement, Bug, ect) and Priority Types (i.e. 1 - Highest Priority, ect)
+        jiraIssueTypeList = jiraIssueType
+        jiraIssuePriorityList = jiraIssuePriorities
         
-        if jiraTicketID:
+        if jiraTicketLink:
             continue
+
+        #If a cell in the xml does not contain empty, continue, otherwise it will return NoneType and break
+        if child.find(DATA_CELL) == None:
+            continue
+
+
+        #Child.find(DATA_CELL).text contains the text for each requirement
+        requirementTextInDataCell = child.find(DATA_CELL).text
             
-        if indentID is None:
-            RequirementIdentifierStringGenerator.SetNextRequirementIndentLevel(0)
-            odfDocument.write(ORDERED_LIST_MAIN_TITLE_STRING.format(child.find(DATA_CELL).text.replace(' ',''), RequirementIdentifierStringGenerator.GetCurrentIdentifierString(), child.find(DATA_CELL).text, child.find(DATA_CELL).text.replace(' ','')))
-            continue
+        if xmlIndentValueString is None:
+            if requirementTextInDataCell in jiraIssueTypeList:
+                continue
 
-        if indentID == 's62' or indentID == 's63' or indentID == 's64':
-            continue
+            elif requirementTextInDataCell in jiraIssuePriorityList:
+                continue
 
-        
-        indentLevel = indentCodeListIdentifierObject.GetIndentLevelFromIndentCode(indentID)
+            else:
+                RequirementIdentifierStringGenerator.SetNextRequirementIndentLevel(0)
+                odfDocument.write(ORDERED_LIST_MAIN_TITLE_STRING.format(requirementTextInDataCell.replace(' ',''), RequirementIdentifierStringGenerator.GetCurrentIdentifierString(), requirementTextInDataCell, requirementTextInDataCell.replace(' ','')))
+                continue
+
+
+        #If an indent ID (i.e. 's65', 's66' is not in the Indent Code List, continue, otherwise we will be trying to
+        #use an indent ID that is not accessible
+        if xmlIndentValueString not in indentCodeListIdentifierObject.idList:
+                continue
+
+
+        #Get indentLevel (i.e. '1', '2', '3', ect)
+        indentLevel = indentCodeListIdentifierObject.GetIndentLevelFromIndentCode(xmlIndentValueString)
+
+        #The last indent level is treated differently in the xml because it contains slightly different values in the ODT format.
         lastIndentLevel = indentCodeListIdentifierObject.GetLastIndentLevelFromIDList()
 
         
@@ -383,29 +513,32 @@ def WriteNumberedList(rowElement, RequirementIdentifierStringGenerator, indentCo
         if indentLevel == lastIndentLevel:
             #Indicates the number of tabs by stripping the periods from prefix of summary (i.e. A.1.2.) to get number of tabs it should have relative to other items on this numbered list
             tabIndentValue =  len(RequirementIdentifierStringGenerator.GetCurrentIdentifierString().replace('.',''))
-            print child.find(DATA_CELL).text
             RequirementIdentifierStringGenerator.SetNextRequirementIndentLevel(indentLevel)            
-            odfDocument.write('<text:p text:style-name="Normal"><text:s text:c="' + str((tabIndentValue) * 4) + '"/>' + RequirementIdentifierStringGenerator.GetCurrentIdentifierString() + '. ' + child.find(DATA_CELL).text + '</text:p>\n')
+            odfDocument.write('<text:p text:style-name="Normal"><text:s text:c="' + str((tabIndentValue) * 4) + '"/>' + RequirementIdentifierStringGenerator.GetCurrentIdentifierString() + '. ' + requirementTextInDataCell + '</text:p>\n')
             continue
 
         #Isolate indent in 4th element of idList because it is a Secondary Title, and must be bolded
         elif indentLevel == 1:
             RequirementIdentifierStringGenerator.SetNextRequirementIndentLevel(indentLevel)
-            odfDocument.write(ORDERED_LIST_SECONDARY_TITLE_STRING.format(child.find(DATA_CELL).text.replace(' ',''), RequirementIdentifierStringGenerator.GetCurrentIdentifierString(), child.find(DATA_CELL).text, child.find(DATA_CELL).text.replace(' ','')))
+            odfDocument.write(ORDERED_LIST_SECONDARY_TITLE_STRING.format(requirementTextInDataCell.replace(' ',''), RequirementIdentifierStringGenerator.GetCurrentIdentifierString(), requirementTextInDataCell, requirementTextInDataCell.replace(' ','')))
             continue
 
-        elif indentID is not None:
-            #idElement is the element in the array that is identical to the 'indents' value i.e. s65, s66, s67, ect
-            RequirementIdentifierStringGenerator.SetNextRequirementIndentLevel(indentLevel)
-            #Multiply str(indentLevel*4) by the 4 because tab indents are measured by multiples of 4 in Microsoft Word
-            odfDocument.write('<text:p text:style-name="Normal"><text:s text:c="' + str(indentLevel*4) + '"/>' + RequirementIdentifierStringGenerator.GetCurrentIdentifierString() + ' ' + child.find(DATA_CELL).text + '</text:p>\n')
-            continue
-
-        else:
-            if indentID is None:
+        elif indentLevel:
+            #Check if text in Cell are an Issue Type or Priority Type. If so, do not write to text file
+            if requirementTextInDataCell in jiraIssueTypeList:
                 continue
+
+            if requirementTextInDataCell in jiraIssuePriorityList:
+                continue
+            
             else:
-                print('Error writing the ordered list')
+                #idElement is the element in the array that is identical to the 'indents' value i.e. s65, s66, s67, ect
+                RequirementIdentifierStringGenerator.SetNextRequirementIndentLevel(indentLevel)
+                #Multiply str(indentLevel*4) by the 4 because tab indents are measured by multiples of 4 in Microsoft Word
+                odfDocument.write('<text:p text:style-name="Normal"><text:s text:c="' + str(indentLevel*4) + '"/>' + RequirementIdentifierStringGenerator.GetCurrentIdentifierString() + ' ' + requirementTextInDataCell + '</text:p>\n')
+                continue
+        else:
+            print('Error writing the ordered list')
 
 
        
@@ -426,51 +559,72 @@ def main():
     defaultContentHeading = ReadContentHeading(argsobj.heading_file)
     alphaList = CreateAlphaList()
 
+
+    #Authenticate Jira Client and create Jira Priority and Issue Type lists
+    print(LOGIN_WAIT_STRING)
+    jiraDatabaseObject = JiraClient()
+    print(LOGIN_SUCCESS_STRING)
+    jiraDatabaseObject.SetIssuePrioritiesAndIssueTypes()
+    jiraIssueTypes = jiraDatabaseObject.GetIssueTypes()
+    jiraIssuePriorities = jiraDatabaseObject.GetIssuePriorities()
+    
+
     #Parse Imported Jira Structure xml document
     jiraStructureTree = etree.parse(argsobj.input_path)
 
-    #Instantiate Class objects
+
+    #Instantiate IndentCodeList and RequirementIdentifierStringGenerator objects
     indentCodeListIdentifier = IndentCodeList()
     indentCodeListIdentifier.Parse(argsobj.input_path)
     RequirementIdentifierStringGeneratorClass = RequirementIdentifierStringGenerator(alphaList)
 
+
     #Open content.xml to write table of contents, numbered list, and tables
     odtOutputContentFile = open(argsobj.output_path, 'w')
+
     
     #Write default heading for entire document
     odtOutputContentFile.write(defaultContentHeading)
 
+
     #Generate Table of Contents and write default content 
     odtOutputContentFile.write(DEFAULT_TABLE_OF_CONTENTS_INTRODUCTION_ITEMS)
+
 
     '''Iterate through jiraStructureTree to write a table of contents based on the significant titles in
         the jiraStructureTree xml file. These items are commonly found in the <Data></Data> blocks within a <Cell></Cell> which is normally located
         within a <Row></Row>'''
-    for value in jiraStructureTree.getiterator(ROW_CELL):
-        WriteTableOfContents(value, RequirementIdentifierStringGeneratorClass, indentCodeListIdentifier, odtOutputContentFile)
+    for value in jiraStructureTree.iter(ROW_CELL):
+        WriteTableOfContents(value, RequirementIdentifierStringGeneratorClass, indentCodeListIdentifier, odtOutputContentFile, jiraIssueTypes, jiraIssuePriorities)
+
         
     #Write in the document revision as last item since it is the last item in the document 
     odtOutputContentFile.write(TABLE_OF_CONTENTS_REVISION_TITLE_STRING)
 
+
     #Generate Introduction
     WriteIntroduction(odtOutputContentFile, alphaList)
 
+
     #Re-initialize this class to reset all lists and the information contained within them
     RequirementIdentifierStringGeneratorClass = RequirementIdentifierStringGenerator(alphaList)
+
     
     #Generate ordered list of tickets and write header for the patient application section  
     odtOutputContentFile.write(PATIENT_APPLICATION_HEADER_STRING)
 
+
     '''Iterate through jiraStructureTree to write a numbered list based on each of items in the Jira Structure xml document.
         These items are commonly found in the <Data></Data> blocks within a <Cell></Cell> which is normally located
         within a <Row></Row>'''
-    for value in jiraStructureTree.getiterator(ROW_CELL):
-        WriteNumberedList(value, RequirementIdentifierStringGeneratorClass, indentCodeListIdentifier, odtOutputContentFile)
+    for value in jiraStructureTree.iter(ROW_CELL):
+        WriteNumberedList(value, RequirementIdentifierStringGeneratorClass, indentCodeListIdentifier, odtOutputContentFile, jiraIssueTypes, jiraIssuePriorities)
+
 
     #Write in default revision table and contents to signify the ending of the document
     odtOutputContentFile.write(DEFAULT_REVISION_TABLE)
     odtOutputContentFile.write(DEFAULT_CONTENT_ENDING)
-    
+
     print('\nYour ODT file is now ready!')
 
 
