@@ -90,24 +90,25 @@ def Parse():
 def SendEmail(sender, receiver, password):
     # Create the container (outer) email message.
     msg = MIMEMultipart()
-    msg['Subject'] = 'Picture Demo'
+    msg['Subject'] = 'A Face Has Been Detected'
     msg['From'] = sender
     msg['To'] = receiver
-    msg.preamble = 'DEMO!'
+    msg.preamble = 'Face Detected'
+
+    
+    textBody = MIMEText('<p>These are the images of a person(s) captured by your camera.</p>', _subtype='html')
+    msg.attach(textBody)
 
     for fileName in os.listdir(DEFAULT_OUTPUT_PATH):
         if '.db' in fileName:
             continue
-        if '.png' in fileName:
+        elif '.png' in fileName:
             pictureFile = open(DEFAULT_OUTPUT_PATH + fileName, 'rb')
             img = MIMEImage(pictureFile.read())
             pictureFile.close()
             msg.attach(img)
         else:
             continue
-
-    textBody = MIMEText('<p>These are the images of a person(s) captured by your camera.</p>', _subtype='html')
-    msg.attach(textBody)
     
     server = smtplib.SMTP(SMTP_SERVER)
     server.starttls()
@@ -130,6 +131,8 @@ def ClearImageCache():
         filePath = os.path.join(DEFAULT_OUTPUT_PATH, files)
         if os.path.isfile(filePath):
             os.unlink(filePath)
+        else:
+            continue
         
 
 def main():
