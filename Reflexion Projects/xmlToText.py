@@ -28,8 +28,8 @@ INDENT_LEVEL_ID = '{urn:schemas-microsoft-com:office:spreadsheet}StyleID'
 ROW_CELL = '{urn:schemas-microsoft-com:office:spreadsheet}Row'
 DEFAULT_INPUT_PATH = 'Vera_srs.xml'
 DEFAULT_OUTPUT_PATH = 'srsText.txt'
-JIRA_USERNAME = 'Jason'
-JIRA_PASSWORD = 'Doorsshut1'
+JIRA_USERNAME = 
+JIRA_PASSWORD = 
 LOGIN_WAIT_STRING = 'Logging into Jira Server, please wait..'
 
 
@@ -50,7 +50,7 @@ class JiraClient:
         jira_options={'server' : 'https://projects.reflexionhealth.com'}
 
         #Authorize username and password
-        jira = JIRA(options=jira_options, basic_auth=('Jason', 'Doorsshut1'))
+        jira = JIRA(options=jira_options, basic_auth=(JIRA_USERNAME, JIRA_PASSWORD))
 
 
     def GetIssuePriorities(self):
