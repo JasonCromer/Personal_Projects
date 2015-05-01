@@ -1,13 +1,16 @@
 from jira.client import JIRA
 import re
 
+JIRA_USERNAME =
+JIRA_PASSWORD =
+
 def authent():
    #Get Jira Reflexion url
    jira_options={'server' : 'https://projects.reflexionhealth.com'}
 
 
    #Authorize username and password
-   jira = JIRA(options=jira_options, basic_auth=('Jason', 'Doorsshut1'))
+   jira = JIRA(options=jira_options, basic_auth=(JIRA_USERNAME, JIRA_PASSWORD))
    return jira
 
 
