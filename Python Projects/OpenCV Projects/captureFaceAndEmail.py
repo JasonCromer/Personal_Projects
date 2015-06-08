@@ -127,12 +127,16 @@ def GetEmailsAndPassword():
 
 
 def ClearImageCache():
-    for files in os.listdir(DEFAULT_OUTPUT_PATH):
-        filePath = os.path.join(DEFAULT_OUTPUT_PATH, files)
-        if os.path.isfile(filePath):
-            os.unlink(filePath)
-        else:
-            continue
+    if not (os.path.exits(DEFAULT_OUTPUT_PATH):
+        os.makedirs(DEFAULT_OUTPUT_PATH)
+        
+    else:
+        for files in os.listdir(DEFAULT_OUTPUT_PATH):
+            filePath = os.path.join(DEFAULT_OUTPUT_PATH, files)
+            if os.path.isfile(filePath):
+                os.unlink(filePath)
+            else:
+                continue
         
 
 def main():
