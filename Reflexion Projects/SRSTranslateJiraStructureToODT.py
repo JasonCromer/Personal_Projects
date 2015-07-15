@@ -69,8 +69,8 @@
 
 
 import xml.etree.ElementTree as etree
-import argparse, re, jira, getpass
-
+import argparse, re, getpass
+import jira
 
 
 
@@ -628,7 +628,7 @@ def main():
     odtOutputContentFile.write(DEFAULT_TABLE_OF_CONTENTS_INTRODUCTION_ITEMS)
 
     #Create a list of input paths to parse through when writing Table of Contents and Numbered List
-    jiraStructurePathList = [argsobj.patient_input_path, argsobj.clinician_input_path, argsobj.api_input_path]
+    jiraStructurePathList = [argsobj.patient_input_path]
     tableOfContentsTitleStringList = [DEFAULT_TABLE_OF_CONTENTS_PATIENT_APPLICATION_TITLE, DEFAULT_TABLE_OF_CONTENTS_CLINICIAN_APPLICATION_TITLE, DEFAULT_TABLE_OF_CONTENTS_API_APPLICATION_TITLE]
     titleStringCounter = 0
 
