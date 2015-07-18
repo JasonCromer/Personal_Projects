@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String url = "http://10.0.2.2:5000/api/users/2";
+        String url = "http://10.0.2.2:5000/api/users";
         new httpRequest().execute(url);
 
     }
