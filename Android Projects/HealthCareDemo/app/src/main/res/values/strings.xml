@@ -4,4 +4,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_login_screen">LoginScreen</string>
+    <string name="title_activity_forgot_password_reset_screen">ForgotPasswordResetScreen</string>
+    <string name="title_activity_la">la</string>
 </resources>
