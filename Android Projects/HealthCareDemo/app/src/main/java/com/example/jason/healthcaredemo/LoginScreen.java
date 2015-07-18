@@ -42,6 +42,9 @@ public class LoginScreen extends Activity implements View.OnClickListener {
             Toast.makeText(getBaseContext(), "Logged in!", Toast.LENGTH_LONG).show();
             usernameField.setText("");
             passwordField.setText("");
+            Intent loginIntent = new Intent(this, ExerciseList.class);
+            loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(loginIntent);
         }
         if(v == forgotPasswordLink) {
             Intent resetPasswordIntent = new Intent(this, ForgotPasswordResetScreen.class);

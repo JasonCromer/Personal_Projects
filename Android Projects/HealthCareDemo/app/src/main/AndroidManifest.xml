@@ -26,7 +26,11 @@
             android:parentActivityName=".LoginScreen" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LoginScreen" ></meta-data>
+                android:value=".LoginScreen" />
+        </activity>
+        <activity
+            android:name=".ExerciseList"
+            android:label="@string/title_activity_exercise_list" >
         </activity>
     </application>
 
