@@ -23,7 +23,7 @@ public class ExerciseVideo extends Activity {
         mediaController.setAnchorView(videoView);
         videoView.setMediaController(mediaController);
         videoView.setVideoURI(Uri.parse(videoPath));
-        videoView.start();
+        //videoView.start();
     }
 
 }
