@@ -38,8 +38,11 @@ public class LoginScreen extends Activity implements View.OnClickListener {
     public void onClick(View v) {
 
         if(v == loginButton) {
-            if(usernameField.equals("") || passwordField.equals(""))
+            if(usernameField.getText().toString().isEmpty() || passwordField.getText().toString().isEmpty())
             {
+                Toast.makeText(getApplicationContext(), "Username or password field is empty", Toast.LENGTH_SHORT).show();
+            }
+            else if(usernameField.getText().toString().isEmpty() && passwordField.getText().toString().isEmpty()) {
                 Toast.makeText(getApplicationContext(), "Username or password field is empty", Toast.LENGTH_SHORT).show();
             }
             else {
