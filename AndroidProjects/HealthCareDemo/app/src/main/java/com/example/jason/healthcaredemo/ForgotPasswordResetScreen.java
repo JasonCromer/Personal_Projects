@@ -1,19 +1,16 @@
 package com.example.jason.healthcaredemo;
 
-import android.app.ActionBar;
+
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 
-public class ForgotPasswordResetScreen extends ActionBarActivity implements View.OnClickListener {
+public class ForgotPasswordResetScreen extends AppCompatActivity implements View.OnClickListener {
 
     private EditText resetEmailField;
     private Button sendResetEmailButton;
@@ -22,10 +19,6 @@ public class ForgotPasswordResetScreen extends ActionBarActivity implements View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password_reset_screen);
-
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
 
         resetEmailField = (EditText) findViewById(R.id.resetEmailField);
         sendResetEmailButton = (Button) findViewById(R.id.resetEmailButton);
@@ -44,15 +37,4 @@ public class ForgotPasswordResetScreen extends ActionBarActivity implements View
 
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 }

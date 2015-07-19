@@ -1,19 +1,16 @@
 package com.example.jason.healthcaredemo;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class LoginScreen extends Activity implements View.OnClickListener {
+public class LoginScreen extends AppCompatActivity implements View.OnClickListener {
 
     private EditText usernameField;
     private EditText passwordField;

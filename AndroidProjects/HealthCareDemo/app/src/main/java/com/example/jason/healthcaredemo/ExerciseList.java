@@ -2,19 +2,19 @@ package com.example.jason.healthcaredemo;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 
-public class ExerciseList extends Activity {
+public class ExerciseList extends Fragment {
 
     ListView listView;
+    View fragmentView;
 
     private String[] itemName = {
             "Safari",
@@ -49,24 +49,29 @@ public class ExerciseList extends Activity {
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_exercise_list);
+        fragmentView = inflater.inflate(R.layout.activity_exercise_list, container, false);
 
-        CustomListAdapter adapter = new CustomListAdapter(this, itemName, imageId);
-        listView = (ListView) findViewById(R.id.listView);
+        return fragmentView;
+
+    }
+
+    public void createListView() {
+
+        CustomListAdapter adapter = new CustomListAdapter(getActivity(), itemName, imageId);
+        listView = (ListView) fragmentView.findViewById(R.id.listView);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //String selectedItem = itemName[position];
-                Intent exerciseVideoIntent = new Intent(getApplicationContext(), ExerciseVideo.class);
+                Intent exerciseVideoIntent = new Intent(getActivity(), ExerciseVideo.class);
                 exerciseVideoIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(exerciseVideoIntent);
             }
         });
-
     }
 
 }
