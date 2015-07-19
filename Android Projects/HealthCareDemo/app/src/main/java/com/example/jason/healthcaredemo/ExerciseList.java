@@ -1,6 +1,7 @@
 package com.example.jason.healthcaredemo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -24,11 +25,6 @@ public class ExerciseList extends Activity {
             "Android Folder",
             "VLC Player",
             "Cold War",
-            "Soup",
-            "I Love Dogs",
-            "Basement Forts",
-            "Computer",
-            "App Development",
 
     };
 
@@ -41,11 +37,7 @@ public class ExerciseList extends Activity {
             R.drawable.pic6,
             R.drawable.pic7,
             R.drawable.pic8,
-            R.drawable.pic9,
-            R.drawable.pic10,
-            R.drawable.pic11,
-            R.drawable.pic12,
-            R.drawable.pic13,
+
     };
 
     @Override
@@ -60,8 +52,10 @@ public class ExerciseList extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItem = itemName[position];
-                Toast.makeText(getApplicationContext(), selectedItem, Toast.LENGTH_LONG).show();
+                //String selectedItem = itemName[position];
+                Intent exerciseVideoIntent = new Intent(getApplicationContext(), ExerciseVideo.class);
+                exerciseVideoIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(exerciseVideoIntent);
             }
         });
 
