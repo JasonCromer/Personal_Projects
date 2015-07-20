@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.jason.healthcaremobileappdemo" >
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,12 +20,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FragmentManager"
+            android:name=".CustomFragmentManager"
             android:label="@string/title_activity_fragment_manager" >
         </activity>
         <activity
-            android:name=".ExerciseList"
-            android:label="@string/title_activity_exercise_list" >
+            android:name=".LoginScreen"
+            android:label="@string/title_activity_login_screen" >
+        </activity>
+        <activity
+            android:name=".ForgotPasswordResetScreen"
+            android:label="@string/title_activity_forgot_password_reset_screen" >
+        </activity>
+        <activity
+            android:name=".ExerciseVideo"
+            android:label="@string/title_activity_exercise_video" >
         </activity>
     </application>
 

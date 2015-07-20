@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/pager"
+    android:background="@drawable/ambientturquoise"
     tools:context="com.example.jason.healthcaremobileappdemo.FragmentManager">
 
     <android.support.v4.view.PagerTitleStrip
@@ -14,8 +15,6 @@
         android:background="#04021C"
         android:id="@+id/title"
         android:layout_gravity="top">
-
-
     </android.support.v4.view.PagerTitleStrip>
 
 

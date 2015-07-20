@@ -5,4 +5,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_fragment_manager">FragmentManager</string>
     <string name="title_activity_exercise_list">ExerciseList</string>
+    <string name="title_activity_login_screen">LoginScreen</string>
+    <string name="title_activity_forgot_password_reset_screen">ForgotPasswordResetScreen</string>
+    <string name="title_activity_exercise_video">ExerciseVideo</string>
 </resources>
