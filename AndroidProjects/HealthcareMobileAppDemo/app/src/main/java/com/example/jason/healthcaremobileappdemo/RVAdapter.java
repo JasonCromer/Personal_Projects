@@ -39,6 +39,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
 
                     Intent exerciseVideoIntent = new Intent(itemView.getContext(), ExerciseVideo.class);
                     exerciseVideoIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    exerciseVideoIntent.putExtra("Exercise Name", personName.getText().toString());
                     itemView.getContext().startActivity(exerciseVideoIntent);
 
 
