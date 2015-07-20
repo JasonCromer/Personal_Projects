@@ -94,7 +94,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Welcome to Vira"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="30dp"
         android:id="@+id/textView3"
         android:layout_below="@+id/imageView"
         android:layout_centerHorizontal="true" />

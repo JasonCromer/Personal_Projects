@@ -1,5 +1,6 @@
 package com.example.jason.healthcaremobileappdemo;
 
+import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
-public class ForgotPasswordResetScreen extends AppCompatActivity implements View.OnClickListener {
+public class ForgotPasswordResetScreen extends Activity implements View.OnClickListener {
 
     private EditText resetEmailField;
     private Button sendResetEmailButton;

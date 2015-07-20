@@ -1,0 +1,26 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ambientturquoise"
+    tools:context="com.example.jason.healthcaremobileappdemo.HomePage">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Plan"
+        android:textColor="#FFFFFF"
+        android:id="@+id/startPlanButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="164dp"
+        android:backgroundTint="#04021C"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView2"
+        android:layout_marginBottom="51dp"
+        android:src="@drawable/starticon"
+        android:layout_above="@+id/startPlanButton"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>

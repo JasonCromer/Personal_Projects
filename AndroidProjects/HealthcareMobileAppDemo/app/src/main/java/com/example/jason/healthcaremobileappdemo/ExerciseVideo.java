@@ -1,5 +1,6 @@
 package com.example.jason.healthcaremobileappdemo;
 
+import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +10,7 @@ import android.widget.MediaController;
 import android.widget.VideoView;
 
 
-public class ExerciseVideo extends AppCompatActivity {
+public class ExerciseVideo extends Activity {
 
     private VideoView videoView;
     private MediaController mediaController;

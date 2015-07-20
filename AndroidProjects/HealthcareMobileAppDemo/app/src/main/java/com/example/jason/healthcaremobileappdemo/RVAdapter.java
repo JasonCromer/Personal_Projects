@@ -1,6 +1,5 @@
 package com.example.jason.healthcaremobileappdemo;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -9,21 +8,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.List;
 
 /**
  * Created by jason on 7/19/15.
+ *
  */
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
 
+    private List<Person> persons;
+
     public static class PersonViewHolder extends RecyclerView.ViewHolder {
 
-        CardView cv;
-        TextView personName;
-        TextView personAge;
-        ImageView personPhoto;
+        private CardView cv;
+        private TextView personName;
+        private TextView personAge;
+        private ImageView personPhoto;
+
 
         PersonViewHolder(final View itemView) {
             super(itemView);
@@ -35,6 +36,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
             cv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Intent exerciseVideoIntent = new Intent(itemView.getContext(), ExerciseVideo.class);
                     exerciseVideoIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     itemView.getContext().startActivity(exerciseVideoIntent);
@@ -44,8 +46,6 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
             });
         }
     }
-
-    List<Person> persons;
 
     RVAdapter(List<Person> persons){
         this.persons = persons;

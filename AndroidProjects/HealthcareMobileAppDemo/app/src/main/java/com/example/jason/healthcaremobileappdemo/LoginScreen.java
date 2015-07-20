@@ -1,5 +1,6 @@
 package com.example.jason.healthcaremobileappdemo;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -13,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class LoginScreen extends AppCompatActivity implements View.OnClickListener {
+public class LoginScreen extends Activity implements View.OnClickListener {
 
     private EditText usernameField;
     private EditText passwordField;
@@ -46,7 +47,6 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
                 Toast.makeText(getApplicationContext(), "Username or password field is empty", Toast.LENGTH_SHORT).show();
             }
             else {
-                Toast.makeText(getApplicationContext(), "Logged in!", Toast.LENGTH_LONG).show();
                 usernameField.setText("");
                 passwordField.setText("");
                 Intent loginIntent = new Intent(this, CustomFragmentManager.class);

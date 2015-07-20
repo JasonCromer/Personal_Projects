@@ -35,6 +35,10 @@
             android:name=".ExerciseVideo"
             android:label="@string/title_activity_exercise_video" >
         </activity>
+        <activity
+            android:name=".HomePage"
+            android:label="@string/title_activity_home_page" >
+        </activity>
     </application>
 
 </manifest>

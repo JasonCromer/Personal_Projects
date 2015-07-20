@@ -2,6 +2,8 @@ package com.example.jason.healthcaremobileappdemo;
 
 /**
  * Created by jason on 7/19/15.
+ *
+ * Abstract data class for demo
  */
 public class Person {
     String name;
