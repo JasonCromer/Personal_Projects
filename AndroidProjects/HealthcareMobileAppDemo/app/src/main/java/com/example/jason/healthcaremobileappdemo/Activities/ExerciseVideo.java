@@ -1,4 +1,4 @@
-package com.example.jason.healthcaremobileappdemo;
+package com.example.jason.healthcaremobileappdemo.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
+
+import com.example.jason.healthcaremobileappdemo.R;
 
 
 public class ExerciseVideo extends Activity {

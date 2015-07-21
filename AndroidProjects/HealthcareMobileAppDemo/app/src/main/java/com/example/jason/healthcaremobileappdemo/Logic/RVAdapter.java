@@ -1,4 +1,4 @@
-package com.example.jason.healthcaremobileappdemo;
+package com.example.jason.healthcaremobileappdemo.Logic;
 
 import android.content.Intent;
 import android.support.v7.widget.CardView;
@@ -8,6 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.jason.healthcaremobileappdemo.Activities.ExerciseVideo;
+import com.example.jason.healthcaremobileappdemo.R;
+
 import java.util.List;
 
 /**

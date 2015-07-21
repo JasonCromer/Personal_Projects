@@ -1,4 +1,4 @@
-package com.example.jason.healthcaremobileappdemo;
+package com.example.jason.healthcaremobileappdemo.Activities.FragmentManagement;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.example.jason.healthcaremobileappdemo.CustomFragmentManager;
+import com.example.jason.healthcaremobileappdemo.R;
 
 public class HomePage extends Fragment implements View.OnClickListener {
 

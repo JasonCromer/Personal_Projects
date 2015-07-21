@@ -1,4 +1,4 @@
-package com.example.jason.healthcaremobileappdemo;
+package com.example.jason.healthcaremobileappdemo.Activities.FragmentManagement;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,12 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
-        import android.support.v4.app.Fragment;
-        import android.support.v4.app.FragmentActivity;
-        import android.support.v4.app.FragmentPagerAdapter;
-        import android.support.v4.view.ViewPager;
-        import android.os.Bundle;
-        import android.support.v4.app.FragmentManager;
+import com.example.jason.healthcaremobileappdemo.R;
 
 /*
     This class is merely the controller for managing the application fragments.

@@ -1,4 +1,4 @@
-package com.example.jason.healthcaremobileappdemo;
+package com.example.jason.healthcaremobileappdemo.Logic;
 
 /**
  * Created by jason on 7/19/15.

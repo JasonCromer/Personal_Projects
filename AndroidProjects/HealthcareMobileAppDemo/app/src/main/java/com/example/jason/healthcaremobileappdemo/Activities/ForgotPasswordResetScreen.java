@@ -1,4 +1,4 @@
-package com.example.jason.healthcaremobileappdemo;
+package com.example.jason.healthcaremobileappdemo.Activities;
 
 import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.jason.healthcaremobileappdemo.R;
 
 
 public class ForgotPasswordResetScreen extends Activity implements View.OnClickListener {
