@@ -6,6 +6,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import com.example.jason.healthcaremobileappdemo.Activities.HomePage;
+import com.example.jason.healthcaremobileappdemo.Activities.SettingsActivity;
+import com.example.jason.healthcaremobileappdemo.Logic.ExerciseList;
 import com.example.jason.healthcaremobileappdemo.R;
 
 /*
@@ -34,6 +37,7 @@ public class CustomFragmentManager extends FragmentActivity {
 
     public void setCurrentItem(int item, boolean smoothScroll) {
         viewPager.setCurrentItem(item, smoothScroll);
+
     }
 
 }
@@ -68,6 +72,10 @@ class MyAdapter extends FragmentPagerAdapter {
         {
             fragment = new ExerciseList();
         }
+        if(position == 2)
+        {
+            fragment = new SettingsActivity();
+        }
         return fragment;
     }
 
@@ -76,7 +84,7 @@ class MyAdapter extends FragmentPagerAdapter {
     //or a null reference error will occur.
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
 
@@ -92,10 +100,12 @@ class MyAdapter extends FragmentPagerAdapter {
         {
             return "My Plan";
         }
+        if(position == 2)
+        {
+            return "Settings";
+        }
         return null;
     }
-
-
 
 
 

@@ -6,7 +6,6 @@
     android:background="@drawable/ambientturquoise"
     android:layout_height="wrap_content">
 
-
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,8 +17,11 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_column="0"
                 android:layout_marginBottom="50dp"
                 android:layout_marginTop="50dp"
+                android:layout_marginLeft="150dp"
+                android:layout_marginRight="150dp"
                 android:src="@drawable/uxicon"/>
         </TableRow>
 

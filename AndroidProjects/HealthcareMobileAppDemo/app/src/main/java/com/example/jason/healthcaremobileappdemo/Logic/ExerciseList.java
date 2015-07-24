@@ -1,5 +1,6 @@
 package com.example.jason.healthcaremobileappdemo.Logic;
 
+
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -8,9 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.example.jason.healthcaremobileappdemo.Logic.Person;
-import com.example.jason.healthcaremobileappdemo.Logic.RVAdapter;
 import com.example.jason.healthcaremobileappdemo.R;
 
 import java.util.ArrayList;
@@ -19,9 +17,10 @@ import java.util.List;
 
 public class ExerciseList extends Fragment {
 
-    View fragmentView;
+    private View fragmentView;
     private List<Person> persons;
     private RecyclerView rv;
+
 
 
     @Nullable
@@ -67,5 +66,4 @@ public class ExerciseList extends Fragment {
         RVAdapter adapter = new RVAdapter(persons);
         rv.setAdapter(adapter);
     }
-
 }

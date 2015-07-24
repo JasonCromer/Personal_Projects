@@ -9,8 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.jason.healthcaremobileappdemo.Activities.ForgotPasswordResetScreen;
-import com.example.jason.healthcaremobileappdemo.CustomFragmentManager;
+import com.example.jason.healthcaremobileappdemo.Activities.FragmentManagement.CustomFragmentManager;
 import com.example.jason.healthcaremobileappdemo.R;
 
 

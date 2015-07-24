@@ -20,24 +20,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CustomFragmentManager"
+            android:name=".Activities.FragmentManagement.CustomFragmentManager"
             android:label="@string/title_activity_fragment_manager" >
         </activity>
         <activity
-            android:name=".LoginScreen"
+            android:name=".Activities.LoginScreen"
             android:label="@string/title_activity_login_screen" >
         </activity>
         <activity
-            android:name=".ForgotPasswordResetScreen"
+            android:name=".Activities.ForgotPasswordResetScreen"
             android:label="@string/title_activity_forgot_password_reset_screen" >
         </activity>
         <activity
-            android:name=".ExerciseVideo"
+            android:name=".Activities.ExerciseVideo"
             android:label="@string/title_activity_exercise_video" >
         </activity>
         <activity
-            android:name=".HomePage"
+            android:name=".Activities.HomePage"
             android:label="@string/title_activity_home_page" >
+        </activity>
+        <activity
+            android:name=".Activities.SettingsActivity"
+            android:label="@string/title_activity_settings" >
         </activity>
     </application>
 

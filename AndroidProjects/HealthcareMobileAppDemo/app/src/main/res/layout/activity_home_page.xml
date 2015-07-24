@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ambientturquoise"
-    tools:context="com.example.jason.healthcaremobileappdemo.HomePage">
+    tools:context="com.example.jason.healthcaremobileappdemo.Activities.HomePage">
 
     <Button
         android:layout_width="wrap_content"
@@ -23,4 +23,11 @@
         android:src="@drawable/starticon"
         android:layout_above="@+id/startPlanButton"
         android:layout_centerHorizontal="true" />
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/barChart"
+        android:layout_marginTop="400dp">
+    </com.github.mikephil.charting.charts.BarChart>
 </RelativeLayout>
