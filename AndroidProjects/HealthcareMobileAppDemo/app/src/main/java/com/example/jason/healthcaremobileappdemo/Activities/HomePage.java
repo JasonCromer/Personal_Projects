@@ -13,12 +13,15 @@ import android.widget.Button;
 import com.example.jason.healthcaremobileappdemo.Activities.FragmentManagement.CustomFragmentManager;
 import com.example.jason.healthcaremobileappdemo.R;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+
 import java.util.ArrayList;
 
 public class HomePage extends Fragment implements View.OnClickListener {
@@ -26,6 +29,7 @@ public class HomePage extends Fragment implements View.OnClickListener {
     private View fragmentView;
     private Button startPlanButton;
     private BarChart exerciseBarChart;
+    private PieChart planStatusPieChart;
 
 
     @Nullable
@@ -36,6 +40,9 @@ public class HomePage extends Fragment implements View.OnClickListener {
         //set up bar chart
         exerciseBarChart = (BarChart) fragmentView.findViewById(R.id.barChart);
         createBarChart(exerciseBarChart);
+
+        //set up pie chart
+        planStatusPieChart = (PieChart) fragmentView.findViewById(R.id.pieChart);
 
 
         startPlanButton = (Button) fragmentView.findViewById(R.id.startPlanButton);
@@ -140,5 +147,9 @@ public class HomePage extends Fragment implements View.OnClickListener {
         xAxis.add("Thursday");
         xAxis.add("Friday");
         return xAxis;
+    }
+
+
+    private void setPieChartData(PieChart thisPieChart) {
     }
 }

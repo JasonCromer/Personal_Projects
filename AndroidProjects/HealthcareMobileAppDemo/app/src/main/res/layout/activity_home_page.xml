@@ -15,14 +15,22 @@
         android:layout_marginBottom="164dp"
         android:backgroundTint="#04021C"/>
 
-    <ImageView
+    <com.github.mikephil.charting.charts.PieChart
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pieChart"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp">
+    </com.github.mikephil.charting.charts.PieChart>
+
+    <!-- <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageView2"
         android:layout_marginBottom="51dp"
         android:src="@drawable/starticon"
         android:layout_above="@+id/startPlanButton"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true" /> -->
 
     <com.github.mikephil.charting.charts.BarChart
         android:layout_width="match_parent"
