@@ -1,8 +1,8 @@
 from jira.client import JIRA
 import re
 
-JIRA_USERNAME =
-JIRA_PASSWORD =
+JIRA_USERNAME = ""
+JIRA_PASSWORD = ""
 
 def authent():
    #Get Jira Reflexion url

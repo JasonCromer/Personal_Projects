@@ -28,8 +28,8 @@ INDENT_LEVEL_ID = '{urn:schemas-microsoft-com:office:spreadsheet}StyleID'
 ROW_CELL = '{urn:schemas-microsoft-com:office:spreadsheet}Row'
 DEFAULT_INPUT_PATH = 'Vera_srs.xml'
 DEFAULT_OUTPUT_PATH = 'srsText.txt'
-JIRA_USERNAME = 
-JIRA_PASSWORD = 
+JIRA_USERNAME = ""
+JIRA_PASSWORD = ""
 LOGIN_WAIT_STRING = 'Logging into Jira Server, please wait..'
 
 
