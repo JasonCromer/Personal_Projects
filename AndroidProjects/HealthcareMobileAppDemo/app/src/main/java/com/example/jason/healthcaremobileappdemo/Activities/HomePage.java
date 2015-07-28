@@ -52,10 +52,9 @@ public class HomePage extends Fragment implements View.OnClickListener {
         planStatusPieChart = (PieChart) fragmentView.findViewById(R.id.pieChart);
         createPieChart(planStatusPieChart);
 
-
+        //set up the start plan button
         startPlanButton = (Button) fragmentView.findViewById(R.id.startPlanButton);
         startPlanButton.setOnClickListener(this);
-
 
         return fragmentView;
     }
@@ -66,9 +65,7 @@ public class HomePage extends Fragment implements View.OnClickListener {
             //Sets the fragment to position 1 with smooth scrolling enabled
             ((CustomFragmentManager)getActivity()).setCurrentItem(1, true);
             onDestroyView();
-
         }
-
     }
 
 

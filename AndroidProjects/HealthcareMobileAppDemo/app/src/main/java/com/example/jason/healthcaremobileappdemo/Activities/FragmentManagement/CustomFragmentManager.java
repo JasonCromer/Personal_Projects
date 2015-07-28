@@ -2,9 +2,11 @@ package com.example.jason.healthcaremobileappdemo.Activities.FragmentManagement;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.ViewGroup;
 
 import com.example.jason.healthcaremobileappdemo.Activities.HomePage;
 import com.example.jason.healthcaremobileappdemo.Activities.SettingsActivity;
@@ -30,7 +32,7 @@ public class CustomFragmentManager extends FragmentActivity {
         viewPager = (ViewPager) findViewById(R.id.pager);
 
         //Create fragment manager that will handle tab functionality
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
         viewPager.setAdapter(new MyAdapter(fragmentManager));
     }
@@ -55,7 +57,7 @@ public class CustomFragmentManager extends FragmentActivity {
 class MyAdapter extends FragmentPagerAdapter {
 
     //Default constructor
-    public MyAdapter(android.support.v4.app.FragmentManager fm) {
+    public MyAdapter(FragmentManager fm) {
         super(fm);
     }
 
