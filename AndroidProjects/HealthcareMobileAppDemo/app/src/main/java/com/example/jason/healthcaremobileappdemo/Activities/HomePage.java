@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import com.example.jason.healthcaremobileappdemo.Activities.FragmentManagement.CustomFragmentManager;
 import com.example.jason.healthcaremobileappdemo.R;
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -21,6 +22,10 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.PercentFormatter;
 
 import java.util.ArrayList;
 
@@ -30,6 +35,8 @@ public class HomePage extends Fragment implements View.OnClickListener {
     private Button startPlanButton;
     private BarChart exerciseBarChart;
     private PieChart planStatusPieChart;
+
+    private float[] pieYValues = {78f, 22};
 
 
     @Nullable
@@ -43,6 +50,7 @@ public class HomePage extends Fragment implements View.OnClickListener {
 
         //set up pie chart
         planStatusPieChart = (PieChart) fragmentView.findViewById(R.id.pieChart);
+        createPieChart(planStatusPieChart);
 
 
         startPlanButton = (Button) fragmentView.findViewById(R.id.startPlanButton);
@@ -150,6 +158,53 @@ public class HomePage extends Fragment implements View.OnClickListener {
     }
 
 
-    private void setPieChartData(PieChart thisPieChart) {
+    private void createPieChart(PieChart thisPieChart) {
+
+        thisPieChart.setDescription("");
+        thisPieChart.setDrawHoleEnabled(true);
+        thisPieChart.setHoleRadius(45f);
+        thisPieChart.setHoleColorTransparent(true);
+        thisPieChart.setTransparentCircleRadius(45f);
+        thisPieChart.setRotationEnabled(false);
+        thisPieChart.setUsePercentValues(true);
+
+
+        Legend thisLegend = thisPieChart.getLegend();
+        thisLegend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+
+        setPieChartData(thisPieChart);
+        thisPieChart.animateY(1500, Easing.EasingOption.EaseInOutQuad);
+
+    }
+
+
+    private void setPieChartData(PieChart pieChart) {
+
+        ArrayList<Entry> yVals1 = new ArrayList<>();
+        yVals1.add(new Entry(pieYValues[0], 0));
+        yVals1.add(new Entry(pieYValues[1], 1));
+
+
+        ArrayList<String> xVals = new ArrayList<>();
+        xVals.add("Completion");
+        xVals.add("Incomplete");
+
+        PieDataSet dataSet = new PieDataSet(yVals1, "");
+
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(Color.rgb(217,138,222));
+        colors.add(Color.GRAY);
+        colors.add(ColorTemplate.getHoloBlue());
+        dataSet.setColors(colors);
+
+        PieData data = new PieData(xVals, dataSet);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(11f);
+        data.setValueTextColor(Color.WHITE);
+        pieChart.setData(data);
+
+        // undo all highlights
+        pieChart.highlightValues(null);
+        pieChart.invalidate();
     }
 }
