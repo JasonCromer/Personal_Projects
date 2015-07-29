@@ -105,7 +105,7 @@ public class HomePage extends Fragment implements View.OnClickListener {
         ArrayList<BarEntry> valueSet1 = new ArrayList<>();
 
         //Create a Bar entry for episode completion each day
-        BarEntry mondayComp = new BarEntry(110.000f, 0);
+        BarEntry mondayComp = new BarEntry(80.000f, 0);
         valueSet1.add(mondayComp);
         BarEntry tuesdayComp = new BarEntry(40.000f, 1);
         valueSet1.add(tuesdayComp);
@@ -120,15 +120,15 @@ public class HomePage extends Fragment implements View.OnClickListener {
         ArrayList<BarEntry> valueSet2 = new ArrayList<>();
 
         //Create a Bar entry for episode accuracy each day
-        BarEntry mondayAcc = new BarEntry(150.000f, 0);
+        BarEntry mondayAcc = new BarEntry(50.000f, 0);
         valueSet2.add(mondayAcc);
         BarEntry tuesdayAcc = new BarEntry(90.000f, 1);
         valueSet2.add(tuesdayAcc);
-        BarEntry wednesdayAcc = new BarEntry(120.000f, 2);
+        BarEntry wednesdayAcc = new BarEntry(20.000f, 2);
         valueSet2.add(wednesdayAcc);
         BarEntry thursdayAcc = new BarEntry(60.000f, 3);
         valueSet2.add(thursdayAcc);
-        BarEntry fridayAcc = new BarEntry(20.000f, 4);
+        BarEntry fridayAcc = new BarEntry(40.000f, 4);
         valueSet2.add(fridayAcc);
 
         BarDataSet episodeCompletion = new BarDataSet(valueSet1, "Episode Completion");
