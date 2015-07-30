@@ -1,19 +1,13 @@
 package com.example.jason.healthcaremobileappdemo.Networking;
 
 
-import android.media.audiofx.BassBoost;
 import android.os.AsyncTask;
-
-import com.example.jason.healthcaremobileappdemo.Activities.FragmentManagement.CustomFragmentManager;
-import com.example.jason.healthcaremobileappdemo.Activities.SettingsActivity;
-import com.example.jason.healthcaremobileappdemo.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Set;
 
 /**
  * Created by jason on 7/29/15.

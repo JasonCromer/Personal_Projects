@@ -5,14 +5,14 @@ package com.example.jason.healthcaremobileappdemo.Logic;
  *
  * Abstract data class for demo
  */
-public class Person {
+public class Exercise {
     String name;
-    String age;
+    String repsSetsAndTimesPerDay;
     int photoId;
 
-    Person(String name, String age, int photoId) {
+    Exercise(String name, String repsSetsAndTimesPerDay, int photoId) {
         this.name = name;
-        this.age = age;
+        this.repsSetsAndTimesPerDay = repsSetsAndTimesPerDay;
         this.photoId = photoId;
     }
 

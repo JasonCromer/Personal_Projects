@@ -13,13 +13,18 @@ import com.example.jason.healthcaremobileappdemo.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 public class ExerciseList extends Fragment {
 
     private View fragmentView;
-    private List<Person> persons;
+    private List<Exercise> exercises;
     private RecyclerView rv;
+
+    private String[] exerciseNames = {"Deep Squat","Alternating Deep Lunge","Shallow Squat"};
+    private String[] timesPerDay = {"12x reps | 2x day","8x reps | 1x day","10x reps | 2x day"};
+    private Random RAND = new Random();
 
 
 
@@ -42,28 +47,14 @@ public class ExerciseList extends Fragment {
 
 
     private void initializeData(){
-        persons = new ArrayList<>();
-        persons.add(new Person("Deep Squat", "12x reps | 2x day", R.drawable.uxicon));
-        persons.add(new Person("Alternating Deep Lunge", "8x reps | 1x day", R.drawable.uxicon));
-        persons.add(new Person("Shallow Squat", "10x reps | 2x day", R.drawable.uxicon));
-        persons.add(new Person("Deep Squat", "12x reps | 2x day", R.drawable.uxicon));
-        persons.add(new Person("Alternating Deep Lunge", "8x reps | 1x day", R.drawable.uxicon));
-        persons.add(new Person("Shallow Squat", "10x reps | 2x day", R.drawable.uxicon));
-        persons.add(new Person("Deep Squat", "12x reps | 2x day", R.drawable.uxicon));
-        persons.add(new Person("Alternating Deep Lunge", "8x reps | 1x day", R.drawable.uxicon));
-        persons.add(new Person("Shallow Squat", "10x reps | 2x day", R.drawable.uxicon));
-        persons.add(new Person("Alternating Deep Lunge", "8x reps | 1x day", R.drawable.uxicon));
-        persons.add(new Person("Deep Squat", "12x reps | 2x day", R.drawable.uxicon));
-        persons.add(new Person("Shallow Squat", "10x reps | 2x day", R.drawable.uxicon));
-        persons.add(new Person("Alternating Deep Lunge", "8x reps | 1x day", R.drawable.uxicon));
-        persons.add(new Person("Shallow Squat", "10x reps | 2x day", R.drawable.uxicon));
-        persons.add(new Person("Alternating Deep Lunge", "8x reps | 1x day", R.drawable.uxicon));
-        persons.add(new Person("Deep Squat", "12x reps | 2x day", R.drawable.uxicon));
-        persons.add(new Person("Shallow Squat", "10x reps | 2x day", R.drawable.uxicon));
+        exercises = new ArrayList<>();
+        for(int i = 0; i < 15; i++) {
+            exercises.add(new Exercise(exerciseNames[RAND.nextInt(2)], timesPerDay[RAND.nextInt(2)], R.drawable.uxicon));
+        }
     }
 
     private void initializeAdapter(){
-        RVAdapter adapter = new RVAdapter(persons);
+        RVAdapter adapter = new RVAdapter(exercises);
         rv.setAdapter(adapter);
     }
 }

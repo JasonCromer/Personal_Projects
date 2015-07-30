@@ -16,69 +16,82 @@ import java.util.List;
 
 /**
  * Created by jason on 7/19/15.
- *
+ * This class provides a custom adapter for populating the recycler view layout via a card item.
+ * A static class is created to hold the data of the card item, namely ExerciseViewHolder.
+ * The RVAdapater class then inflates the card item via the ExerciseViewHolder data,
+ * instead of searching for each item, on each card, each time the class is inflated.
+ * This is done via a ViewHolder (ExerciseViewHolder) to improve performance and is required
+ * by the RecyclerView Class.
  */
-public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
 
-    private List<Person> persons;
+public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ExerciseViewHolder> {
 
-    public static class PersonViewHolder extends RecyclerView.ViewHolder {
+    //Create a list of data that the exercises object will contain
+    private List<Exercise> exercises;
+
+
+    //This class creates the data necessary for the RVAdapter to use
+    public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
         private CardView cv;
-        private TextView personName;
-        private TextView personAge;
-        private ImageView personPhoto;
+        private TextView exerciseName;
+        private TextView exerciseRepsSetsAndTimesPerDay;
+        private ImageView exerciseImage;
 
-
-        PersonViewHolder(final View itemView) {
+        //Constructor for ExerciseViewHolder
+        ExerciseViewHolder(final View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv);
-            personName = (TextView)itemView.findViewById(R.id.person_name);
-            personAge = (TextView)itemView.findViewById(R.id.person_age);
-            personPhoto = (ImageView)itemView.findViewById(R.id.person_photo);
+            exerciseName = (TextView)itemView.findViewById(R.id.exerciseName);
+            exerciseRepsSetsAndTimesPerDay = (TextView)itemView.findViewById(R.id.exerciseRepsSetsAndTimesPerDay);
+            exerciseImage = (ImageView)itemView.findViewById(R.id.exerciseImage);
 
             cv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     Intent exerciseVideoIntent = new Intent(itemView.getContext(), ExerciseVideo.class);
                     exerciseVideoIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    exerciseVideoIntent.putExtra("Exercise Name", personName.getText().toString());
+                    //Add exercise name to the ExerciseVideo title as an intent parameter
+                    exerciseVideoIntent.putExtra("EXERCISE_NAME", exerciseName.getText().toString());
+                    exerciseVideoIntent.putExtra("REPS_SETS_TIMES_PER_DAY", exerciseRepsSetsAndTimesPerDay.getText().toString());
                     itemView.getContext().startActivity(exerciseVideoIntent);
-
-
                 }
             });
         }
     }
 
-    RVAdapter(List<Person> persons){
-        this.persons = persons;
+
+    //Constructor for RVAdapter instantiates the exercises object
+    RVAdapter(List<Exercise> exercises){
+        this.exercises = exercises;
     }
 
 
+    //Inflate the layout by grabbing the card_view_item layout, and instantiating a new viewholder(ExerciseViewHolder)
     @Override
-    public PersonViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public ExerciseViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_view_item, viewGroup, false);
-        PersonViewHolder pvh = new PersonViewHolder(v);
+        ExerciseViewHolder pvh = new ExerciseViewHolder(v);
 
         return pvh;
     }
 
+
+    //Use the PersonViewHolder to populate the card via the Recycler View
     @Override
-    public void onBindViewHolder(PersonViewHolder personViewHolder, int i) {
-        personViewHolder.personName.setText(persons.get(i).name);
-        personViewHolder.personAge.setText(persons.get(i).age);
-        personViewHolder.personPhoto.setImageResource(persons.get(i).photoId);
+    public void onBindViewHolder(ExerciseViewHolder personViewHolder, int i) {
+        personViewHolder.exerciseName.setText(exercises.get(i).name);
+        personViewHolder.exerciseRepsSetsAndTimesPerDay.setText(exercises.get(i).repsSetsAndTimesPerDay);
+        personViewHolder.exerciseImage.setImageResource(exercises.get(i).photoId);
     }
 
     @Override
     public int getItemCount() {
-        return persons.size();
+        return exercises.size();
     }
 
     @Override
-    public void onViewAttachedToWindow(PersonViewHolder holder) {
+    public void onViewAttachedToWindow(ExerciseViewHolder holder) {
         super.onViewAttachedToWindow(holder);
     }
 }
