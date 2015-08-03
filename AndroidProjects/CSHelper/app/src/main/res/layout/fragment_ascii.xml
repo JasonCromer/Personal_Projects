@@ -1,0 +1,37 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/asciiView"
+    tools:context="com.dev.cromer.jason.cshelper.Fragments.AsciiChart"
+    android:background="@drawable/background">
+
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="0">
+
+        <TableRow>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ascii_part_one"
+                android:layout_marginTop="30dp">
+            </ImageView>
+        </TableRow>
+
+
+        <TableRow>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ascii_part_two"
+                android:layout_marginTop="2dp">
+            </ImageView>
+        </TableRow>
+
+
+    </TableLayout>
+</ScrollView>
