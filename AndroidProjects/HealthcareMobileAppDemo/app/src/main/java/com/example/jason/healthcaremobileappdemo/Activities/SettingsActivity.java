@@ -37,7 +37,9 @@ public class SettingsActivity extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         if(v == getUsernameButton){
             try {
-                String receivedData = new HttpGetRequest().execute(url).get();
+                HttpGetRequest currentGetRequest = new HttpGetRequest();
+                currentGetRequest.setAuthUsernameAndPassword("Jason", "mypass");
+                String receivedData = currentGetRequest.execute(url).get();
                 Toast.makeText(getActivity(), receivedData, Toast.LENGTH_SHORT).show();
             }
             catch(ExecutionException | InterruptedException e) {
