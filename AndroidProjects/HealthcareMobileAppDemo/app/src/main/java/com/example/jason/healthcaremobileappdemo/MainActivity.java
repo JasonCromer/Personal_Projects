@@ -16,8 +16,7 @@ public class MainActivity extends Activity {
 
         //TODO: Go through user auth to check whether or not to log in
         Intent thisIntent = new Intent(this, LoginScreen.class);
-        thisIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        thisIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        thisIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(thisIntent);
     }
 

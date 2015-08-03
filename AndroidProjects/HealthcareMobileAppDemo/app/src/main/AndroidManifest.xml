@@ -35,14 +35,6 @@
             android:name=".Activities.ExerciseVideo"
             android:label="@string/title_activity_exercise_video" >
         </activity>
-        <activity
-            android:name=".Activities.HomePage"
-            android:label="@string/title_activity_home_page" >
-        </activity>
-        <activity
-            android:name=".Activities.SettingsActivity"
-            android:label="@string/title_activity_settings" >
-        </activity>
     </application>
 
 </manifest>

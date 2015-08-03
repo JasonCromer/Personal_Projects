@@ -55,6 +55,7 @@ public class LoginScreen extends Activity implements View.OnClickListener {
         }
         if(v == forgotPasswordLink) {
             Intent resetPasswordIntent = new Intent(this, ForgotPasswordResetScreen.class);
+            resetPasswordIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(resetPasswordIntent);
 
         }
