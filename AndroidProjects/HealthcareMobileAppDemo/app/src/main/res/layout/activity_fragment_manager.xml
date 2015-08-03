@@ -13,8 +13,7 @@
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
         android:background="#04021C"
-        android:id="@+id/title"
-        android:layout_gravity="top">
+        android:id="@+id/title">
     </android.support.v4.view.PagerTitleStrip>
 
 
