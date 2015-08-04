@@ -48,6 +48,7 @@ public class ExerciseList extends Fragment {
 
     private void initializeData(){
         exercises = new ArrayList<>();
+        //15 is number of cards
         for(int i = 0; i < 15; i++) {
             exercises.add(new Exercise(exerciseNames[RAND.nextInt(2)], timesPerDay[RAND.nextInt(2)], R.drawable.uxicon));
         }
