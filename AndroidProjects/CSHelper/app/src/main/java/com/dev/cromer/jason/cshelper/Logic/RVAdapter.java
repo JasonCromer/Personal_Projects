@@ -1,5 +1,7 @@
 package com.dev.cromer.jason.cshelper.Logic;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,7 +21,14 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DataStructuresView
     private List<DataStructureItem> dataStructureItems;
 
 
-    public static class DataStructuresViewHolder extends RecyclerView.ViewHolder {
+    public RVAdapter(List<DataStructureItem> dataStructureItems) {
+        this.dataStructureItems = dataStructureItems;
+    }
+
+
+
+
+    public static class DataStructuresViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private CardView cardView;
         private TextView dataStructureName;
@@ -29,14 +38,23 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DataStructuresView
 
             cardView = (CardView) itemView.findViewById(R.id.dataStructureCardView);
             dataStructureName = (TextView) itemView.findViewById(R.id.dataStructureItemText);
+
+            cardView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(v == cardView) {
+                //replace all whitespace with underscore for correct URL
+                final String dataStrucURLExtension = dataStructureName.getText().toString().replaceAll(" ", "_");
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://en.wikipedia.org/wiki/" + dataStrucURLExtension));
+                browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                itemView.getContext().startActivity(browserIntent);
+            }
+
         }
     }
 
-
-
-    public RVAdapter(List<DataStructureItem> dataStructureItems) {
-        this.dataStructureItems = dataStructureItems;
-    }
 
     //Inflate the layout by grabbing the card_view_item and instantiating the new layout view
     @Override

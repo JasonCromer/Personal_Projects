@@ -15,7 +15,6 @@ import com.dev.cromer.jason.cshelper.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 
 public class DataStructures extends Fragment {
@@ -24,11 +23,9 @@ public class DataStructures extends Fragment {
     private RecyclerView recyclerView;
 
     private List<DataStructureItem> dataStructuresList;
-    private String[] dataStructureNames = {"Arrays", "Link Lists", "Hash Maps", "Binary Tree"};
+    private String[] dataStructureNames = {"Array", "Linked List", "Hash Table", "Binary Tree"};
 
-    private int LENGTH_OF_DATASTRUCTURES = dataStructureNames.length - 1;
-    private int NUMBER_OF_CARDS = 15;
-    private Random RAND = new Random();
+    private int NUMBER_OF_CARDS = dataStructureNames.length;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,7 +46,7 @@ public class DataStructures extends Fragment {
     private void initializeData() {
         dataStructuresList = new ArrayList<>();
         for(int i = 0; i < NUMBER_OF_CARDS; i++) {
-            dataStructuresList.add(new DataStructureItem(dataStructureNames[RAND.nextInt(LENGTH_OF_DATASTRUCTURES)]));
+            dataStructuresList.add(new DataStructureItem(dataStructureNames[i]));
         }
     }
 
@@ -58,5 +55,4 @@ public class DataStructures extends Fragment {
         recyclerView.setAdapter(adapter);
 
     }
-
 }

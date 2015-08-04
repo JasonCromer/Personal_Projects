@@ -21,8 +21,11 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
     private TextView conversionOutputField;
     private Button binaryConvertButton;
     private Button hexConvertButton;
+    private String outputString;
 
     private String EMPTY_INPUT_ERROR = "Cannot convert an empty input.";
+    private String ALPHA_INPUT_ERROR = "Numbers only please!";
+    private String INT_TOO_LONG_ERROR = "Your number is too large";
 
 
     @Override
@@ -37,22 +40,41 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
         binaryConvertButton.setOnClickListener(this);
         hexConvertButton.setOnClickListener(this);
 
-
         return hexAndBinaryConverterView;
     }
 
 
     @Override
     public void onClick(View v) {
-        if(userInputField.getText().toString() == "" || userInputField == null) {
+        //Check if there are no numbers
+        if(!userInputField.getText().toString().matches("[0-9]+")) {
             Toast.makeText(getActivity(), EMPTY_INPUT_ERROR, Toast.LENGTH_SHORT).show();
         }
-        else if(userInputField.getText().toString().matches("[0-9]+")) {
-            Toast.makeText(getActivity(), "Nice!", Toast.LENGTH_SHORT).show();
+        //check for appropriate integer parsing length (greater than 9)
+        else if(userInputField.getText().length() > 9){
+            Toast.makeText(getActivity(), INT_TOO_LONG_ERROR, Toast.LENGTH_SHORT).show();
         }
-        else {
-            Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+        //Make sure input is numeric only and less than length 10
+        else if(userInputField.getText().toString().matches("[0-9]+")  && userInputField.getText().length() < 10) {
+
+            //parse integer input
+            final int userInputInteger = Integer.parseInt(userInputField.getText().toString());
+
+            if(v == binaryConvertButton) {
+                conversionOutputField.setText("");
+                outputString = Integer.toBinaryString(userInputInteger);
+                conversionOutputField.setText(outputString);
+            }
+            if(v == hexConvertButton) {
+                conversionOutputField.setText("");
+                outputString = Integer.toHexString(userInputInteger);
+                conversionOutputField.setText(outputString);
+            }
         }
 
+        //Catch any whitespace or possible letters and print this error
+        else {
+            Toast.makeText(getActivity(), ALPHA_INPUT_ERROR, Toast.LENGTH_SHORT).show();
+        }
     }
 }
