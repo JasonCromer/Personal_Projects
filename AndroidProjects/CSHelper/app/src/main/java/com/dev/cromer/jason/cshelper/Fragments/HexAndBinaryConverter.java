@@ -32,6 +32,7 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         hexAndBinaryConverterView = inflater.inflate(R.layout.fragment_hex_and_binary_converter, container, false);
 
+        //Instantiate layout items and set their respective OnClickListeners
         userInputField = (EditText) hexAndBinaryConverterView.findViewById(R.id.userInputFieldEditText);
         conversionOutputField = (TextView) hexAndBinaryConverterView.findViewById(R.id.conversionOutputTextView);
         binaryConvertButton = (Button) hexAndBinaryConverterView.findViewById(R.id.binaryConvertButton);
@@ -46,14 +47,17 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+
         //Check if there are no numbers
         if(!userInputField.getText().toString().matches("[0-9]+")) {
             Toast.makeText(getActivity(), EMPTY_INPUT_ERROR, Toast.LENGTH_SHORT).show();
         }
+
         //check for appropriate integer parsing length (greater than 9)
         else if(userInputField.getText().length() > 9){
             Toast.makeText(getActivity(), INT_TOO_LONG_ERROR, Toast.LENGTH_SHORT).show();
         }
+
         //Make sure input is numeric only and less than length 10
         else if(userInputField.getText().toString().matches("[0-9]+")  && userInputField.getText().length() < 10) {
 

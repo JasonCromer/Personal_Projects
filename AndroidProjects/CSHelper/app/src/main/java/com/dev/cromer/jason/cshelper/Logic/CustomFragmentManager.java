@@ -28,7 +28,6 @@ public class CustomFragmentManager extends FragmentActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         viewPager.setAdapter(new MyAdapter(fragmentManager));
-
     }
 }
 
@@ -46,12 +45,15 @@ class MyAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Fragment fragment = null;
+
         if(position == 0) {
             fragment = new AsciiChart();
         }
+
         if(position == 1) {
             fragment = new HexAndBinaryConverter();
         }
+
         if(position == 2) {
             fragment = new DataStructures();
         }

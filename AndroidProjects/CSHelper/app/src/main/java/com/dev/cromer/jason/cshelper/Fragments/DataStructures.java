@@ -23,17 +23,24 @@ public class DataStructures extends Fragment {
     private RecyclerView recyclerView;
 
     private List<DataStructureItem> dataStructuresList;
-    private String[] dataStructureNames = {"Array", "Linked List", "Hash Table", "Binary Tree"};
+    private String[] dataStructureNames = {"Array", "Dynamic Array", "Lookup Table", "Bitmap",
+            "Linked List", "Doubly Linked List", "Binary Tree", "B-Tree", "Red-Black Tree",
+            "AVL Tree", "Bloom Filter", "Hash List", "Hash Table"};
 
     private int NUMBER_OF_CARDS = dataStructureNames.length;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         dataStructuresView = inflater.inflate(R.layout.fragment_data_structures, container, false);
 
+        //Add recycler view to the layout inflater
         recyclerView = (RecyclerView) dataStructuresView.findViewById(R.id.recyclerView);
+
+        //set a fixed size so size of the view cannot be adjusted
         recyclerView.setHasFixedSize(true);
 
+        //Create a Linear Layout manager to manage recycler view layout
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(llm);
 
@@ -43,6 +50,8 @@ public class DataStructures extends Fragment {
         return dataStructuresView;
     }
 
+
+    //This function creates a list of DataStructureItems
     private void initializeData() {
         dataStructuresList = new ArrayList<>();
         for(int i = 0; i < NUMBER_OF_CARDS; i++) {
@@ -50,9 +59,10 @@ public class DataStructures extends Fragment {
         }
     }
 
+
+    //This function passes the DataStructureItem List into the custom RVAdapter
     private void initializeAdapter() {
         RVAdapter adapter = new RVAdapter(dataStructuresList);
         recyclerView.setAdapter(adapter);
-
     }
 }

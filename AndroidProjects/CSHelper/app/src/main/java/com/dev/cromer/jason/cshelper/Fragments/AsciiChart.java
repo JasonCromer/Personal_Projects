@@ -16,11 +16,9 @@ public class AsciiChart extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         asciiView = inflater.inflate(R.layout.fragment_ascii, container, false);
 
         return asciiView;
-
     }
 
 
