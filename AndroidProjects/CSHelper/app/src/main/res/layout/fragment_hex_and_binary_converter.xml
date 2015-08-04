@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,4 +6,48 @@
     android:id="@+id/hexBinConverterView"
     android:background="@drawable/background">
 
-</FrameLayout>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userInputFieldEditText"
+        android:layout_alignParentTop="true"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="112dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Binary"
+        android:id="@+id/binaryConvertButton"
+        android:textColor="#000000"
+        android:layout_marginTop="43dp"
+        android:layout_marginLeft="96dp"
+        android:layout_marginStart="96dp"
+        android:layout_below="@+id/userInputFieldEditText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hex"
+        android:textColor="#000000"
+        android:id="@+id/hexConvertButton"
+        android:layout_alignTop="@+id/binaryConvertButton"
+        android:layout_toRightOf="@+id/binaryConvertButton"
+        android:layout_toEndOf="@+id/binaryConvertButton" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="#FFFFFF"
+        android:id="@+id/conversionOutputTextView"
+        android:layout_below="@+id/binaryConvertButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="103dp" />
+</RelativeLayout>
