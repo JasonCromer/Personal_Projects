@@ -7,6 +7,10 @@
     android:background="@drawable/background">
 
     <EditText
+        android:hint="Enter number here"
+        android:textColorHint="#FFFFFF"
+        android:gravity="center"
+        android:backgroundTint="@color/material_blue_grey_800"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/userInputFieldEditText"
@@ -45,6 +49,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/material_blue_grey_800"
         android:text=""
         android:textSize="20dp"
         android:textColor="#FFFFFF"
