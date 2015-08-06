@@ -17,43 +17,43 @@
         android:inputType="number"
         android:layout_alignParentTop="true"
         android:textColor="#FFFFFF"
-        android:layout_marginTop="112dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Binary"
-        android:background="@android:drawable/btn_default_small"
-        android:id="@+id/binaryConvertButton"
-        android:textColor="#000000"
         android:layout_marginTop="40dp"
-        android:layout_marginLeft="95dp"
-        android:layout_below="@+id/userInputFieldEditText" />
+        android:layout_centerHorizontal="true"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hex"
-        android:background="@android:drawable/btn_default_small"
-        android:textColor="#000000"
-        android:id="@+id/hexConvertButton"
-        android:layout_marginTop="40dp"
-        android:layout_marginLeft="185dp"
-        android:layout_below="@+id/userInputFieldEditText" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/material_blue_grey_800"
         android:text=""
+        android:hint="-"
         android:textSize="20dp"
         android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
         android:id="@+id/conversionOutputTextView"
-        android:layout_marginBottom="121dp"
-        android:layout_alignParentBottom="true"
+        android:layout_marginTop="130dp"
         android:layout_centerHorizontal="true" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:backgroundTint="#FFFFFF"
+        android:popupBackground="#000000"
+        android:layout_alignTop="@+id/userInputFieldEditText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginRight="20dp"
+        android:layout_toStartOf="@+id/userInputFieldEditText"
+        android:layout_toLeftOf="@+id/userInputFieldEditText" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Convert"
+        android:id="@+id/convertButton"
+        android:textColor="#000000"
+        android:layout_marginTop="80dp"
+        android:layout_centerHorizontal="true"/>
+
 </RelativeLayout>

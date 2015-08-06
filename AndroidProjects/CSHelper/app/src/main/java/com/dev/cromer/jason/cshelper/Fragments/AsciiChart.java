@@ -1,5 +1,6 @@
 package com.dev.cromer.jason.cshelper.Fragments;
 
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -20,6 +21,5 @@ public class AsciiChart extends Fragment {
 
         return asciiView;
     }
-
 
 }

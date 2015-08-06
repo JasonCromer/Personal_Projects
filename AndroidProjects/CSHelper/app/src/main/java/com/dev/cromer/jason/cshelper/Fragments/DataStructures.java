@@ -51,6 +51,7 @@ public class DataStructures extends Fragment {
     }
 
 
+
     //This function creates a list of DataStructureItems
     private void initializeData() {
         dataStructuresList = new ArrayList<>();
@@ -65,4 +66,5 @@ public class DataStructures extends Fragment {
         RVAdapter adapter = new RVAdapter(dataStructuresList);
         recyclerView.setAdapter(adapter);
     }
+
 }
