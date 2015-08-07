@@ -31,6 +31,7 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
     private String EMPTY_INPUT_ERROR = "Cannot convert an empty input.";
     private String ALPHA_INPUT_ERROR = "Numbers only please!";
     private String INT_TOO_LONG_ERROR = "Your number is too large";
+    private String NOT_VALID_SIGNED_ERROR = "This number doesn't fit in an 8-bit signed int";
 
 
     @Override
@@ -57,7 +58,7 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
     public void onClick(View v) {
 
         //Check if there are no numbers
-        if (!userInputField.getText().toString().matches("[0-9]+")) {
+        if (!userInputField.getText().toString().matches("-?[0-9]+")) {
             conversionOutputField.setText("-");
             Toast.makeText(getActivity(), EMPTY_INPUT_ERROR, Toast.LENGTH_SHORT).show();
         }
@@ -68,7 +69,7 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
         }
 
         //Make sure input is numeric only and less than length 10
-        else if (userInputField.getText().toString().matches("[0-9]+") && userInputField.getText().length() < 10) {
+        else if (userInputField.getText().toString().matches("-?[0-9]+") && userInputField.getText().length() < 10) {
 
             //parse integer input
             final int userInputInteger = Integer.parseInt(userInputField.getText().toString());
@@ -112,10 +113,17 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
                 //Unsigned
                 if(spinnerItemPosition == 4) {
                     conversionOutputField.setText("");
-                    final byte inputAsByte = (byte) userInputInteger;
-                    long result = inputAsByte & 0xFF;
-                    outputString = String.valueOf(result);
-                    conversionOutputField.setText(outputString);
+                    final byte inputAsByte = (byte) (userInputInteger);
+                    //If value is above 127 or below -128, it is not within the byte range of a signed int
+                    if((userInputInteger > Byte.MAX_VALUE) || (userInputInteger< Byte.MIN_VALUE)) {
+                        Toast.makeText(getActivity(), NOT_VALID_SIGNED_ERROR, Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(getActivity(), String.valueOf(Byte.MAX_VALUE), Toast.LENGTH_SHORT).show();
+                        long result = inputAsByte & 0xFF;
+                        outputString = String.valueOf(result);
+                        conversionOutputField.setText(outputString);
+                    }
                 }
                 //One's Compliment
                 if(spinnerItemPosition == 5) {
