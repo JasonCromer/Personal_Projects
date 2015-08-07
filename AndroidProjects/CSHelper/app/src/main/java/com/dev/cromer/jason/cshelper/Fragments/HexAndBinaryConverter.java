@@ -1,14 +1,11 @@
 package com.dev.cromer.jason.cshelper.Fragments;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,19 +15,9 @@ import android.widget.Toast;
 
 import com.dev.cromer.jason.cshelper.R;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 
-/*
-    TODO: octal, decimal, unsigned, two's compliments, one's compliment
- */
-
-
-public class HexAndBinaryConverter extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class HexAndBinaryConverter extends Fragment implements View.OnClickListener {
 
     private View hexAndBinaryConverterView;
     private EditText userInputField;
@@ -39,7 +26,7 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
     private Spinner mySpinner;
 
     private ArrayAdapter<String> spinnerArrayAdapter;
-    private String[] spinnerItems = {"Binary", "Hex", "Octal", "Decimal", "One's Compl.", "Two's Compl."};
+    private String[] spinnerItems = {"Binary", "Hex", "Octal", "Decimal", "Unsigned", "One's Compl.", "Two's Compl."};
     private String outputString;
     private String EMPTY_INPUT_ERROR = "Cannot convert an empty input.";
     private String ALPHA_INPUT_ERROR = "Numbers only please!";
@@ -54,7 +41,6 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
         mySpinner = (Spinner) hexAndBinaryConverterView.findViewById(R.id.spinner);
         spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
         mySpinner.setAdapter(spinnerArrayAdapter);
-        mySpinner.setOnItemSelectedListener(this);
 
         //Instantiate layout items and set their respective OnClickListeners
         userInputField = (EditText) hexAndBinaryConverterView.findViewById(R.id.userInputFieldEditText);
@@ -72,6 +58,7 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
 
         //Check if there are no numbers
         if (!userInputField.getText().toString().matches("[0-9]+")) {
+            conversionOutputField.setText("-");
             Toast.makeText(getActivity(), EMPTY_INPUT_ERROR, Toast.LENGTH_SHORT).show();
         }
 
@@ -116,29 +103,37 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
                     }
                     else {
                         final char firstNumber = String.valueOf(Math.abs((long) userInputInteger)).charAt(0);
-                        final char secondNumber = String.valueOf(Math.abs((long) userInputInteger)).charAt(1);
+                        final String restOfNumber = String.valueOf(userInputInteger).substring(1);
                         final int numberToRaiseBy = String.valueOf(userInputInteger).length() - 1;
-                        outputString = String.valueOf(firstNumber) + "." + secondNumber + " x 10^" + String.valueOf(numberToRaiseBy);
+                        outputString = String.valueOf(firstNumber) + "." + restOfNumber + " x 10^" + String.valueOf(numberToRaiseBy);
                         conversionOutputField.setText(outputString);
                     }
                 }
-                //One's Compliment
+                //Unsigned
                 if(spinnerItemPosition == 4) {
+                    conversionOutputField.setText("");
+                    final byte inputAsByte = (byte) userInputInteger;
+                    long result = inputAsByte & 0xFF;
+                    outputString = String.valueOf(result);
+                    conversionOutputField.setText(outputString);
+                }
+                //One's Compliment
+                if(spinnerItemPosition == 5) {
                     conversionOutputField.setText("");
                     //outputString = String.valueOf(~userInputInteger);   for simple answer like -16
                     final int inputInBinary = Integer.parseInt(Integer.toBinaryString(userInputInteger), 2);
                     final long result = (~inputInBinary);
                     final String resultString = Long.toBinaryString(result);
-                    outputString = resultString.substring(Math.max(resultString.length() - 32, 0));
+                    outputString = resultString.substring(Math.max(resultString.length() - 16, 0));
                     conversionOutputField.setText(outputString);
                 }
                 //Two's Compliment
-                if(spinnerItemPosition == 5) {
+                if(spinnerItemPosition == 6) {
                     conversionOutputField.setText("");
                     final int inputInBinary = Integer.parseInt(Integer.toBinaryString(userInputInteger), 2);
                     final long result = (~inputInBinary) + 1;
                     final String resultString = Long.toBinaryString(result);
-                    outputString = resultString.substring(Math.max(resultString.length() - 32, 0));
+                    outputString = resultString.substring(Math.max(resultString.length() - 16, 0));
                     conversionOutputField.setText(outputString);
                 }
             }
@@ -148,15 +143,5 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
         else {
             Toast.makeText(getActivity(), ALPHA_INPUT_ERROR, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
     }
 }

@@ -1,16 +1,12 @@
 package com.dev.cromer.jason.cshelper.Logic;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.inputmethod.InputMethod;
 import android.view.inputmethod.InputMethodManager;
 
 import com.dev.cromer.jason.cshelper.Fragments.AsciiChart;
@@ -44,6 +40,7 @@ public class CustomFragmentManager extends FragmentActivity {
 
             @Override
             public void onPageSelected(int position) {
+
                 final InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(viewPager.getWindowToken(), 0);
             }
