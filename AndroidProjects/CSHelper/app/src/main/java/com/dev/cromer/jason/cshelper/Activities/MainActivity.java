@@ -14,7 +14,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         //Start the fragment manager class that manages all three tabs
         Intent startAsciiFragment = new Intent(this, CustomFragmentManager.class);
         startAsciiFragment.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
