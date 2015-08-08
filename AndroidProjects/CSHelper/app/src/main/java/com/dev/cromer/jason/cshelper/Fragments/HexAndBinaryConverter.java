@@ -32,6 +32,7 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
     private String ALPHA_INPUT_ERROR = "Numbers only please!";
     private String INT_TOO_LONG_ERROR = "Your number is too large";
     private String NOT_VALID_SIGNED_ERROR = "This number doesn't fit in an 8-bit signed int";
+    private String INT_NEGATIVE_ERROR = "Your input must be a positive number";
 
 
     @Override
@@ -99,15 +100,30 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
                 if(spinnerItemPosition == 3) {
                     conversionOutputField.setText("");
                     if(String.valueOf(userInputInteger).length() < 2) {
-                        outputString = String.valueOf(userInputInteger) + ".0";
-                        conversionOutputField.setText(outputString);
+                        if(userInputInteger > 0){
+                            outputString = String.valueOf(userInputInteger) + ".0";
+                            conversionOutputField.setText(outputString);
+                        }
+                        else {
+                            outputString = "-" + String.valueOf(userInputInteger) + ".0";
+                            conversionOutputField.setText(outputString);
+                        }
                     }
                     else {
-                        final char firstNumber = String.valueOf(Math.abs((long) userInputInteger)).charAt(0);
-                        final String restOfNumber = String.valueOf(userInputInteger).substring(1);
-                        final int numberToRaiseBy = String.valueOf(userInputInteger).length() - 1;
-                        outputString = String.valueOf(firstNumber) + "." + restOfNumber + " x 10^" + String.valueOf(numberToRaiseBy);
-                        conversionOutputField.setText(outputString);
+                        if(userInputInteger > 0) {
+                            final char firstNumber = String.valueOf(Math.abs((long) userInputInteger)).charAt(0);
+                            final String restOfNumber = String.valueOf(userInputInteger).substring(1);
+                            final int numberToRaiseBy = String.valueOf(userInputInteger).length() - 1;
+                            outputString = String.valueOf(firstNumber) + "." + restOfNumber + " x 10^" + String.valueOf(numberToRaiseBy);
+                            conversionOutputField.setText(outputString);
+                        }
+                        else {
+                            final char firstNumber = String.valueOf(Math.abs((long) userInputInteger)).charAt(0);
+                            final String restOfNumber = String.valueOf(userInputInteger).substring(1);
+                            final int numberToRaiseBy = String.valueOf(userInputInteger).length() - 1;
+                            outputString = "-" + String.valueOf(firstNumber) + "." + restOfNumber + " x 10^" + String.valueOf(numberToRaiseBy);
+                            conversionOutputField.setText(outputString);
+                        }
                     }
                 }
                 //Unsigned
@@ -119,7 +135,6 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
                         Toast.makeText(getActivity(), NOT_VALID_SIGNED_ERROR, Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        Toast.makeText(getActivity(), String.valueOf(Byte.MAX_VALUE), Toast.LENGTH_SHORT).show();
                         long result = inputAsByte & 0xFF;
                         outputString = String.valueOf(result);
                         conversionOutputField.setText(outputString);
@@ -128,21 +143,30 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
                 //One's Compliment
                 if(spinnerItemPosition == 5) {
                     conversionOutputField.setText("");
-                    //outputString = String.valueOf(~userInputInteger);   for simple answer like -16
-                    final int inputInBinary = Integer.parseInt(Integer.toBinaryString(userInputInteger), 2);
-                    final long result = (~inputInBinary);
-                    final String resultString = Long.toBinaryString(result);
-                    outputString = resultString.substring(Math.max(resultString.length() - 16, 0));
-                    conversionOutputField.setText(outputString);
+                    if(userInputInteger > 0) {
+                        final int inputInBinary = Integer.parseInt(Integer.toBinaryString(userInputInteger), 2);
+                        final long result = (~inputInBinary);
+                        final String resultString = Long.toBinaryString(result);
+                        outputString = resultString.substring(Math.max(resultString.length() - 16, 0));
+                        conversionOutputField.setText(outputString);
+                    }
+                    else {
+                        Toast.makeText(getActivity(), INT_NEGATIVE_ERROR, Toast.LENGTH_SHORT).show();
+                    }
                 }
                 //Two's Compliment
                 if(spinnerItemPosition == 6) {
                     conversionOutputField.setText("");
-                    final int inputInBinary = Integer.parseInt(Integer.toBinaryString(userInputInteger), 2);
-                    final long result = (~inputInBinary) + 1;
-                    final String resultString = Long.toBinaryString(result);
-                    outputString = resultString.substring(Math.max(resultString.length() - 16, 0));
-                    conversionOutputField.setText(outputString);
+                    if(userInputInteger > 0) {
+                        final int inputInBinary = Integer.parseInt(Integer.toBinaryString(userInputInteger), 2);
+                        final long result = (~inputInBinary) + 1;
+                        final String resultString = Long.toBinaryString(result);
+                        outputString = resultString.substring(Math.max(resultString.length() - 16, 0));
+                        conversionOutputField.setText(outputString);
+                    }
+                    else {
+                        Toast.makeText(getActivity(), INT_NEGATIVE_ERROR, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }
