@@ -7,6 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dev.cromer.jason.cshelper.R;
@@ -58,13 +61,17 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DataStructuresView
         @Override
         public void onClick(View v) {
             if(v == cardView) {
+                //Increase textview size when clicked
+                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 300);
+                dataStructureName.setLayoutParams(lp);
+
                 //replace all whitespace with underscore for correct Wikipedia URL
                 final String dataStrucURLExtension = dataStructureName.getText().toString().replaceAll(" ", "_").toLowerCase();
 
                 //Open the wikipedia page via the phone's internet browser
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(wikipediaStartingURL + dataStrucURLExtension));
-                browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                itemView.getContext().startActivity(browserIntent);
+                //Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(wikipediaStartingURL + dataStrucURLExtension));
+                //browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                //itemView.getContext().startActivity(browserIntent);
             }
         }
     }
