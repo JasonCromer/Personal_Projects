@@ -12,7 +12,7 @@ import com.dev.cromer.jason.cshelper.R;
 
 public class AsciiChart extends Fragment {
 
-    private View asciiView;
+    static View asciiView;
 
 
     @Override

@@ -3,7 +3,6 @@ package com.dev.cromer.jason.cshelper.Logic;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -14,7 +13,6 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import com.dev.cromer.jason.cshelper.Fragments.AsciiChart;
 import com.dev.cromer.jason.cshelper.Fragments.DataStructures;
@@ -83,7 +81,7 @@ public class CustomFragmentManager extends FragmentActivity {
         }).setInverseBackgroundForced(true).show();
         SharedPreferences.Editor editor = preferenceManager.edit();
         editor.putBoolean(welcomeScreenShownPref, true);
-        editor.commit();
+        editor.apply();
     }
 
 }
@@ -125,7 +123,6 @@ class MyAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        String title = new String();
 
         if(position == 0) {
             return "Ascii Chart";

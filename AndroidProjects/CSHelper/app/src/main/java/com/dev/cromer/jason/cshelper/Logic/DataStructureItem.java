@@ -13,8 +13,4 @@ public class DataStructureItem {
     public DataStructureItem(String name) {
         this.name = name;
     }
-
-    public String getName() {
-        return name;
-    }
 }

@@ -4,15 +4,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dev.cromer.jason.cshelper.R;
@@ -79,7 +75,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DataStructuresView
         public void onClick(View v) {
             if(v == expandCardButton || v == cardView) {
                 //Increase textview size when clicked
-                if(cardIsExpanded == false){
+                if(!cardIsExpanded){
                     FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, ENLARGED_CARD_HEIGHT);
                     cardItemsLayout.setLayoutParams(lp);
 
@@ -91,7 +87,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DataStructuresView
                     expandCardButton.setBackgroundResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
                     cardIsExpanded = true;
                 }
-                else if(cardIsExpanded == true) {
+                else {
                     FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, ORIGINAL_CARD_HEIGHT);
                     cardItemsLayout.setLayoutParams(lp);
 
@@ -131,8 +127,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DataStructuresView
     //This function is called for each card in the layout
     @Override
     public void onBindViewHolder(DataStructuresViewHolder dataStructViewHolder, int position) {
-        dataStructViewHolder.dataStructureName.setText(dataStructureItems.get(position).name);;
-
+        dataStructViewHolder.dataStructureName.setText(dataStructureItems.get(position).name);
     }
 
 

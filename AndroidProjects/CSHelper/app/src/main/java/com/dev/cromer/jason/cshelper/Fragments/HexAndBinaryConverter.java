@@ -19,20 +19,20 @@ import com.dev.cromer.jason.cshelper.R;
 
 public class HexAndBinaryConverter extends Fragment implements View.OnClickListener {
 
-    private View hexAndBinaryConverterView;
     private EditText userInputField;
     private TextView conversionOutputField;
     private Button convertButton;
     private Spinner mySpinner;
-
-    private ArrayAdapter<String> spinnerArrayAdapter;
     private String[] spinnerItems = {"Binary", "Hex", "Octal", "Decimal", "Unsigned", "One's Compl.", "Two's Compl."};
-    private String outputString;
-    private String EMPTY_INPUT_ERROR = "Cannot convert an empty input.";
-    private String ALPHA_INPUT_ERROR = "Numbers only please!";
-    private String INT_TOO_LONG_ERROR = "Your number is too large";
-    private String NOT_VALID_SIGNED_ERROR = "This number doesn't fit in an 8-bit signed int";
-    private String INT_NEGATIVE_ERROR = "Your input must be a positive number";
+
+    protected View hexAndBinaryConverterView;
+    protected ArrayAdapter<String> spinnerArrayAdapter;
+    protected String outputString;
+    protected String EMPTY_INPUT_ERROR = "Cannot convert an empty input.";
+    protected String ALPHA_INPUT_ERROR = "Numbers only please!";
+    protected String INT_TOO_LONG_ERROR = "Your number is too large";
+    protected String NOT_VALID_SIGNED_ERROR = "This number doesn't fit in an 8-bit signed int";
+    protected String INT_NEGATIVE_ERROR = "Your input must be a positive number";
 
 
     @Override
@@ -41,7 +41,7 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
 
         //Create spinner and set its adapter and on item selected listener
         mySpinner = (Spinner) hexAndBinaryConverterView.findViewById(R.id.spinner);
-        spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
+        spinnerArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
         mySpinner.setAdapter(spinnerArrayAdapter);
 
         //Instantiate layout items and set their respective OnClickListeners
@@ -100,7 +100,7 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
                 if(spinnerItemPosition == 3) {
                     conversionOutputField.setText("");
                     if(String.valueOf(userInputInteger).length() < 2) {
-                        if(userInputInteger > 0){
+                        if(userInputInteger >= 0){
                             outputString = String.valueOf(userInputInteger) + ".0";
                             conversionOutputField.setText(outputString);
                         }

@@ -19,7 +19,7 @@ import java.util.List;
 
 public class DataStructures extends Fragment {
 
-    private View dataStructuresView;
+    static View dataStructuresView;
     private RecyclerView recyclerView;
 
     private List<DataStructureItem> dataStructuresList;
