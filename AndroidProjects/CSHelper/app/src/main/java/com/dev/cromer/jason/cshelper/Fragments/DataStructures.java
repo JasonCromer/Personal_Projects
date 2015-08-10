@@ -56,7 +56,7 @@ public class DataStructures extends Fragment {
     private void initializeData() {
         dataStructuresList = new ArrayList<>();
         for(int i = 0; i < NUMBER_OF_CARDS; i++) {
-            dataStructuresList.add(new DataStructureItem(dataStructureNames[i], R.drawable.array_image_small));
+            dataStructuresList.add(new DataStructureItem(dataStructureNames[i]));
         }
     }
 

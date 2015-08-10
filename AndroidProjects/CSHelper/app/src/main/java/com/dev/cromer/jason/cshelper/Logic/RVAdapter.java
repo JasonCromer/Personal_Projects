@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -47,9 +48,14 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DataStructuresView
 
         private CardView cardView;
         private TextView dataStructureName;
-        private ImageView dataStructureImageView;
+        private TextView dataStructureDescription;
+        private TextView clickToLearnMoreTextButton;
+        private FrameLayout cardItemsLayout;
+        private ImageButton expandCardButton;
         private boolean cardIsExpanded;
         private String wikipediaStartingURL = "https://en.wikipedia.org/wiki/";
+        private int ORIGINAL_CARD_HEIGHT = 136;
+        private int ENLARGED_CARD_HEIGHT = 300;
 
         //Constructor to inflate the card item
         DataStructuresViewHolder(final View itemView) {
@@ -58,36 +64,54 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DataStructuresView
             cardIsExpanded = false;
             cardView = (CardView) itemView.findViewById(R.id.dataStructureCardView);
             dataStructureName = (TextView) itemView.findViewById(R.id.dataStructureItemText);
-            dataStructureImageView = (ImageView) itemView.findViewById(R.id.dataStructureImageView);
+            dataStructureDescription = (TextView) itemView.findViewById(R.id.dataStructureDescriptionText);
+            clickToLearnMoreTextButton = (TextView) itemView.findViewById(R.id.cardLearnMoreLinkTextView);
+            expandCardButton = (ImageButton) itemView.findViewById(R.id.expandCardButton);
+            cardItemsLayout = (FrameLayout) itemView.findViewById(R.id.cardItemsLayout);
 
+            expandCardButton.setOnClickListener(this);
             cardView.setOnClickListener(this);
+            clickToLearnMoreTextButton.setOnClickListener(this);
         }
 
 
         @Override
         public void onClick(View v) {
-            if(v == cardView) {
+            if(v == expandCardButton || v == cardView) {
                 //Increase textview size when clicked
                 if(cardIsExpanded == false){
-                    Log.d("TAG", String.valueOf(cardIsExpanded));
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 300);
-                    dataStructureName.setLayoutParams(lp);
+                    FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, ENLARGED_CARD_HEIGHT);
+                    cardItemsLayout.setLayoutParams(lp);
+
+                    //show extended information
+                    dataStructureDescription.setVisibility(View.VISIBLE);
+                    clickToLearnMoreTextButton.setVisibility(View.VISIBLE);
+
+                    //change arrow direction to up
+                    expandCardButton.setBackgroundResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
                     cardIsExpanded = true;
                 }
                 else if(cardIsExpanded == true) {
-                    Log.d("TAG", String.valueOf(cardIsExpanded));
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 50);
-                    dataStructureName.setLayoutParams(lp);
+                    FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, ORIGINAL_CARD_HEIGHT);
+                    cardItemsLayout.setLayoutParams(lp);
+
+                    //hide extended information
+                    dataStructureDescription.setVisibility(View.GONE);
+                    clickToLearnMoreTextButton.setVisibility(View.GONE);
+
+                    //change arrow direction to down
+                    expandCardButton.setBackgroundResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
                     cardIsExpanded = false;
                 }
-
+            }
+            else if(v == clickToLearnMoreTextButton) {
                 //replace all whitespace with underscore for correct Wikipedia URL
-                //final String dataStrucURLExtension = dataStructureName.getText().toString().replaceAll(" ", "_").toLowerCase();
+                final String dataStructURLExtension = dataStructureName.getText().toString().replaceAll(" ", "_").toLowerCase();
 
                 //Open the wikipedia page via the phone's internet browser
-                //Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(wikipediaStartingURL + dataStrucURLExtension));
-                //browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                //itemView.getContext().startActivity(browserIntent);
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(wikipediaStartingURL + dataStructURLExtension));
+                browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                itemView.getContext().startActivity(browserIntent);
             }
         }
     }
@@ -107,8 +131,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DataStructuresView
     //This function is called for each card in the layout
     @Override
     public void onBindViewHolder(DataStructuresViewHolder dataStructViewHolder, int position) {
-        dataStructViewHolder.dataStructureName.setText(dataStructureItems.get(position).name);
-        dataStructViewHolder.dataStructureImageView.setImageResource(dataStructureItems.get(position).imageID);
+        dataStructViewHolder.dataStructureName.setText(dataStructureItems.get(position).name);;
 
     }
 

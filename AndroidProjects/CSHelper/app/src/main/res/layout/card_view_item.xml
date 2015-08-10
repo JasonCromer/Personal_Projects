@@ -5,28 +5,55 @@
     android:layout_height="match_parent"
     android:id="@+id/dataStructureCardView">
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
+        android:id="@+id/cardItemsLayout"
         android:background="@drawable/exercise_card_border">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_keyboard_arrow_down_black_24dp"
+            android:id="@+id/expandCardButton"
+            android:layout_alignTop="@+id/dataStructureDescriptionText"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="right|top" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Example Text"
             android:textColor="#000000"
-            android:id="@+id/dataStructureItemText">
+            android:layout_marginTop="8dp"
+            android:id="@+id/dataStructureItemText"
+            android:layout_gravity="left|top">
         </TextView>
 
-        <ImageView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/dataStructureImageView"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:id="@+id/cardLearnMoreLinkTextView"
+            android:text="Click to learn more"
+            android:textColor="#0645AD"
+            android:layout_below="@id/dataStructureDescriptionText"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal|bottom" />
 
-    </RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:id="@+id/dataStructureDescriptionText"
+            android:textColor="#000000"
+            android:text="About this DataStructure..."
+            android:layout_marginTop="100dp"
+            android:layout_alignParentLeft="true"
+            android:visibility="gone"
+            android:layout_gravity="left|bottom" />
+
+    </FrameLayout>
 
 </android.support.v7.widget.CardView>
