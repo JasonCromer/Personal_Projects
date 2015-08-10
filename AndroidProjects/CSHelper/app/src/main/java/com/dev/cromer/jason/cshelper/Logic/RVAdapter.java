@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -45,14 +47,18 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DataStructuresView
 
         private CardView cardView;
         private TextView dataStructureName;
+        private ImageView dataStructureImageView;
+        private boolean cardIsExpanded;
         private String wikipediaStartingURL = "https://en.wikipedia.org/wiki/";
 
         //Constructor to inflate the card item
         DataStructuresViewHolder(final View itemView) {
             super(itemView);
 
+            cardIsExpanded = false;
             cardView = (CardView) itemView.findViewById(R.id.dataStructureCardView);
             dataStructureName = (TextView) itemView.findViewById(R.id.dataStructureItemText);
+            dataStructureImageView = (ImageView) itemView.findViewById(R.id.dataStructureImageView);
 
             cardView.setOnClickListener(this);
         }
@@ -62,11 +68,21 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DataStructuresView
         public void onClick(View v) {
             if(v == cardView) {
                 //Increase textview size when clicked
-                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 300);
-                dataStructureName.setLayoutParams(lp);
+                if(cardIsExpanded == false){
+                    Log.d("TAG", String.valueOf(cardIsExpanded));
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 300);
+                    dataStructureName.setLayoutParams(lp);
+                    cardIsExpanded = true;
+                }
+                else if(cardIsExpanded == true) {
+                    Log.d("TAG", String.valueOf(cardIsExpanded));
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 50);
+                    dataStructureName.setLayoutParams(lp);
+                    cardIsExpanded = false;
+                }
 
                 //replace all whitespace with underscore for correct Wikipedia URL
-                final String dataStrucURLExtension = dataStructureName.getText().toString().replaceAll(" ", "_").toLowerCase();
+                //final String dataStrucURLExtension = dataStructureName.getText().toString().replaceAll(" ", "_").toLowerCase();
 
                 //Open the wikipedia page via the phone's internet browser
                 //Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(wikipediaStartingURL + dataStrucURLExtension));
@@ -92,6 +108,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DataStructuresView
     @Override
     public void onBindViewHolder(DataStructuresViewHolder dataStructViewHolder, int position) {
         dataStructViewHolder.dataStructureName.setText(dataStructureItems.get(position).name);
+        dataStructViewHolder.dataStructureImageView.setImageResource(dataStructureItems.get(position).imageID);
 
     }
 

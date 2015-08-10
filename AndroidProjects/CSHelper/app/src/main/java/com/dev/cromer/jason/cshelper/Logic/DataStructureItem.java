@@ -9,8 +9,18 @@ package com.dev.cromer.jason.cshelper.Logic;
 public class DataStructureItem {
 
     String name;
+    int imageID;
 
-    public DataStructureItem(String name) {
+    public DataStructureItem(String name, int imageID) {
         this.name = name;
+        this.imageID = imageID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getImageID() {
+        return imageID;
     }
 }
