@@ -38,12 +38,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/spinner"
-        android:backgroundTint="#0097A7"
-        android:popupBackground="#000000"
+        android:backgroundTint="#FFFFFF"
+        android:popupBackground="#212121"
         android:layout_alignTop="@+id/userInputFieldEditText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="10dp"
+        android:layout_alignBaseline="@+id/userInputFieldEditText"
         android:layout_toStartOf="@+id/userInputFieldEditText"
         android:layout_toLeftOf="@+id/userInputFieldEditText" />
 

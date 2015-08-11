@@ -42,7 +42,7 @@ public class HexAndBinaryConverter extends Fragment implements View.OnClickListe
 
         //Create spinner and set its adapter and on item selected listener
         mySpinner = (Spinner) hexAndBinaryConverterView.findViewById(R.id.spinner);
-        spinnerArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item ,spinnerItems);
+        spinnerArrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.custom_spinner_item ,spinnerItems);
         mySpinner.setAdapter(spinnerArrayAdapter);
 
         //Instantiate layout items and set their respective OnClickListeners
