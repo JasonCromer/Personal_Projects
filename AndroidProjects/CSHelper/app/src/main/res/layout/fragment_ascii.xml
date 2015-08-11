@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:id="@+id/asciiView"
     tools:context="com.dev.cromer.jason.cshelper.Fragments.AsciiChart"
-    android:background="@drawable/background">
+    android:background="#212121">
 
 
     <TableLayout

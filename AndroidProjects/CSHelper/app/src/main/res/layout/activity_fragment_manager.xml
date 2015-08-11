@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
-        android:background="#04021C"
+        android:background="#0097A7"
         android:id="@+id/fragmentTitle">
     </android.support.v4.view.PagerTitleStrip>
 
