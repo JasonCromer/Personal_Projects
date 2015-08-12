@@ -14,9 +14,9 @@ import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.inputmethod.InputMethodManager;
 
-import com.dev.cromer.jason.cshelper.Fragments.AsciiChart;
 import com.dev.cromer.jason.cshelper.Fragments.DataStructures;
 import com.dev.cromer.jason.cshelper.Fragments.HexAndBinaryConverter;
+import com.dev.cromer.jason.cshelper.Fragments.HomeScreen;
 import com.dev.cromer.jason.cshelper.R;
 
 public class CustomFragmentManager extends FragmentActivity {
@@ -102,7 +102,7 @@ class MyAdapter extends FragmentPagerAdapter {
         Fragment fragment = null;
 
         if(position == 0) {
-            fragment = new AsciiChart();
+            fragment = new HomeScreen();
         }
 
         if(position == 1) {
@@ -125,7 +125,7 @@ class MyAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
 
         if(position == 0) {
-            return "Ascii Chart";
+            return "Home";
         }
 
         if(position == 1) {
