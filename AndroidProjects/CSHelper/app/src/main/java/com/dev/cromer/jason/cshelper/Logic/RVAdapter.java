@@ -46,8 +46,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DataStructuresView
         private TextView dataStructureName;
         private TextView dataStructureDescription;
         private TextView clickToLearnMoreTextButton;
+
         private FrameLayout cardItemsLayout;
         private ImageButton expandCardButton;
+
         private boolean cardIsExpanded;
         private String wikipediaStartingURL = "https://en.wikipedia.org/wiki/";
         private int ORIGINAL_CARD_HEIGHT = 136;
@@ -62,6 +64,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DataStructuresView
             dataStructureName = (TextView) itemView.findViewById(R.id.dataStructureItemText);
             dataStructureDescription = (TextView) itemView.findViewById(R.id.dataStructureDescriptionText);
             clickToLearnMoreTextButton = (TextView) itemView.findViewById(R.id.cardLearnMoreLinkTextView);
+
             expandCardButton = (ImageButton) itemView.findViewById(R.id.expandCardButton);
             cardItemsLayout = (FrameLayout) itemView.findViewById(R.id.cardItemsLayout);
 
@@ -78,6 +81,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DataStructuresView
                 if(!cardIsExpanded){
                     FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, ENLARGED_CARD_HEIGHT);
                     cardItemsLayout.setLayoutParams(lp);
+
+                    //Create alert Dialog
+
 
                     //show extended information
                     dataStructureDescription.setVisibility(View.VISIBLE);
