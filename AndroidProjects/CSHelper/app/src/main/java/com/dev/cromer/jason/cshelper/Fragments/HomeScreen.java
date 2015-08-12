@@ -10,13 +10,23 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.dev.cromer.jason.cshelper.Logic.ImageAdapter;
+import com.dev.cromer.jason.cshelper.Logic.GridViewAdapter;
+import com.dev.cromer.jason.cshelper.Logic.GridViewItem;
 import com.dev.cromer.jason.cshelper.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeScreen extends Fragment {
 
     static View homeScreenView;
     static GridView gridView;
+
+    private String[] imageTitles = {"Ascii Chart"};
+    private Integer[] imageIds = {R.drawable.ascii_chart_icon};
+    private List<GridViewItem> gridViewItemList;
+
+    private int NUMBER_OF_GRID_ITEMS = imageTitles.length;
 
     @Nullable
     @Override
@@ -24,7 +34,8 @@ public class HomeScreen extends Fragment {
         homeScreenView = inflater.inflate(R.layout.activity_home_screen, container, false);
 
         gridView = (GridView) homeScreenView.findViewById(R.id.gridView);
-        gridView.setAdapter(new ImageAdapter(getActivity()));
+        initializeData();
+        initializeGridAdapter();
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -34,5 +45,18 @@ public class HomeScreen extends Fragment {
         });
 
         return homeScreenView;
+    }
+
+
+    public void initializeData() {
+        gridViewItemList = new ArrayList<>();
+        for(int i = 0; i < NUMBER_OF_GRID_ITEMS; i++) {
+            gridViewItemList.add(new GridViewItem(imageTitles[i], imageIds[i]));
+        }
+    }
+
+    public void initializeGridAdapter() {
+        GridViewAdapter adapter = new GridViewAdapter(getActivity(), gridViewItemList);
+        gridView.setAdapter(adapter);
     }
 }

@@ -21,19 +21,19 @@ import java.util.List;
  * a parameter and generates a recycler view from it.
  * The static class DataStructureViewHolder is used to generate the data that will populate the
  * card item that fills the recycler view. This is done so that the data is only called once,
- * and thus improving performance so that the RVAdapter doesn't have to inflate and re-populate
+ * and thus improving performance so that the RecyclerViewAdapter doesn't have to inflate and re-populate
  * the entire card items each time it is loaded.
  */
 
 
-public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DataStructuresViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.DataStructuresViewHolder> {
 
     //Create an empty list of dataStructureItems
     private List<DataStructureItem> dataStructureItems;
 
 
-    //Constructor for RVAdapter
-    public RVAdapter(List<DataStructureItem> dataStructureItems) {
+    //Constructor for RecyclerViewAdapter
+    public RecyclerViewAdapter(List<DataStructureItem> dataStructureItems) {
         this.dataStructureItems = dataStructureItems;
     }
 

@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dev.cromer.jason.cshelper.Logic.DataStructureItem;
-import com.dev.cromer.jason.cshelper.Logic.RVAdapter;
+import com.dev.cromer.jason.cshelper.Logic.RecyclerViewAdapter;
 import com.dev.cromer.jason.cshelper.R;
 
 import java.util.ArrayList;
@@ -61,9 +61,9 @@ public class DataStructures extends Fragment {
     }
 
 
-    //This function passes the DataStructureItem List into the custom RVAdapter
+    //This function passes the DataStructureItem List into the custom RecyclerViewAdapter
     private void initializeAdapter() {
-        RVAdapter adapter = new RVAdapter(dataStructuresList);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(dataStructuresList);
         recyclerView.setAdapter(adapter);
     }
 
