@@ -22,6 +22,7 @@ public class HomeScreen extends Fragment {
     static View homeScreenView;
     static GridView gridView;
 
+    //Create items for the GridView
     private String[] imageTitles = {"Ascii Chart"};
     private Integer[] imageIds = {R.drawable.ascii_chart_icon};
     private List<GridViewItem> gridViewItemList;
@@ -33,6 +34,7 @@ public class HomeScreen extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         homeScreenView = inflater.inflate(R.layout.activity_home_screen, container, false);
 
+        //Create GridView data and adapter
         gridView = (GridView) homeScreenView.findViewById(R.id.gridView);
         initializeData();
         initializeGridAdapter();
@@ -48,6 +50,7 @@ public class HomeScreen extends Fragment {
     }
 
 
+    //This function adds respective images and their titles to a list
     public void initializeData() {
         gridViewItemList = new ArrayList<>();
         for(int i = 0; i < NUMBER_OF_GRID_ITEMS; i++) {
@@ -55,6 +58,9 @@ public class HomeScreen extends Fragment {
         }
     }
 
+
+    //This function sets the adapter to the gridView, passing the activity as the context
+    //and the list of items for the adapter to use
     public void initializeGridAdapter() {
         GridViewAdapter adapter = new GridViewAdapter(getActivity(), gridViewItemList);
         gridView.setAdapter(adapter);
