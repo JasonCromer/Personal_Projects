@@ -18,10 +18,14 @@ public class GridViewAdapter extends ArrayAdapter {
     private Context gridViewContext;
     private List<GridViewItem> gridViewItemList;
 
-    private TextView itemText;
-    private ImageView itemImage;
+    static TextView itemText;
+    static ImageView itemImage;
 
-    //constructor
+    /*
+        Constructor: Pass in application context (Activity), and the gridViewItemList
+        that holds a GridViewItem with two lists: one of string titles and one of int
+        Image Id's
+     */
     public GridViewAdapter(Context gridViewContext, List<GridViewItem> gridViewItemList) {
         super(gridViewContext, R.layout.grid_view_item, gridViewItemList);
         this.gridViewContext = gridViewContext;

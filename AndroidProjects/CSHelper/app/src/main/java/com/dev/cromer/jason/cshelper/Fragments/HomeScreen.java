@@ -23,8 +23,8 @@ public class HomeScreen extends Fragment {
     static GridView gridView;
 
     //Create items for the GridView
-    private String[] imageTitles = {"Ascii Chart"};
-    private Integer[] imageIds = {R.drawable.ascii_chart_icon};
+    private String[] imageTitles = {"Ascii Chart", "Something else"};
+    private Integer[] imageIds = {R.drawable.ascii_chart_icon, R.drawable.ascii_chart_icon};
     private List<GridViewItem> gridViewItemList;
 
     private int NUMBER_OF_GRID_ITEMS = imageTitles.length;
@@ -50,7 +50,11 @@ public class HomeScreen extends Fragment {
     }
 
 
-    //This function adds respective images and their titles to a list
+    /*
+        This function creates a list that adds a new GridViewItem. The GridViewItem is a class
+        structure that holds a String title and int Image Id.
+        Here add a GridViewItem for each pair of title and Image Id to the gridViewItemList.
+     */
     public void initializeData() {
         gridViewItemList = new ArrayList<>();
         for(int i = 0; i < NUMBER_OF_GRID_ITEMS; i++) {
