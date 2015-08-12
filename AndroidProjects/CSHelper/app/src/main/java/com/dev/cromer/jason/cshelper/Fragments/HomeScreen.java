@@ -21,7 +21,7 @@ public class HomeScreen extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        homeScreenView = inflater.inflate(R.layout.fragment_ascii, container, false);
+        homeScreenView = inflater.inflate(R.layout.activity_home_screen, container, false);
 
         gridView = (GridView) homeScreenView.findViewById(R.id.gridView);
         gridView.setAdapter(new ImageAdapter(getActivity()));
