@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.dev.cromer.jason.cshelper.Activities.AsciiChart;
 import com.dev.cromer.jason.cshelper.Logic.GridViewAdapter;
@@ -25,8 +24,10 @@ public class HomeScreen extends Fragment {
     static GridView gridView;
 
     //Create items for the GridView
-    private String[] imageTitles = {"Ascii Chart", "Something else"};
-    private Integer[] imageIds = {R.drawable.ascii_chart_icon, R.drawable.ascii_chart_icon};
+    private String[] imageTitles = {"Ascii Chart", "Time Complexity", "Programming Languages", "Data Containers",
+                                "Unix Cheat Sheet", "SQL Cheat Sheet"};
+    private Integer[] imageIds = {R.drawable.ascii_chart_icon, R.drawable.ascii_chart_icon, R.drawable.ascii_chart_icon,
+                            R.drawable.ascii_chart_icon, R.drawable.ascii_chart_icon, R.drawable.ascii_chart_icon};
     private List<GridViewItem> gridViewItemList;
 
     private int NUMBER_OF_GRID_ITEMS = imageTitles.length;
@@ -44,8 +45,6 @@ public class HomeScreen extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), String.valueOf(position), Toast.LENGTH_SHORT).show();
-
                 if(position == 0) {
                     Intent gridItemActivityIntent = new Intent(getActivity().getApplicationContext(), AsciiChart.class);
                     //add flag to clear stack and put pass position parameter to determine how to populate the activity
