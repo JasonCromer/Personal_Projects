@@ -28,8 +28,7 @@
             android:label="@string/title_activity_fragment_manager" >
         </activity>
         <activity
-            android:name=".Fragments.HomeScreen"
-            android:label="@string/title_activity_home_screen" >
+            android:name=".Activities.AsciiChart">
         </activity>
     </application>
 

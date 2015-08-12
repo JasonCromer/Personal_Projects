@@ -1,5 +1,6 @@
 package com.dev.cromer.jason.cshelper.Fragments;
 
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.dev.cromer.jason.cshelper.Activities.AsciiChart;
 import com.dev.cromer.jason.cshelper.Logic.GridViewAdapter;
 import com.dev.cromer.jason.cshelper.Logic.GridViewItem;
 import com.dev.cromer.jason.cshelper.R;
@@ -32,7 +34,7 @@ public class HomeScreen extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        homeScreenView = inflater.inflate(R.layout.activity_home_screen, container, false);
+        homeScreenView = inflater.inflate(R.layout.fragment_home_screen, container, false);
 
         //Create GridView data and adapter
         gridView = (GridView) homeScreenView.findViewById(R.id.gridView);
@@ -43,6 +45,16 @@ public class HomeScreen extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getActivity(), String.valueOf(position), Toast.LENGTH_SHORT).show();
+
+                if(position == 0) {
+                    Intent gridItemActivityIntent = new Intent(getActivity().getApplicationContext(), AsciiChart.class);
+                    //add flag to clear stack and put pass position parameter to determine how to populate the activity
+                    gridItemActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    gridItemActivityIntent.putExtra("GridViewPosition", position);
+
+                    //start activity
+                    startActivity(gridItemActivityIntent);
+                }
             }
         });
 
