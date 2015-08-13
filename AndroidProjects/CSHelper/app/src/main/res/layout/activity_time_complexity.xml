@@ -1,0 +1,37 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dev.cromer.jason.cshelper.Activities.TimeComplexityActivity"
+    android:background="#212121">
+
+    <RelativeLayout
+        android:layout_height="25dp"
+        android:layout_width="match_parent"
+        android:background="#1E88E5">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_arrow_back_white_24dp"
+            android:id="@+id/timeComplexityBackButton">
+        </ImageView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Time Complexity"
+            android:gravity="center"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true">
+        </TextView>
+
+    </RelativeLayout>
+
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/timeComplexityWebView"
+        android:layout_marginTop="25dp">
+    </WebView>
+
+</RelativeLayout>

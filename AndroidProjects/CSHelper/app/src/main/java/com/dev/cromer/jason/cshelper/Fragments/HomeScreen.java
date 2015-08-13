@@ -13,10 +13,12 @@ import android.widget.GridView;
 import com.dev.cromer.jason.cshelper.Activities.AsciiChartActivity;
 import com.dev.cromer.jason.cshelper.Activities.DataContainerActivity;
 import com.dev.cromer.jason.cshelper.Activities.ProgrammingLanguagesActivity;
+import com.dev.cromer.jason.cshelper.Activities.TimeComplexityActivity;
 import com.dev.cromer.jason.cshelper.Logic.GridViewAdapter;
 import com.dev.cromer.jason.cshelper.Logic.GridViewItem;
 import com.dev.cromer.jason.cshelper.R;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,6 +94,9 @@ public class HomeScreen extends Fragment implements AdapterView.OnItemClickListe
 
         //Time Complexity Activity
         if(position == 2) {
+            Intent timeComplexityIntent = new Intent(getActivity().getApplicationContext(), TimeComplexityActivity.class);
+            timeComplexityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(timeComplexityIntent);
         }
 
         //Unix Cheat Sheet Activity

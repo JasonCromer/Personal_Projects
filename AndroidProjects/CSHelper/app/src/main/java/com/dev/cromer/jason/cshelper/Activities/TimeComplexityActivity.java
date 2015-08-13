@@ -13,28 +13,29 @@ import android.widget.Toast;
 
 import com.dev.cromer.jason.cshelper.R;
 
-public class ProgrammingLanguagesActivity extends AppCompatActivity implements View.OnClickListener {
+public class TimeComplexityActivity extends AppCompatActivity implements View.OnClickListener {
 
     private WebView thisWebView;
     private ImageView thisBackButton;
 
-    static String THIS_URL = "https://en.wikipedia.org/wiki/Comparison_of_programming_languages";
+    static String THIS_URL = "https://en.wikipedia.org/wiki/Sorting_algorithm";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_PROGRESS);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_programming_languages);
+        setContentView(R.layout.activity_time_complexity);
 
-        thisWebView = (WebView) findViewById(R.id.programmingLanguageWebView);
-        thisBackButton = (ImageView) findViewById(R.id.languagesBackButton);
+        thisWebView = (WebView) findViewById(R.id.timeComplexityWebView);
+        thisBackButton = (ImageView) findViewById(R.id.timeComplexityBackButton);
         thisBackButton.setOnClickListener(this);
 
         initializeWebView();
     }
 
 
-    //This function initializes the webview for the activity and catches URL loading errors
+
     public void initializeWebView() {
         final Activity thisActivity = this;
 
@@ -62,6 +63,5 @@ public class ProgrammingLanguagesActivity extends AppCompatActivity implements V
         if(v == thisBackButton) {
             finish();
         }
-
     }
 }

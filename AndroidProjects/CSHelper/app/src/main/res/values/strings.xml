@@ -10,4 +10,5 @@
     <string name="title_activity_home_screen">HomeScreen</string>
     <string name="title_activity_data_container">DataContainerActivity</string>
     <string name="title_activity_programming_languages">ProgrammingLanguagesActivity</string>
+    <string name="title_activity_time_complexity">TimeComplexityActivity</string>
 </resources>

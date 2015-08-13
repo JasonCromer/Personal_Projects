@@ -37,6 +37,10 @@
             android:name=".Activities.ProgrammingLanguagesActivity"
             android:label="@string/title_activity_programming_languages" >
         </activity>
+        <activity
+            android:name=".Activities.TimeComplexityActivity"
+            android:label="@string/title_activity_time_complexity" >
+        </activity>
     </application>
 
 </manifest>
