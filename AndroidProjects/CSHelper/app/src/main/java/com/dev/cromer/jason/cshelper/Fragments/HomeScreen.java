@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.dev.cromer.jason.cshelper.Activities.AsciiChartActivity;
+import com.dev.cromer.jason.cshelper.Activities.DataContainerActivity;
 import com.dev.cromer.jason.cshelper.Activities.ProgrammingLanguagesActivity;
 import com.dev.cromer.jason.cshelper.Logic.GridViewAdapter;
 import com.dev.cromer.jason.cshelper.Logic.GridViewItem;
@@ -87,6 +88,25 @@ public class HomeScreen extends Fragment implements AdapterView.OnItemClickListe
             Intent languagesIntent = new Intent(getActivity().getApplicationContext(), ProgrammingLanguagesActivity.class);
             languagesIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(languagesIntent);
+        }
+
+        //Time Complexity Activity
+        if(position == 2) {
+        }
+
+        //Unix Cheat Sheet Activity
+        if(position == 3) {
+        }
+
+        //Data Containers Activity
+        if(position == 4) {
+            Intent dataContainersIntent = new Intent(getActivity().getApplicationContext(), DataContainerActivity.class);
+            dataContainersIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(dataContainersIntent);
+        }
+
+        //SQL Cheat Sheet
+        if(position == 5) {
         }
 
     }
