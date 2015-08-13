@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
         Intent startAsciiFragment = new Intent(this, CustomFragmentManager.class);
         startAsciiFragment.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(startAsciiFragment);
+        finish();
     }
 
 

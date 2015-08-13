@@ -1,15 +1,15 @@
 package com.dev.cromer.jason.cshelper.Activities;
 
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.dev.cromer.jason.cshelper.R;
 
 
-public class AsciiChartActivity extends Activity implements View.OnClickListener{
+public class AsciiChartActivity extends AppCompatActivity implements View.OnClickListener{
 
     private ImageView backButton;
 

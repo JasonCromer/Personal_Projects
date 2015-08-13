@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.dev.cromer.jason.cshelper.Activities.AsciiChartActivity;
+import com.dev.cromer.jason.cshelper.Activities.ProgrammingLanguagesActivity;
 import com.dev.cromer.jason.cshelper.Logic.GridViewAdapter;
 import com.dev.cromer.jason.cshelper.Logic.GridViewItem;
 import com.dev.cromer.jason.cshelper.R;
@@ -18,16 +19,16 @@ import com.dev.cromer.jason.cshelper.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeScreen extends Fragment {
+public class HomeScreen extends Fragment implements AdapterView.OnItemClickListener {
 
     static View homeScreenView;
     static GridView gridView;
 
     //Create items for the GridView
-    private String[] imageTitles = {"Ascii Chart", "Time Complexity", "Programming Languages", "Data Containers",
-                                "Unix Cheat Sheet", "SQL Cheat Sheet"};
-    private Integer[] imageIds = {R.drawable.ascii_chart_icon, R.drawable.ascii_chart_icon, R.drawable.ascii_chart_icon,
-                            R.drawable.ascii_chart_icon, R.drawable.ascii_chart_icon, R.drawable.ascii_chart_icon};
+    private String[] imageTitles = {"Ascii Chart", "Programming Languages", "Time Complexity",
+                                "Unix Cheat Sheet", "Data Containers", "SQL Cheat Sheet"};
+    private Integer[] imageIds = {R.drawable.ascii_table_icon, R.drawable.programming_languages_icon, R.drawable.time_complexity_icon,
+                                R.drawable.unix_sheet_icon, R.drawable.data_container_icon, R.drawable.sql_sheet_icon};
     private List<GridViewItem> gridViewItemList;
 
     private int NUMBER_OF_GRID_ITEMS = imageTitles.length;
@@ -42,19 +43,7 @@ public class HomeScreen extends Fragment {
         initializeData();
         initializeGridAdapter();
 
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position == 0) {
-                    Intent gridItemActivityIntent = new Intent(getActivity().getApplicationContext(), AsciiChartActivity.class);
-                    //add flag to clear stack and put pass position parameter to determine how to populate the activity
-                    gridItemActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                    //start activity
-                    startActivity(gridItemActivityIntent);
-                }
-            }
-        });
+        gridView.setOnItemClickListener(this);
 
         return homeScreenView;
     }
@@ -78,5 +67,27 @@ public class HomeScreen extends Fragment {
     public void initializeGridAdapter() {
         GridViewAdapter adapter = new GridViewAdapter(getActivity(), gridViewItemList);
         gridView.setAdapter(adapter);
+    }
+
+
+    //Handle intent based on which gridview item is clicked via position
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //Ascii Chart Activity
+        if(position == 0) {
+            Intent asciiChartIntent = new Intent(getActivity().getApplicationContext(), AsciiChartActivity.class);
+
+            //add flag to clear stack and put pass position parameter to determine how to populate the activity
+            asciiChartIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(asciiChartIntent);
+        }
+
+        //Programming Languages Activity
+        if(position == 1) {
+            Intent languagesIntent = new Intent(getActivity().getApplicationContext(), ProgrammingLanguagesActivity.class);
+            languagesIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(languagesIntent);
+        }
+
     }
 }

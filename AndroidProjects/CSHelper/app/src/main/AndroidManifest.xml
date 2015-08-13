@@ -33,6 +33,10 @@
             android:name=".Activities.DataContainerActivity"
             android:label="@string/title_activity_data_container" >
         </activity>
+        <activity
+            android:name=".Activities.ProgrammingLanguagesActivity"
+            android:label="@string/title_activity_programming_languages" >
+        </activity>
     </application>
 
 </manifest>
