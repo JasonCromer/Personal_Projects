@@ -51,6 +51,7 @@ public class LoginScreen extends Activity implements View.OnClickListener {
                 Intent loginIntent = new Intent(this, CustomFragmentManager.class);
                 loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(loginIntent);
+                finish();
             }
         }
         if(v == forgotPasswordLink) {

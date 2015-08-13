@@ -18,6 +18,7 @@ public class MainActivity extends Activity {
         Intent thisIntent = new Intent(this, LoginScreen.class);
         thisIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(thisIntent);
+        finish();
     }
 
 
