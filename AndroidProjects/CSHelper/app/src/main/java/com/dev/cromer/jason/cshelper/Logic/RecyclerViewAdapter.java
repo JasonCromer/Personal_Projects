@@ -71,7 +71,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             expandCardButton = (ImageButton) itemView.findViewById(R.id.expandCardButton);
             cardItemsLayout = (FrameLayout) itemView.findViewById(R.id.cardItemsLayout);
 
-            dataStructureDescription.setMovementMethod(new ScrollingMovementMethod());
             expandCardButton.setOnClickListener(this);
             cardView.setOnClickListener(this);
             clickToLearnMoreTextButton.setOnClickListener(this);

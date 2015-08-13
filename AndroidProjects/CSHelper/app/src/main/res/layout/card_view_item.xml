@@ -49,8 +49,6 @@
             android:id="@+id/dataStructureDescriptionText"
             android:textColor="#000000"
             android:text="lala"
-            android:scrollbars="vertical"
-            android:scrollbarSize="10dp"
             android:layout_marginTop="60dp"
             android:layout_alignParentLeft="true"
             android:visibility="gone"

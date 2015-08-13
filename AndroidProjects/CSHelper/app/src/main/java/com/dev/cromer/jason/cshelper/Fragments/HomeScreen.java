@@ -18,7 +18,6 @@ import com.dev.cromer.jason.cshelper.Logic.GridViewAdapter;
 import com.dev.cromer.jason.cshelper.Logic.GridViewItem;
 import com.dev.cromer.jason.cshelper.R;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
