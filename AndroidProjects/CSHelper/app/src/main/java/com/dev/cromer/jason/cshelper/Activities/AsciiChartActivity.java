@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import com.dev.cromer.jason.cshelper.R;
 
 
-public class AsciiChart extends Activity implements View.OnClickListener{
+public class AsciiChartActivity extends Activity implements View.OnClickListener{
 
     private ImageView backButton;
 

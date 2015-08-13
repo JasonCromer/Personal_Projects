@@ -12,10 +12,9 @@
     <TextView
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
         android:gravity="center"
         android:textSize="12sp"
-        android:text=""
+        android:text="Lala"
         android:id="@+id/gridViewText" />
 
 </LinearLayout>

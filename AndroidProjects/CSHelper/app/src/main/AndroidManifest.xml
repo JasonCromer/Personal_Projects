@@ -27,8 +27,11 @@
             android:name=".Logic.CustomFragmentManager"
             android:label="@string/title_activity_fragment_manager" >
         </activity>
+        <activity android:name=".Activities.AsciiChartActivity" >
+        </activity>
         <activity
-            android:name=".Activities.AsciiChart">
+            android:name=".Activities.DataContainerActivity"
+            android:label="@string/title_activity_data_container" >
         </activity>
     </application>
 

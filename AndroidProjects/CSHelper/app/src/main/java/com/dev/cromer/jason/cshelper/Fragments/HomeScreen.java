@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.dev.cromer.jason.cshelper.Activities.AsciiChart;
+import com.dev.cromer.jason.cshelper.Activities.AsciiChartActivity;
 import com.dev.cromer.jason.cshelper.Logic.GridViewAdapter;
 import com.dev.cromer.jason.cshelper.Logic.GridViewItem;
 import com.dev.cromer.jason.cshelper.R;
@@ -46,10 +46,9 @@ public class HomeScreen extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position == 0) {
-                    Intent gridItemActivityIntent = new Intent(getActivity().getApplicationContext(), AsciiChart.class);
+                    Intent gridItemActivityIntent = new Intent(getActivity().getApplicationContext(), AsciiChartActivity.class);
                     //add flag to clear stack and put pass position parameter to determine how to populate the activity
                     gridItemActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    gridItemActivityIntent.putExtra("GridViewPosition", position);
 
                     //start activity
                     startActivity(gridItemActivityIntent);
