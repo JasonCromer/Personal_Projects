@@ -25,7 +25,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Example Text"
+            android:text=""
             android:textColor="#000000"
             android:layout_marginTop="8dp"
             android:id="@+id/dataStructureItemText"
@@ -39,22 +39,22 @@
             android:text="Click to learn more"
             android:textColor="#0645AD"
             android:layout_below="@id/dataStructureDescriptionText"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="160dp"
             android:visibility="gone"
             android:layout_gravity="center_horizontal|bottom" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:id="@+id/dataStructureDescriptionText"
             android:textColor="#000000"
-            android:text="About this DataStructure..."
-            android:layout_marginTop="100dp"
+            android:text="lala"
+            android:scrollbars="vertical"
+            android:scrollbarSize="10dp"
+            android:layout_marginTop="60dp"
             android:layout_alignParentLeft="true"
             android:visibility="gone"
-            android:layout_gravity="left|bottom" />
-
-
+            android:layout_gravity="center_horizontal|top" />
 
     </FrameLayout>
 

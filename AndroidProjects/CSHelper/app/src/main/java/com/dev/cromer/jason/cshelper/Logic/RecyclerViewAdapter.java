@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dev.cromer.jason.cshelper.R;
 
@@ -53,7 +56,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private boolean cardIsExpanded;
         private String wikipediaStartingURL = "https://en.wikipedia.org/wiki/";
         private int ORIGINAL_CARD_HEIGHT = 136;
-        private int ENLARGED_CARD_HEIGHT = 300;
+        private int ENLARGED_CARD_HEIGHT = 550;
 
         //Constructor to inflate the card item
         DataStructuresViewHolder(final View itemView) {
@@ -68,6 +71,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             expandCardButton = (ImageButton) itemView.findViewById(R.id.expandCardButton);
             cardItemsLayout = (FrameLayout) itemView.findViewById(R.id.cardItemsLayout);
 
+            dataStructureDescription.setMovementMethod(new ScrollingMovementMethod());
             expandCardButton.setOnClickListener(this);
             cardView.setOnClickListener(this);
             clickToLearnMoreTextButton.setOnClickListener(this);
