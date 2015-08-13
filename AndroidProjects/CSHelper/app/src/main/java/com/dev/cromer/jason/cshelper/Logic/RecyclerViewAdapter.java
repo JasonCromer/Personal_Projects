@@ -134,6 +134,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(DataStructuresViewHolder dataStructViewHolder, int position) {
         dataStructViewHolder.dataStructureName.setText(dataStructureItems.get(position).name);
+        dataStructViewHolder.dataStructureDescription.setText(dataStructureItems.get(position).description);
     }
 
 
