@@ -13,7 +13,9 @@ import android.widget.GridView;
 import com.dev.cromer.jason.cshelper.Activities.AsciiChartActivity;
 import com.dev.cromer.jason.cshelper.Activities.DataContainerActivity;
 import com.dev.cromer.jason.cshelper.Activities.ProgrammingLanguagesActivity;
+import com.dev.cromer.jason.cshelper.Activities.SqlCheatSheetActivity;
 import com.dev.cromer.jason.cshelper.Activities.TimeComplexityActivity;
+import com.dev.cromer.jason.cshelper.Activities.UnixCheatSheetActivity;
 import com.dev.cromer.jason.cshelper.Logic.GridViewAdapter;
 import com.dev.cromer.jason.cshelper.Logic.GridViewItem;
 import com.dev.cromer.jason.cshelper.R;
@@ -100,6 +102,9 @@ public class HomeScreen extends Fragment implements AdapterView.OnItemClickListe
 
         //Unix Cheat Sheet Activity
         if(position == 3) {
+            Intent unixSheetIntent = new Intent(getActivity().getApplicationContext(), UnixCheatSheetActivity.class);
+            unixSheetIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(unixSheetIntent);
         }
 
         //Data Containers Activity
@@ -111,6 +116,9 @@ public class HomeScreen extends Fragment implements AdapterView.OnItemClickListe
 
         //SQL Cheat Sheet
         if(position == 5) {
+            Intent sqlSheetIntent = new Intent(getActivity(), SqlCheatSheetActivity.class);
+            sqlSheetIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(sqlSheetIntent);
         }
 
     }

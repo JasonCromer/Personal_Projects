@@ -4,8 +4,48 @@
     tools:context="com.dev.cromer.jason.cshelper.Activities.DataContainerActivity"
     android:background="#212121">
 
-    <ImageView
+    
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:stretchColumns="0">
+
+        <TableRow>
+            <RelativeLayout
+                android:layout_height="25dp"
+                android:layout_width="match_parent"
+                android:background="#1E88E5">
+
+
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_arrow_back_white_24dp"
+                    android:id="@+id/dataContainerBackButton">
+                </ImageView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Data Containers"
+                    android:gravity="center"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true">
+                </TextView>
+
+            </RelativeLayout>
+        </TableRow>
+
+
+        <TableRow>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/data_containers_image">
+            </ImageView>
+        </TableRow>
+
+    </TableLayout>
+
 
 </RelativeLayout>

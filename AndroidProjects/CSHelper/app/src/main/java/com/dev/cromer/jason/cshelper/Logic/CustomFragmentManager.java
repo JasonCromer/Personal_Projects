@@ -56,7 +56,6 @@ public class CustomFragmentManager extends FragmentActivity {
 
             @Override
             public void onPageSelected(int position) {
-
                 final InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(viewPager.getWindowToken(), 0);
             }

@@ -41,6 +41,14 @@
             android:name=".Activities.TimeComplexityActivity"
             android:label="@string/title_activity_time_complexity" >
         </activity>
+        <activity
+            android:name=".Activities.UnixCheatSheetActivity"
+            android:label="@string/title_activity_unix_cheat_sheet" >
+        </activity>
+        <activity
+            android:name=".Activities.SqlCheatSheetActivity"
+            android:label="@string/title_activity_sql_cheat_sheet" >
+        </activity>
     </application>
 
 </manifest>

@@ -5,15 +5,18 @@
     android:padding="4dp">
 
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:id="@+id/gridViewImage" />
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/gridViewImage"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"/>
     <TextView
-        android:layout_width="80dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="12sp"
         android:text=""
+        android:lines="2"
         android:id="@+id/gridViewText" />
 
 </LinearLayout>

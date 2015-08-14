@@ -11,4 +11,6 @@
     <string name="title_activity_data_container">DataContainerActivity</string>
     <string name="title_activity_programming_languages">ProgrammingLanguagesActivity</string>
     <string name="title_activity_time_complexity">TimeComplexityActivity</string>
+    <string name="title_activity_unix_cheat_sheet">UnixCheatSheetActivity</string>
+    <string name="title_activity_sql_cheat_sheet">SqlCheatSheetActivity</string>
 </resources>
