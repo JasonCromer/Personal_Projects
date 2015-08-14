@@ -31,25 +31,8 @@ public class GridViewAdapter extends ArrayAdapter {
         super(gridViewContext, R.layout.grid_view_item, gridViewItemList);
         this.gridViewContext = gridViewContext;
         this.gridViewItemList = gridViewItemList;
-        Toast.makeText(getContext(), String.valueOf(gridViewItemList.size()), Toast.LENGTH_SHORT).show();
-
     }
 
-
-    @Override
-    public int getCount() {
-        return gridViewItemList.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return super.getItem(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return super.getItemId(position);
-    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -69,5 +52,21 @@ public class GridViewAdapter extends ArrayAdapter {
         itemImage.setImageResource(gridViewItemList.get(position).imageId);
 
         return convertView;
+    }
+
+
+    @Override
+    public int getCount() {
+        return gridViewItemList.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return super.getItem(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
     }
 }

@@ -8,8 +8,8 @@ android {
         applicationId "com.dev.cromer.jason.cshelper"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 8
-        versionName "1.12.3"
+        versionCode 9
+        versionName "1.12.4"
     }
     buildTypes {
         release {

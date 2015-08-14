@@ -3,8 +3,8 @@
     package="com.dev.cromer.jason.cshelper"
     android:configChanges="keyboardHidden|orientation|screenSize"
     android:screenOrientation="portrait"
-    android:versionCode="8"
-    android:versionName="1.12.3"
+    android:versionCode="9"
+    android:versionName="1.12.4"
     android:windowSoftInputMode="stateHidden" >
 
     <uses-permission android:name="android.permission.INTERNET" />
