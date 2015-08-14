@@ -10,9 +10,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created by jason on 7/29/15.
- */
+
 public class HttpGetRequest extends AsyncTask<String, Void, String>{
 
     String authUsernameAndPassword = "";
@@ -21,7 +19,7 @@ public class HttpGetRequest extends AsyncTask<String, Void, String>{
     @Override
     protected String doInBackground(String... url) {
         String stringURL = url[0];
-        String result = null;
+        String result;
         BufferedReader reader = null;
         StringBuilder stringBuilder = null;
 
@@ -64,6 +62,7 @@ public class HttpGetRequest extends AsyncTask<String, Void, String>{
                 }
             }
         }
+
 
         result = stringBuilder.toString();
 

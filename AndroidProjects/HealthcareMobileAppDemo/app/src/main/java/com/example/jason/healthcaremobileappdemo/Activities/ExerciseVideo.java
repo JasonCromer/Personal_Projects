@@ -10,16 +10,14 @@ import android.widget.TextView;
 import android.widget.VideoView;
 import com.example.jason.healthcaremobileappdemo.R;
 
-import org.w3c.dom.Text;
-
 
 public class ExerciseVideo extends Activity implements View.OnClickListener {
 
-    private TextView exerciseTitleField;
-    private TextView exerciseRepsSetsTimesPerDayTitleField;
-    private VideoView videoView;
-    private MediaController mediaController;
-    private final String videoPath = "";
+    static TextView exerciseTitleField;
+    static TextView exerciseRepsSetsTimesPerDayTitleField;
+    static VideoView videoView;
+    static MediaController mediaController;
+    //private final String videoPath = "";
     private ImageButton backButton;
 
     @Override

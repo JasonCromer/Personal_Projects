@@ -13,13 +13,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created by jason on 7/29/15.
- */
+
 public class HttpRequest extends Activity {
 
     @Override
@@ -72,7 +69,7 @@ public class HttpRequest extends Activity {
 
                 //Read incoming response from API
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream(), "UTF-8"));
-                String inputLine = null;
+                String inputLine;
                 StringBuilder stringBuilder = new StringBuilder();
 
                 //Append all input lines to the String builder; break when input is null
@@ -82,9 +79,6 @@ public class HttpRequest extends Activity {
 
                 bufferedReader.close();
                 result = stringBuilder.toString();
-            }
-            catch(UnsupportedEncodingException e) {
-                e.printStackTrace();
             }
             catch(IOException e){
                 e.printStackTrace();
@@ -96,7 +90,7 @@ public class HttpRequest extends Activity {
         @Override
         protected void onPostExecute(String result) {
             //print
-            Toast.makeText(getBaseContext(), result.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), result, Toast.LENGTH_SHORT).show();
         }
     }
 }

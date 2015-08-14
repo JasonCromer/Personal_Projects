@@ -1,7 +1,6 @@
 package com.example.jason.healthcaremobileappdemo.Activities;
 
 
-import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,8 +18,8 @@ import java.util.concurrent.ExecutionException;
 public class SettingsActivity extends Fragment implements View.OnClickListener{
 
     private Button getUsernameButton;
-    private View fragmentView;
-    private String url = "http://10.0.2.2:5000/api/users/1";
+    static View fragmentView;
+    static String url = "http://10.0.2.2:5000/api/users/1";
 
     @Nullable
     @Override

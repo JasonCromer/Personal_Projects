@@ -92,7 +92,6 @@ class MyAdapter extends FragmentPagerAdapter {
     //returns a title of each fragment
     @Override
     public CharSequence getPageTitle(int position){
-        String title = new String();
         if(position == 0)
         {
             return "Home";

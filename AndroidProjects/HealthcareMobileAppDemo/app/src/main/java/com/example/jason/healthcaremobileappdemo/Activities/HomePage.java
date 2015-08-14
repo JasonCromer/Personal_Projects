@@ -31,10 +31,10 @@ import java.util.ArrayList;
 
 public class HomePage extends Fragment implements View.OnClickListener {
 
-    private View fragmentView;
     private Button startPlanButton;
-    private BarChart exerciseBarChart;
-    private PieChart planStatusPieChart;
+    static BarChart exerciseBarChart;
+    static PieChart planStatusPieChart;
+    static View fragmentView;
 
     private float[] pieYValues = {78f, 22};
 
@@ -134,9 +134,9 @@ public class HomePage extends Fragment implements View.OnClickListener {
         BarDataSet episodeCompletion = new BarDataSet(valueSet1, "Episode Completion");
         BarDataSet episodeAccuracy = new BarDataSet(valueSet2, "Episode Accuracy");
 
-        episodeCompletion.setColor(Color.rgb(160, 209, 247));
+        episodeCompletion.setColor(Color.rgb(85,202,237));
         episodeCompletion.setDrawValues(false);
-        episodeAccuracy.setColor(Color.rgb(217, 138, 222));
+        episodeAccuracy.setColor(Color.rgb(217,138,222));
         episodeAccuracy.setDrawValues(false);
 
         dataSets.add(episodeCompletion);

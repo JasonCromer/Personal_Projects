@@ -51,7 +51,8 @@
             android:layout_alignLeft="@+id/passwordField"
             android:layout_below="@+id/passwordField"
             android:text="Login"
-            android:textColor="#000000"/>
+            android:textColor="#000000"
+            android:backgroundTint="#FFFFFF"/>
 
         <TextView
             android:id="@+id/forgotPasswordLink"

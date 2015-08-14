@@ -18,7 +18,7 @@ import java.util.Random;
 
 public class ExerciseList extends Fragment {
 
-    private View fragmentView;
+    static View fragmentView;
     private List<Exercise> exercises;
     private RecyclerView rv;
 
