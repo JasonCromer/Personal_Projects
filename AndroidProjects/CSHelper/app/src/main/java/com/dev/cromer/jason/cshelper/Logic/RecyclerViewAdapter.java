@@ -1,14 +1,18 @@
 package com.dev.cromer.jason.cshelper.Logic;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -55,8 +59,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         private boolean cardIsExpanded;
         private String wikipediaStartingURL = "https://en.wikipedia.org/wiki/";
-        private int ORIGINAL_CARD_HEIGHT = 136;
-        private int ENLARGED_CARD_HEIGHT = 550;
+        private int ORIGINAL_CARD_HEIGHT;
+        private int ENLARGED_CARD_HEIGHT;
+        private double DESCRIPTION_HEIGHT_RATIO = 8.0/17.0;
 
         //Constructor to inflate the card item
         DataStructuresViewHolder(final View itemView) {
@@ -74,18 +79,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             expandCardButton.setOnClickListener(this);
             cardView.setOnClickListener(this);
             clickToLearnMoreTextButton.setOnClickListener(this);
+
+            setCardHeight();
         }
 
 
         @Override
         public void onClick(View v) {
+
             if(v == expandCardButton || v == cardView) {
                 //Increase textview size when clicked
                 if(!cardIsExpanded){
                     FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, ENLARGED_CARD_HEIGHT);
                     cardItemsLayout.setLayoutParams(lp);
-
-                    //Create alert Dialog
 
 
                     //show extended information
@@ -95,6 +101,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     //change arrow direction to up
                     expandCardButton.setBackgroundResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
                     cardIsExpanded = true;
+
+                    ORIGINAL_CARD_HEIGHT = cardItemsLayout.getHeight();
                 }
                 else {
                     FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, ORIGINAL_CARD_HEIGHT);
@@ -118,8 +126,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 itemView.getContext().startActivity(browserIntent);
             }
+
+        }
+
+
+        /*  This function sets the enlarged card height for the card description based on the
+            height of the entire screen, then multiplying by a ration for a standard description
+            height. This is due to differing screen heights/densities
+        */
+        public void setCardHeight() {
+            final float screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+            ENLARGED_CARD_HEIGHT = (int) (screenHeight * DESCRIPTION_HEIGHT_RATIO);
         }
     }
+
+
 
 
     //Inflate the layout by grabbing the card_view_item and instantiating the new layout view
