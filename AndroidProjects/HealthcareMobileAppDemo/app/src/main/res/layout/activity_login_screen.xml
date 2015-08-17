@@ -86,6 +86,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="5dp"
         android:id="@+id/textView"
+        android:textColor="#000000"
         android:layout_alignTop="@+id/imageView"
         android:layout_toRightOf="@+id/imageView"
         android:layout_toEndOf="@+id/imageView" />
@@ -97,6 +98,7 @@
         android:text="Welcome to Vira"
         android:layout_marginTop="30dp"
         android:id="@+id/textView3"
+        android:textColor="#000000"
         android:layout_below="@+id/imageView"
         android:layout_centerHorizontal="true" />
 

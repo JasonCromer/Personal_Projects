@@ -58,7 +58,6 @@ public class LoginScreen extends Activity implements View.OnClickListener {
             Intent resetPasswordIntent = new Intent(this, ForgotPasswordResetScreen.class);
             resetPasswordIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(resetPasswordIntent);
-
         }
 
     }
