@@ -1,4 +1,4 @@
-package org.android.jasoncromer.coverme;
+package com.dev.cromer.jason.coverme;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
