@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
         Intent mapIntent = new Intent(this, MapActivity.class);
         mapIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(mapIntent);
+        this.finish();
     }
 
 }
