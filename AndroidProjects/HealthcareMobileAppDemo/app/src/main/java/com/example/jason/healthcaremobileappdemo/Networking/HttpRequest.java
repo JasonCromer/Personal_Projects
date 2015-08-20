@@ -52,12 +52,12 @@ public class HttpRequest extends Activity {
                 httpURLConnection.setRequestProperty("Content-Type", "application/json");
                 httpURLConnection.setRequestProperty("Accept", "application/json");
 
-                httpURLConnection.setRequestMethod("GET");
+                httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.connect();
 
                 //Create a new JSON object
                 JSONObject jsonObject = new JSONObject();
-                // json.put("username", "Jason");
+                json.put("username", "Jason");
                 data = jsonObject.toString();
 
                 //Write the data to an output stream
