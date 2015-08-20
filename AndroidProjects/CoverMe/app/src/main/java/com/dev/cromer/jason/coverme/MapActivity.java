@@ -5,7 +5,9 @@ import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.dev.cromer.jason.coverme.Networking.HttpGetRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -16,6 +18,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.concurrent.ExecutionException;
 
 
 public class MapActivity extends FragmentActivity implements com.google.android.gms.location.LocationListener,
@@ -32,6 +36,7 @@ public class MapActivity extends FragmentActivity implements com.google.android.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         setUpMapIfNeeded();
+
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -91,6 +96,7 @@ public class MapActivity extends FragmentActivity implements com.google.android.
     }
     protected void showLocation(Location mCurrentLocation) {
         if (mCurrentLocation != null) {
+            getLocalMarkers(mCurrentLocation);
             Log.i("Where am I?", "Latitude: " + mCurrentLocation.getLatitude() + ", Longitude:" + mCurrentLocation.getLongitude());
             mCurrentMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()))
                     .title("ITS ME!").draggable(true));
@@ -132,6 +138,25 @@ public class MapActivity extends FragmentActivity implements com.google.android.
         if (mGoogleApiClient.isConnected()) {
             setUpMapIfNeeded();    // <-from previous tutorial
             startLocationUpdates();
+        }
+    }
+
+
+
+
+    private void getLocalMarkers(Location mCurrentLocation) {
+        Log.d("TAG", String.valueOf(mCurrentLocation.getLatitude()));
+        Log.d("TAG", String.valueOf(mCurrentLocation.getLongitude()));
+        final String url = "http://10.0.2.2:5000/api/get_markers/"+String.valueOf(mCurrentLocation.getLatitude())+
+                String.valueOf("/"+mCurrentLocation.getLongitude());
+
+        try{
+            HttpGetRequest getRequest = new HttpGetRequest();
+            String receivedData = getRequest.execute(url).get();
+            Toast.makeText(getApplicationContext(), receivedData, Toast.LENGTH_SHORT).show();
+        }
+        catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
