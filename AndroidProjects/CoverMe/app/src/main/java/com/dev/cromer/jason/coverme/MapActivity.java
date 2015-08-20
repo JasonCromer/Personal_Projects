@@ -5,6 +5,9 @@ import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.dev.cromer.jason.coverme.Networking.HttpGetRequest;
@@ -21,24 +24,32 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
 public class MapActivity extends FragmentActivity implements com.google.android.gms.location.LocationListener,
                                                                 GoogleApiClient.ConnectionCallbacks,
-                                                                GoogleApiClient.OnConnectionFailedListener {
+                                                                GoogleApiClient.OnConnectionFailedListener,
+                                                                View.OnClickListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private GoogleApiClient mGoogleApiClient;
-    private Marker mCurrentMarker;
     private Marker mLastMarker;
-    private List<String> latLngLocalPositions;
+
+    private ImageButton postNewPinButton;
+    private EditText setPinTitleText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        postNewPinButton = (ImageButton) findViewById(R.id.postNewPinButton);
+        setPinTitleText = (EditText) findViewById(R.id.pinTitleEditText);
+        postNewPinButton.setOnClickListener(this);
+
         setUpMapIfNeeded();
 
 
@@ -92,23 +103,28 @@ public class MapActivity extends FragmentActivity implements com.google.android.
 
 
     }
+
     @Override
     public void onConnectionSuspended(int i) {
     }
+
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
     }
+
+
     protected void showLocation(Location mCurrentLocation) {
+        final List<String> latLngLocalPositions;
+        final Marker mCurrentMarker;
+
         //clear previous markers
         mMap.clear();
 
         if (mCurrentLocation != null) {
 
-            //grab local marker locations
-            latLngLocalPositions = getLocalMarkers(mCurrentLocation);
+            latLngLocalPositions = getLocalMarkers(mCurrentLocation);       //grab local marker locations
             if(latLngLocalPositions.size() > 1) {
-                Log.d("TAG", String.valueOf(latLngLocalPositions));
-                mapLocalMarkers(latLngLocalPositions);
+                mapLocalMarkers(latLngLocalPositions);                      // display local markers from other users
             }
             else {
                 Toast.makeText(getApplicationContext(), "No data available: Server is down", Toast.LENGTH_LONG).show();
@@ -128,6 +144,7 @@ public class MapActivity extends FragmentActivity implements com.google.android.
 
     }
 
+
     protected void startLocationUpdates() {
         LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(10000);
@@ -137,6 +154,7 @@ public class MapActivity extends FragmentActivity implements com.google.android.
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
     }
+
 
     @Override
     public void onLocationChanged(Location location) {
@@ -150,29 +168,32 @@ public class MapActivity extends FragmentActivity implements com.google.android.
         LocationServices.FusedLocationApi.removeLocationUpdates(
                 mGoogleApiClient, this);
     }
+
     @Override
     public void onResume() {
         super.onResume();
         if (mGoogleApiClient.isConnected()) {
-            setUpMapIfNeeded();    // <-from previous tutorial
+            setUpMapIfNeeded();
             startLocationUpdates();
         }
     }
 
 
-
-
     private List<String> getLocalMarkers(Location mCurrentLocation) {
-        List<String> markerItems = Arrays.asList("");   //Initialize as to return null if try doesn't work
+        List<String> markerItems = Collections.emptyList();   //Initialize as empty to return null if try-block doesn't succeed
+
+        //url to endpoint containing user's local latitude and longitude
         final String url = "http://10.0.2.2:5000/api/get_markers/"+String.valueOf(mCurrentLocation.getLatitude())+
                 String.valueOf("/"+mCurrentLocation.getLongitude());
 
 
         try{
             HttpGetRequest getRequest = new HttpGetRequest();
+
+            //Returned data from API as String-list, i.e. [[item1, item2, item3,]]
             String receivedData = getRequest.execute(url).get();
-            receivedData = receivedData.replace("[", "").replace("]", "").replace("\"", "");  //replace brackets
-            markerItems = Arrays.asList(receivedData.split("\\s*,\\s*"));   //filter out whitespace
+            receivedData = receivedData.replace("[", "").replace("]", "").replace("\"", "");  //replace brackets and quotations
+            markerItems = Arrays.asList(receivedData.split("\\s*,\\s*"));                     //filter out whitespace and turn into List
 
             return markerItems;
         }
@@ -180,23 +201,37 @@ public class MapActivity extends FragmentActivity implements com.google.android.
             e.printStackTrace();
         }
 
+        //Return empty list
         return markerItems;
     }
 
 
     private void mapLocalMarkers(List<String> localCoordinates) {
         /*
-            List includes a pattern of: [latitude, longitude, latitude, long...]
-            so we must assign values based on chunks of two, then iterate by 2.
+            List includes a pattern of: [latitude, longitude, Title, latitude, long...]
+            so we must assign values based on chunks of three, then iterate by 3.
          */
         for(int i = 0; i < localCoordinates.size(); i+=3) {
             final String thisLatitude = localCoordinates.get(i);
             final String thisLongitude = localCoordinates.get(i+1);
             final String thisTitle = localCoordinates.get(i+2);
 
+            //Add new marker with the coordinates and title of each marker in the list
             mMap.addMarker(new MarkerOptions().position(new LatLng(Float.valueOf(thisLatitude), Float.valueOf(thisLongitude)))
                     .title(thisTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
 
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == postNewPinButton) {
+            if (setPinTitleText.getVisibility() == View.GONE) {
+                setPinTitleText.setVisibility(View.VISIBLE);
+            }
+            else {
+                setPinTitleText.setVisibility(View.GONE);
+            }
         }
     }
 }
