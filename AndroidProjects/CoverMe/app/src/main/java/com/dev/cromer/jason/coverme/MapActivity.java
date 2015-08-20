@@ -15,10 +15,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
@@ -30,6 +33,7 @@ public class MapActivity extends FragmentActivity implements com.google.android.
     private GoogleApiClient mGoogleApiClient;
     private Marker mCurrentMarker;
     private Marker mLastMarker;
+    private List<String> latLngLocalPositions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +99,22 @@ public class MapActivity extends FragmentActivity implements com.google.android.
     public void onConnectionFailed(ConnectionResult connectionResult) {
     }
     protected void showLocation(Location mCurrentLocation) {
+        //clear previous markers
+        mMap.clear();
+
         if (mCurrentLocation != null) {
-            getLocalMarkers(mCurrentLocation);
+
+            //grab local marker locations
+            latLngLocalPositions = getLocalMarkers(mCurrentLocation);
+            if(latLngLocalPositions.size() > 1) {
+                Log.d("TAG", String.valueOf(latLngLocalPositions));
+                mapLocalMarkers(latLngLocalPositions);
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "No data available: Server is down", Toast.LENGTH_LONG).show();
+            }
+
+
             Log.i("Where am I?", "Latitude: " + mCurrentLocation.getLatitude() + ", Longitude:" + mCurrentLocation.getLongitude());
             mCurrentMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()))
                     .title("ITS ME!").draggable(true));
@@ -144,19 +162,41 @@ public class MapActivity extends FragmentActivity implements com.google.android.
 
 
 
-    private void getLocalMarkers(Location mCurrentLocation) {
-        Log.d("TAG", String.valueOf(mCurrentLocation.getLatitude()));
-        Log.d("TAG", String.valueOf(mCurrentLocation.getLongitude()));
+    private List<String> getLocalMarkers(Location mCurrentLocation) {
+        List<String> markerItems = Arrays.asList("");   //Initialize as to return null if try doesn't work
         final String url = "http://10.0.2.2:5000/api/get_markers/"+String.valueOf(mCurrentLocation.getLatitude())+
                 String.valueOf("/"+mCurrentLocation.getLongitude());
+
 
         try{
             HttpGetRequest getRequest = new HttpGetRequest();
             String receivedData = getRequest.execute(url).get();
-            Toast.makeText(getApplicationContext(), receivedData, Toast.LENGTH_SHORT).show();
+            receivedData = receivedData.replace("[", "").replace("]", "").replace("\"", "");  //replace brackets
+            markerItems = Arrays.asList(receivedData.split("\\s*,\\s*"));   //filter out whitespace
+
+            return markerItems;
         }
-        catch (ExecutionException | InterruptedException e) {
+        catch (ExecutionException | InterruptedException | NullPointerException e) {
             e.printStackTrace();
+        }
+
+        return markerItems;
+    }
+
+
+    private void mapLocalMarkers(List<String> localCoordinates) {
+        /*
+            List includes a pattern of: [latitude, longitude, latitude, long...]
+            so we must assign values based on chunks of two, then iterate by 2.
+         */
+        for(int i = 0; i < localCoordinates.size(); i+=3) {
+            final String thisLatitude = localCoordinates.get(i);
+            final String thisLongitude = localCoordinates.get(i+1);
+            final String thisTitle = localCoordinates.get(i+2);
+
+            mMap.addMarker(new MarkerOptions().position(new LatLng(Float.valueOf(thisLatitude), Float.valueOf(thisLongitude)))
+                    .title(thisTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+
         }
     }
 }
