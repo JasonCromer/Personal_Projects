@@ -1,4 +1,4 @@
-package com.dev.cromer.jason.coverme;
+package com.dev.cromer.jason.coverme.Activities;
 
 
 import android.location.Location;
@@ -10,7 +10,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.dev.cromer.jason.coverme.Logic.LocalMarkers;
 import com.dev.cromer.jason.coverme.Networking.HttpGetRequest;
+import com.dev.cromer.jason.coverme.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -114,7 +116,7 @@ public class MapActivity extends FragmentActivity implements com.google.android.
 
 
     protected void showLocation(Location mCurrentLocation) {
-        final List<String> latLngLocalPositions;
+        final int localMarkersListSize;
         final Marker mCurrentMarker;
 
         //clear previous markers
@@ -122,16 +124,14 @@ public class MapActivity extends FragmentActivity implements com.google.android.
 
         if (mCurrentLocation != null) {
 
-            latLngLocalPositions = getLocalMarkers(mCurrentLocation);       //grab local marker locations
-            if(latLngLocalPositions.size() > 1) {
-                mapLocalMarkers(latLngLocalPositions);                      // display local markers from other users
-            }
-            else {
-                Toast.makeText(getApplicationContext(), "No data available: Server is down", Toast.LENGTH_LONG).show();
-            }
+            LocalMarkers localMarkers = new LocalMarkers(mCurrentLocation, mMap);
+            localMarkers.setLocalMarkers();                                         //Set local markers based on current position
+            localMarkersListSize = localMarkers.getMarkerItemListSize();            //Get markerlist size to determine
+
+            localMarkers.mapLocalMarkers();                                     // display local markers from other users
 
 
-            Log.i("Where am I?", "Latitude: " + mCurrentLocation.getLatitude() + ", Longitude:" + mCurrentLocation.getLongitude());
+            //Map our current position
             mCurrentMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()))
                     .title("ITS ME!").draggable(true));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), 7));
@@ -158,6 +158,7 @@ public class MapActivity extends FragmentActivity implements com.google.android.
 
     @Override
     public void onLocationChanged(Location location) {
+        mMap.clear();
         showLocation(location);
     }
 
@@ -179,49 +180,6 @@ public class MapActivity extends FragmentActivity implements com.google.android.
     }
 
 
-    private List<String> getLocalMarkers(Location mCurrentLocation) {
-        List<String> markerItems = Collections.emptyList();   //Initialize as empty to return null if try-block doesn't succeed
-
-        //url to endpoint containing user's local latitude and longitude
-        final String url = "http://10.0.2.2:5000/api/get_markers/"+String.valueOf(mCurrentLocation.getLatitude())+
-                String.valueOf("/"+mCurrentLocation.getLongitude());
-
-
-        try{
-            HttpGetRequest getRequest = new HttpGetRequest();
-
-            //Returned data from API as String-list, i.e. [[item1, item2, item3,]]
-            String receivedData = getRequest.execute(url).get();
-            receivedData = receivedData.replace("[", "").replace("]", "").replace("\"", "");  //replace brackets and quotations
-            markerItems = Arrays.asList(receivedData.split("\\s*,\\s*"));                     //filter out whitespace and turn into List
-
-            return markerItems;
-        }
-        catch (ExecutionException | InterruptedException | NullPointerException e) {
-            e.printStackTrace();
-        }
-
-        //Return empty list
-        return markerItems;
-    }
-
-
-    private void mapLocalMarkers(List<String> localCoordinates) {
-        /*
-            List includes a pattern of: [latitude, longitude, Title, latitude, long...]
-            so we must assign values based on chunks of three, then iterate by 3.
-         */
-        for(int i = 0; i < localCoordinates.size(); i+=3) {
-            final String thisLatitude = localCoordinates.get(i);
-            final String thisLongitude = localCoordinates.get(i+1);
-            final String thisTitle = localCoordinates.get(i+2);
-
-            //Add new marker with the coordinates and title of each marker in the list
-            mMap.addMarker(new MarkerOptions().position(new LatLng(Float.valueOf(thisLatitude), Float.valueOf(thisLongitude)))
-                    .title(thisTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
-
-        }
-    }
 
     @Override
     public void onClick(View v) {
