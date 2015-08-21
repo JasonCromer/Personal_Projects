@@ -69,9 +69,4 @@ public class LocalMarkers {
     }
 
 
-    public int getMarkerItemListSize() {
-        return markerItemsList.size();
-    }
-
-
 }

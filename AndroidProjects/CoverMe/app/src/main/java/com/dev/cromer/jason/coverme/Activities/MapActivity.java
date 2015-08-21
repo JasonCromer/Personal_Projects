@@ -4,14 +4,11 @@ package com.dev.cromer.jason.coverme.Activities;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.dev.cromer.jason.coverme.Logic.LocalMarkers;
-import com.dev.cromer.jason.coverme.Networking.HttpGetRequest;
 import com.dev.cromer.jason.coverme.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -20,15 +17,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 
 public class MapActivity extends FragmentActivity implements com.google.android.gms.location.LocationListener,
@@ -88,6 +81,7 @@ public class MapActivity extends FragmentActivity implements com.google.android.
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.setMyLocationEnabled(true);
+        showLocation(mMap.getMyLocation());
 
     }
 
@@ -102,8 +96,6 @@ public class MapActivity extends FragmentActivity implements com.google.android.
         Location mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         showLocation(mCurrentLocation);
         startLocationUpdates();
-
-
     }
 
     @Override
@@ -116,7 +108,6 @@ public class MapActivity extends FragmentActivity implements com.google.android.
 
 
     protected void showLocation(Location mCurrentLocation) {
-        final int localMarkersListSize;
         final Marker mCurrentMarker;
 
         //clear previous markers
@@ -124,17 +115,16 @@ public class MapActivity extends FragmentActivity implements com.google.android.
 
         if (mCurrentLocation != null) {
 
+            //Set up nearby markers
             LocalMarkers localMarkers = new LocalMarkers(mCurrentLocation, mMap);
             localMarkers.setLocalMarkers();                                         //Set local markers based on current position
-            localMarkersListSize = localMarkers.getMarkerItemListSize();            //Get markerlist size to determine
-
             localMarkers.mapLocalMarkers();                                     // display local markers from other users
 
 
             //Map our current position
             mCurrentMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()))
                     .title("ITS ME!").draggable(true));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), 7));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), 10));
 
             if(mLastMarker != null) {
                 mLastMarker.setTitle("Expired!");

@@ -20,11 +20,11 @@ public class MainActivity extends AppCompatActivity implements PermissionChecker
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //requestPermissions(PERMS_ARRAY, INITIAL_REQUEST);
-        Intent mapIntent = new Intent(this, MapActivity.class);
-        mapIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(mapIntent);
-        this.finish();
+        requestPermissions(PERMS_ARRAY, INITIAL_REQUEST);
+        //Intent mapIntent = new Intent(this, MapActivity.class);
+        //mapIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //startActivity(mapIntent);
+        //this.finish();
     }
 
     @Override
