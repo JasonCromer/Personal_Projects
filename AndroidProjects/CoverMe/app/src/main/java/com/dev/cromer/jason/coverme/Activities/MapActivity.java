@@ -4,18 +4,20 @@ package com.dev.cromer.jason.coverme.Activities;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import com.dev.cromer.jason.coverme.Logic.DraggedMarker;
 import com.dev.cromer.jason.coverme.Logic.LocalMarkers;
 import com.dev.cromer.jason.coverme.Logic.PostRequestParams;
 import com.dev.cromer.jason.coverme.Networking.HttpPostRequest;
 import com.dev.cromer.jason.coverme.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,10 +31,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.concurrent.ExecutionException;
 
 
-public class MapActivity extends FragmentActivity implements com.google.android.gms.location.LocationListener,
+public class MapActivity extends FragmentActivity implements LocationListener,
                                                                 GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener,
-                                                                View.OnClickListener {
+                                                                View.OnClickListener, GoogleMap.OnMarkerDragListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private GoogleApiClient mGoogleApiClient;
@@ -41,6 +43,10 @@ public class MapActivity extends FragmentActivity implements com.google.android.
     private ImageButton postNewPinButton;
     private EditText setPinTitleText;
     private Button backMeUpButton;
+
+    static DraggedMarker currentDraggedMarker;
+    static int CAMERA_ZOOM = 10;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,39 +86,13 @@ public class MapActivity extends FragmentActivity implements com.google.android.
     }
 
 
-    /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
-     * <p/>
-     * This should only be called once and when we are sure that {@link #mMap} is not null.
-     */
+    //This should only be called once and when we are sure that mMap is not null.
     private void setUpMap() {
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.setMyLocationEnabled(true);
+        mMap.setOnMarkerDragListener(this);
         showLocation(mMap.getMyLocation());
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
-
-    }
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        Location mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        showLocation(mCurrentLocation);
-        startLocationUpdates();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
     }
 
 
@@ -133,7 +113,8 @@ public class MapActivity extends FragmentActivity implements com.google.android.
             //Map our current position
             mCurrentMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()))
                     .title("ITS ME!").draggable(true));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), 10));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())
+                    , CAMERA_ZOOM));
 
             if(mLastMarker != null) {
                 mLastMarker.setTitle("Expired!");
@@ -143,7 +124,7 @@ public class MapActivity extends FragmentActivity implements com.google.android.
 
     }
 
-
+    
     protected void startLocationUpdates() {
         LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(10000);
@@ -153,6 +134,69 @@ public class MapActivity extends FragmentActivity implements com.google.android.
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
     }
+
+
+    @Override
+    public void onClick(View v) {
+        if (v == postNewPinButton) {
+            if (setPinTitleText.getVisibility() == View.GONE) {
+                setPinTitleText.setVisibility(View.VISIBLE);
+                backMeUpButton.setVisibility(View.VISIBLE);
+
+            }
+            else if(setPinTitleText.getVisibility() == View.VISIBLE){
+                setPinTitleText.setVisibility(View.GONE);
+                backMeUpButton.setVisibility(View.GONE);
+            }
+        }
+        if(v == backMeUpButton) {
+            if(!setPinTitleText.getText().toString().isEmpty()){
+                setMarker();
+                setPinTitleText.setText("");
+            }
+        }
+    }
+
+
+    protected void setMarker() {
+        final String markerLatitude;
+        final String markerLongitude;
+        final String postRequestURL = "http://10.0.2.2:5000/api/add_marker";
+        final String markerTitle = setPinTitleText.getText().toString();
+
+        //Give draggedMarker priority, but if null, use current location
+        if(currentDraggedMarker.getDraggedLatitude() == null || currentDraggedMarker.getDraggedLongitude() == null) {
+            Location loc = mMap.getMyLocation();
+            markerLatitude = String.valueOf(loc.getLatitude());
+            markerLongitude = String.valueOf(loc.getLongitude());
+        }
+        else {
+            markerLatitude = currentDraggedMarker.getDraggedLatitude();
+            markerLongitude = currentDraggedMarker.getDraggedLongitude();
+        }
+
+        //Create params object holding all the data and a new postRequest object
+        PostRequestParams params = new PostRequestParams(postRequestURL, markerLatitude, markerLongitude, markerTitle);
+        HttpPostRequest postRequest = new HttpPostRequest();
+
+        //Post the marker and Toast the user a confirmation
+        try{
+            String receivedData = postRequest.execute(params).get();
+            Toast.makeText(getApplicationContext(), receivedData, Toast.LENGTH_SHORT).show();
+        }
+        catch (ExecutionException | InterruptedException | NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        Location myLocation = mMap.getMyLocation();
+        onLocationChanged(myLocation);
+    }
+
+
+
+    /*
+        Override Methods
+     */
 
 
     @Override
@@ -178,39 +222,41 @@ public class MapActivity extends FragmentActivity implements com.google.android.
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        Location mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        showLocation(mCurrentLocation);
+        startLocationUpdates();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+    }
 
 
     @Override
-    public void onClick(View v) {
-        if (v == postNewPinButton) {
-            if (setPinTitleText.getVisibility() == View.GONE) {
-                setPinTitleText.setVisibility(View.VISIBLE);
-                backMeUpButton.setVisibility(View.VISIBLE);
+    public void onMarkerDragStart(Marker marker) {
+    }
 
-            }
-            else if(setPinTitleText.getVisibility() == View.VISIBLE){
-                setPinTitleText.setVisibility(View.GONE);
-                backMeUpButton.setVisibility(View.GONE);
-            }
-        }
-        if(v == backMeUpButton) {
-            Log.d("TAG", "BUTTON PRESSED..................");
-            Location loc = mMap.getMyLocation();
-            String url = "http://10.0.2.2:5000/api/add_marker";
-            String lat = String.valueOf(loc.getLatitude());
-            String lng = String.valueOf(loc.getLongitude());
-            String title = setPinTitleText.getText().toString();
+    @Override
+    public void onMarkerDrag(Marker marker) {
+    }
 
-            PostRequestParams params = new PostRequestParams(url, lat, lng, title);
-            HttpPostRequest postRequest = new HttpPostRequest();
-
-            try{
-                String recievedData = postRequest.execute(params).get();
-                Log.d("RETURNED........", recievedData);
-            }
-            catch (ExecutionException | InterruptedException | NullPointerException e) {
-                e.printStackTrace();
-            }
-        }
+    @Override
+    public void onMarkerDragEnd(Marker marker) {
+        //Get dragged marker Position
+        LatLng markerPos = marker.getPosition();
+        currentDraggedMarker = new DraggedMarker(String.valueOf(markerPos.latitude),
+                String.valueOf(markerPos.longitude));
     }
 }

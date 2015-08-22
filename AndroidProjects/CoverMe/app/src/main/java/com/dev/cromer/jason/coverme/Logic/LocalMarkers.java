@@ -2,9 +2,7 @@ package com.dev.cromer.jason.coverme.Logic;
 
 
 import android.location.Location;
-import android.widget.Toast;
 
-import com.dev.cromer.jason.coverme.Activities.MapActivity;
 import com.dev.cromer.jason.coverme.Networking.HttpGetRequest;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
