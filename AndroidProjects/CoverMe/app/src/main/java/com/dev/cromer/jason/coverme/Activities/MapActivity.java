@@ -4,11 +4,15 @@ package com.dev.cromer.jason.coverme.Activities;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.dev.cromer.jason.coverme.Logic.LocalMarkers;
+import com.dev.cromer.jason.coverme.Logic.PostRequestParams;
+import com.dev.cromer.jason.coverme.Networking.HttpPostRequest;
 import com.dev.cromer.jason.coverme.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -22,6 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.concurrent.ExecutionException;
 
 
 public class MapActivity extends FragmentActivity implements com.google.android.gms.location.LocationListener,
@@ -35,6 +40,7 @@ public class MapActivity extends FragmentActivity implements com.google.android.
 
     private ImageButton postNewPinButton;
     private EditText setPinTitleText;
+    private Button backMeUpButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,9 @@ public class MapActivity extends FragmentActivity implements com.google.android.
 
         postNewPinButton = (ImageButton) findViewById(R.id.postNewPinButton);
         setPinTitleText = (EditText) findViewById(R.id.pinTitleEditText);
+        backMeUpButton = (Button) findViewById(R.id.backMeUpButton);
+
+        backMeUpButton.setOnClickListener(this);
         postNewPinButton.setOnClickListener(this);
 
         setUpMapIfNeeded();
@@ -176,9 +185,31 @@ public class MapActivity extends FragmentActivity implements com.google.android.
         if (v == postNewPinButton) {
             if (setPinTitleText.getVisibility() == View.GONE) {
                 setPinTitleText.setVisibility(View.VISIBLE);
+                backMeUpButton.setVisibility(View.VISIBLE);
+
             }
-            else {
+            else if(setPinTitleText.getVisibility() == View.VISIBLE){
                 setPinTitleText.setVisibility(View.GONE);
+                backMeUpButton.setVisibility(View.GONE);
+            }
+        }
+        if(v == backMeUpButton) {
+            Log.d("TAG", "BUTTON PRESSED..................");
+            Location loc = mMap.getMyLocation();
+            String url = "http://10.0.2.2:5000/api/add_marker";
+            String lat = String.valueOf(loc.getLatitude());
+            String lng = String.valueOf(loc.getLongitude());
+            String title = setPinTitleText.getText().toString();
+
+            PostRequestParams params = new PostRequestParams(url, lat, lng, title);
+            HttpPostRequest postRequest = new HttpPostRequest();
+
+            try{
+                String recievedData = postRequest.execute(params).get();
+                Log.d("RETURNED........", recievedData);
+            }
+            catch (ExecutionException | InterruptedException | NullPointerException e) {
+                e.printStackTrace();
             }
         }
     }

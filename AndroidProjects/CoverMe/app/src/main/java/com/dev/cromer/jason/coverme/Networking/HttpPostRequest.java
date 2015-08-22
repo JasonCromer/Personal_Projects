@@ -22,7 +22,10 @@ public class HttpPostRequest extends AsyncTask<PostRequestParams, String, String
 
     @Override
     protected String doInBackground(PostRequestParams... params) {
-        String httpURL = "lalal";
+        String httpURL = params[0].getUrl();
+        String latitude = params[0].getLatitude();
+        String longitude = params[0].getLongitude();
+        String markerTitle = params[0].getMarkerTitle();
         HttpURLConnection httpURLConnection;
         String data;
         String result = null;
@@ -41,7 +44,9 @@ public class HttpPostRequest extends AsyncTask<PostRequestParams, String, String
 
             //Create a new JSON object
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("latitude", "");
+            jsonObject.put("latitude", latitude);
+            jsonObject.put("longitude", longitude);
+            jsonObject.put("markerTitle", markerTitle);
             data = jsonObject.toString();
 
             //Write the data to an output stream
