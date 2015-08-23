@@ -50,6 +50,7 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
 
     @Override
     public void onPostExecute(String result) {
+
     }
 
 }

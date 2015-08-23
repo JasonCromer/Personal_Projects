@@ -4,6 +4,7 @@ package com.dev.cromer.jason.coverme.Activities;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +25,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -34,7 +36,7 @@ import java.util.concurrent.ExecutionException;
 public class MapActivity extends FragmentActivity implements LocationListener,
                                                                 GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener,
-                                                                View.OnClickListener, GoogleMap.OnMarkerDragListener {
+                                                                View.OnClickListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private GoogleApiClient mGoogleApiClient;
@@ -44,7 +46,7 @@ public class MapActivity extends FragmentActivity implements LocationListener,
     private EditText setPinTitleText;
     private Button backMeUpButton;
 
-    static DraggedMarker currentDraggedMarker;
+    static DraggedMarker currentDraggedMarker = null;
     static int CAMERA_ZOOM = 10;
 
 
@@ -92,6 +94,7 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.setMyLocationEnabled(true);
         mMap.setOnMarkerDragListener(this);
+        mMap.setOnMarkerClickListener(this);
         showLocation(mMap.getMyLocation());
     }
 
@@ -159,37 +162,43 @@ public class MapActivity extends FragmentActivity implements LocationListener,
 
 
     protected void setMarker() {
-        final String markerLatitude;
-        final String markerLongitude;
+        String markerLatitude = "";
+        String markerLongitude = "";
         final String postRequestURL = "http://10.0.2.2:5000/api/add_marker";
         final String markerTitle = setPinTitleText.getText().toString();
+        final Location loc = mMap.getMyLocation();
+        boolean hasLocation = false;
 
         //Give draggedMarker priority, but if null, use current location
-        if(currentDraggedMarker.getDraggedLatitude() == null || currentDraggedMarker.getDraggedLongitude() == null) {
-            Location loc = mMap.getMyLocation();
+        if(currentDraggedMarker == null && loc != null) {
             markerLatitude = String.valueOf(loc.getLatitude());
             markerLongitude = String.valueOf(loc.getLongitude());
+            hasLocation = true;
         }
-        else {
+        else if(currentDraggedMarker != null){
+            Log.d("TAG", "DRAGGED");
             markerLatitude = currentDraggedMarker.getDraggedLatitude();
             markerLongitude = currentDraggedMarker.getDraggedLongitude();
+            hasLocation = true;
         }
 
-        //Create params object holding all the data and a new postRequest object
-        PostRequestParams params = new PostRequestParams(postRequestURL, markerLatitude, markerLongitude, markerTitle);
-        HttpPostRequest postRequest = new HttpPostRequest();
+        if(hasLocation) {
+            //Create params object holding all the data and a new postRequest object
+            PostRequestParams params = new PostRequestParams(postRequestURL, markerLatitude, markerLongitude, markerTitle);
+            HttpPostRequest postRequest = new HttpPostRequest();
 
-        //Post the marker and Toast the user a confirmation
-        try{
-            String receivedData = postRequest.execute(params).get();
-            Toast.makeText(getApplicationContext(), receivedData, Toast.LENGTH_SHORT).show();
-        }
-        catch (ExecutionException | InterruptedException | NullPointerException e) {
-            e.printStackTrace();
-        }
+            //Post the marker and Toast the user a confirmation
+            try{
+                String receivedData = postRequest.execute(params).get();
+                Toast.makeText(getApplicationContext(), receivedData, Toast.LENGTH_SHORT).show();
+            }
+            catch (ExecutionException | InterruptedException | NullPointerException e) {
+                e.printStackTrace();
+            }
 
-        Location myLocation = mMap.getMyLocation();
-        onLocationChanged(myLocation);
+            Location myLocation = mMap.getMyLocation();
+            onLocationChanged(myLocation);
+        }
     }
 
 
@@ -258,5 +267,14 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         LatLng markerPos = marker.getPosition();
         currentDraggedMarker = new DraggedMarker(String.valueOf(markerPos.latitude),
                 String.valueOf(markerPos.longitude));
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        if(!marker.isDraggable()){                      //Only our icon is draggable, we don't want it faded
+            marker.setAlpha(.4f);
+        }
+
+        return false;
     }
 }
