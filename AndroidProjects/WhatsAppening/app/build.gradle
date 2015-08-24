@@ -5,7 +5,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "com.dev.cromer.jason.coverme"
+        applicationId "com.dev.cromer.jason.whatsappening"
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
