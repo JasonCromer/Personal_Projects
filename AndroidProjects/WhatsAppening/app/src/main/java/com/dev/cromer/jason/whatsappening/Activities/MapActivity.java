@@ -102,7 +102,6 @@ public class MapActivity extends FragmentActivity implements LocationListener,
     protected void showLocation(Location mCurrentLocation) {
 
         if (mCurrentLocation != null) {
-            mMap.clear();
             getNeabyMarkers(mCurrentLocation);
 
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())
@@ -224,7 +223,6 @@ public class MapActivity extends FragmentActivity implements LocationListener,
 
     @Override
     public void onLocationChanged(Location location) {
-        mMap.clear();
         showLocation(location);
     }
 
