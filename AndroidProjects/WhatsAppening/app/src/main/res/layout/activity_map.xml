@@ -54,5 +54,13 @@
         android:layout_centerHorizontal="true"
         android:visibility="gone"/>
 
+    <AutoCompleteTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Location"
+        android:gravity="center">
+        <requestFocus />
+    </AutoCompleteTextView>
+
 
 </RelativeLayout>

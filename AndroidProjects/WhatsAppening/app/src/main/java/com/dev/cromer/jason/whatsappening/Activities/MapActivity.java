@@ -236,7 +236,7 @@ public class MapActivity extends FragmentActivity implements LocationListener,
     @Override
     protected void onPause() {
         super.onPause();
-        //stop location updates
+        //stop location updates to conserve battery
         LocationServices.FusedLocationApi.removeLocationUpdates(
                 mGoogleApiClient, this);
     }
@@ -244,6 +244,7 @@ public class MapActivity extends FragmentActivity implements LocationListener,
     @Override
     public void onResume() {
         super.onResume();
+        //Resume location updates
         if (mGoogleApiClient.isConnected()) {
             setUpMapIfNeeded();
             startLocationUpdates();
