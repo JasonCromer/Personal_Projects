@@ -12,11 +12,6 @@ public class DraggedMarker {
         this.longitude = longitude;
     }
 
-    public void setDraggedCoordinates(String latitude, String longitude){
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
-
     public String getDraggedLatitude(){
         return this.latitude;
     }

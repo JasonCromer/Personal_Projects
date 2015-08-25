@@ -4,6 +4,7 @@ package com.dev.cromer.jason.whatsappening.Activities;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -162,24 +163,30 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         final Location currentLocation = mMap.getMyLocation();
         boolean hasLocation = false;
 
-
-        //Give centered marker overall priority
+        //Give centered marker first priority
         if(mLastMarker != null && currentDraggedMarker == null){
             LatLng markerLocation = mLastMarker.getPosition();
             markerLatitude = String.valueOf(markerLocation.latitude);
             markerLongitude = String.valueOf(markerLocation.longitude);
+            Log.d("TAG", "2");
+            mLastMarker.remove();
+            currentDraggedMarker = null;
             hasLocation = true;
         }
         //If dragged marker is null, and current location isn't, use current location
         else if(currentDraggedMarker == null && currentLocation != null) {
+            Log.d("TAG", "3");
             markerLatitude = String.valueOf(currentLocation.getLatitude());
             markerLongitude = String.valueOf(currentLocation.getLongitude());
             hasLocation = true;
         }
         //If dragged marker isn't null, use dragged marker location
         else if(currentDraggedMarker != null){
+            Log.d("TAG", "4");
             markerLatitude = currentDraggedMarker.getDraggedLatitude();
             markerLongitude = currentDraggedMarker.getDraggedLongitude();
+            mLastMarker.remove();
+            currentDraggedMarker = null;
             hasLocation = true;
         }
         else{
