@@ -2,25 +2,17 @@ package com.dev.cromer.jason.whatsappening.Activities;
 
 
 import android.location.Location;
-import android.media.Image;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.dev.cromer.jason.whatsappening.Logic.DraggedMarker;
 import com.dev.cromer.jason.whatsappening.Logic.LocalMarkers;
-import com.dev.cromer.jason.whatsappening.Logic.MapSearchBar.DelayAutoCompleteTextView;
-import com.dev.cromer.jason.whatsappening.Logic.MapSearchBar.GeoAutoCompleteAdapter;
-import com.dev.cromer.jason.whatsappening.Logic.MapSearchBar.GeoSearchResult;
 import com.dev.cromer.jason.whatsappening.Logic.PostRequestParams;
 import com.dev.cromer.jason.whatsappening.Networking.HttpPostRequest;
 import com.dev.cromer.jason.whatsappening.R;
@@ -44,7 +36,7 @@ import java.util.concurrent.ExecutionException;
 public class MapActivity extends FragmentActivity implements LocationListener,
                                                                 GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener,
-                                                                View.OnClickListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraChangeListener, AdapterView.OnItemClickListener, TextWatcher {
+                                                                View.OnClickListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraChangeListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private GoogleApiClient mGoogleApiClient;
@@ -57,11 +49,6 @@ public class MapActivity extends FragmentActivity implements LocationListener,
     static DraggedMarker currentDraggedMarker = null;
     static int CAMERA_ZOOM = 15;
 
-    //Search bar constants
-    private Integer THRESHOLD = 2;
-    private DelayAutoCompleteTextView geoAutoComplete;
-    private ImageView geoAutoCompleteClear;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,16 +58,7 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         postNewPinButton = (ImageButton) findViewById(R.id.postNewPinButton);
         setPinTitleText = (EditText) findViewById(R.id.pinTitleEditText);
         backMeUpButton = (Button) findViewById(R.id.backMeUpButton);
-        geoAutoCompleteClear = (ImageView) findViewById(R.id.geoAutoCompleteClear);
-        geoAutoComplete = (DelayAutoCompleteTextView) findViewById(R.id.geoAutoCompleteBar);
 
-
-        geoAutoComplete.setThreshold(THRESHOLD);
-        geoAutoComplete.setAdapter(new GeoAutoCompleteAdapter(this));
-
-        geoAutoComplete.addTextChangedListener(this);
-        geoAutoComplete.setOnItemClickListener(this);
-        geoAutoCompleteClear.setOnClickListener(this);
         backMeUpButton.setOnClickListener(this);
         postNewPinButton.setOnClickListener(this);
 
@@ -168,9 +146,6 @@ public class MapActivity extends FragmentActivity implements LocationListener,
                 setMarker();
                 setPinTitleText.setText("");
             }
-        }
-        if(v == geoAutoCompleteClear) {
-            geoAutoComplete.setText("");
         }
     }
 
@@ -345,29 +320,5 @@ public class MapActivity extends FragmentActivity implements LocationListener,
             mLastMarker.remove();
         }
         mLastMarker = mCurrentMarker;
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        GeoSearchResult result = (GeoSearchResult) parent.getItemAtPosition(position);
-        geoAutoComplete.setText(result.getAddress());
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-        if(s.length() > 0) {
-            geoAutoCompleteClear.setVisibility(View.VISIBLE);
-        }
-        else{
-            geoAutoCompleteClear.setVisibility(View.GONE);
-        }
     }
 }

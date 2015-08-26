@@ -54,33 +54,89 @@
         android:layout_centerHorizontal="true"
         android:visibility="gone"/>
 
-    <com.dev.cromer.jason.whatsappening.Logic.MapSearchBar.DelayAutoCompleteTextView
+
+
+    <!-- AutoFill settings -->
+
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/geoAutoCompleteBar"
-        android:hint="Enter Location"
-        android:imeOptions="actionSearch"
-        android:inputType="textCapSentences"
-        android:textColor="#000000"
-        android:background="#FFFFFF"
-        android:gravity="center_vertical"
-        android:padding="10dp"
-        android:dropDownWidth="wrap_content">
-        <requestFocus />
-    </com.dev.cromer.jason.whatsappening.Logic.MapSearchBar.DelayAutoCompleteTextView>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:hint="Enter Place Here"/>
 
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/autoCompleteTextView"
+        android:layout_marginTop="20dp"
+        android:text="Selected Place:"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/header"
+        android:layout_marginTop="20dp"/>
+
+    <TextView
+        android:id="@+id/address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/name"/>
+
+    <TextView
+        android:id="@+id/place_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/address"/>
+
+    <TextView
+        android:id="@+id/phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/place_id"
+        android:autoLink="phone"/>
+
+    <TextView
+        android:id="@+id/web"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/phone"
+        android:autoLink="web"/>
+
+    <TextView
+        android:id="@+id/att"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:autoLink="web"/>
 
     <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:id="@+id/geoAutoCompleteClear"
-        android:src="@drawable/ic_close_black_24dp"
-        android:foregroundGravity="center_vertical"
-        android:visibility="gone"
-        android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/postNewPinButton"
-        android:layout_alignStart="@+id/postNewPinButton"
-        android:layout_marginTop="6dp">
-    </ImageView>
+        android:id="@+id/poweredBy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/att"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/powered_by_google_light"/>
 
 </RelativeLayout>
