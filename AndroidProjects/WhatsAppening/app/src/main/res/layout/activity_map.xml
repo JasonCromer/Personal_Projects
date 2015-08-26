@@ -54,13 +54,33 @@
         android:layout_centerHorizontal="true"
         android:visibility="gone"/>
 
-    <AutoCompleteTextView
+    <com.dev.cromer.jason.whatsappening.Logic.MapSearchBar.DelayAutoCompleteTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/geoAutoCompleteBar"
         android:hint="Enter Location"
-        android:gravity="center">
+        android:imeOptions="actionSearch"
+        android:inputType="textCapSentences"
+        android:textColor="#000000"
+        android:background="#FFFFFF"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:dropDownWidth="wrap_content">
         <requestFocus />
-    </AutoCompleteTextView>
+    </com.dev.cromer.jason.whatsappening.Logic.MapSearchBar.DelayAutoCompleteTextView>
 
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/geoAutoCompleteClear"
+        android:src="@drawable/ic_close_black_24dp"
+        android:foregroundGravity="center_vertical"
+        android:visibility="gone"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/postNewPinButton"
+        android:layout_alignStart="@+id/postNewPinButton"
+        android:layout_marginTop="6dp">
+    </ImageView>
 
 </RelativeLayout>
