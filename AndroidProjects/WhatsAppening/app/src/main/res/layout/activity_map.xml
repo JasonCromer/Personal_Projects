@@ -64,79 +64,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:hint="Enter Place Here"/>
+        android:layout_marginTop="10dp"
+        android:hint="Enter Place Here"
+        android:visibility="gone"/>
 
-    <TextView
-        android:id="@+id/header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/autoCompleteTextView"
-        android:layout_marginTop="20dp"
-        android:text="Selected Place:"
-        android:textStyle="bold"/>
-
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/header"
-        android:layout_marginTop="20dp"/>
-
-    <TextView
-        android:id="@+id/address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/name"/>
-
-    <TextView
-        android:id="@+id/place_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/address"/>
-
-    <TextView
-        android:id="@+id/phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/place_id"
-        android:autoLink="phone"/>
-
-    <TextView
-        android:id="@+id/web"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/phone"
-        android:autoLink="web"/>
-
-    <TextView
-        android:id="@+id/att"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:autoLink="web"/>
 
     <ImageView
         android:id="@+id/poweredBy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/att"
-        android:layout_alignParentEnd="true"
+        android:src="@drawable/powered_by_google_light"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/powered_by_google_light"/>
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

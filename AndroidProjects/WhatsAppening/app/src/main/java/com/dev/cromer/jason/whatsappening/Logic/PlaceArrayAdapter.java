@@ -131,7 +131,7 @@ public class PlaceArrayAdapter extends ArrayAdapter<PlaceArrayAdapter.PlaceAutoc
         return filter;
     }
 
-    class PlaceAutocomplete {
+    public class PlaceAutocomplete {
 
         public CharSequence placeId;
         public CharSequence description;

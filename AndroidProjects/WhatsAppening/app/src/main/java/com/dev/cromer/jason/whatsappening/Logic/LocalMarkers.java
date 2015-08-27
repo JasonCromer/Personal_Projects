@@ -19,6 +19,7 @@ public class LocalMarkers {
     Location markerLatLngLocation;
     GoogleMap mMap;
     List<String> markerItemsList = Collections.emptyList();
+    List<String> lastMarkerItemsList = Collections.emptyList();
 
     public LocalMarkers(Location markerLatLngLocation, GoogleMap mMap) {
         this.markerLatLngLocation = markerLatLngLocation;
@@ -59,10 +60,16 @@ public class LocalMarkers {
                 final String thisLongitude = markerItemsList.get(i + 1);
                 final String thisTitle = markerItemsList.get(i + 2);
 
-                //Add new marker with the coordinates and title of each marker in the list
-                this.mMap.addMarker(new MarkerOptions().position(new LatLng(Float.valueOf(thisLatitude), Float.valueOf(thisLongitude)))
-                        .title(thisTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+                for(int j = 0; j < lastMarkerItemsList.size(); i+=3) {
+                    //Add new marker with the coordinates and title of each marker in the list
+                    this.mMap.addMarker(new MarkerOptions().position(new LatLng(Float.valueOf(thisLatitude), Float.valueOf(thisLongitude)))
+                            .title(thisTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+                }
+
+
             }
+
+            lastMarkerItemsList = markerItemsList;
         }
 
         else{
