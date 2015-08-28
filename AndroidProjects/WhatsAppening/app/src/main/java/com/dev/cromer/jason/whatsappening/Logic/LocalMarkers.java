@@ -52,7 +52,7 @@ public class LocalMarkers {
     }
 
 
-    public HashMap<MarkerOptions, Integer> mapLocalMarkers() {
+    public HashMap<MarkerOptions, Integer> getLocalMarkersList() {
         /*
             List includes a pattern of: [latitude, longitude, Title, latitude, long...]
             so we must assign values based on chunks of three, then iterate by 3.
@@ -68,7 +68,7 @@ public class LocalMarkers {
                 final MarkerOptions currentMarker = new MarkerOptions().position(new LatLng(Float.valueOf(thisLatitude),
                         Float.valueOf(thisLongitude))).title(thisTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
 
-                mMap.addMarker(currentMarker);
+                //mMap.addMarker(currentMarker);
                 markers.put(currentMarker, Integer.parseInt(thisId));
             }
 

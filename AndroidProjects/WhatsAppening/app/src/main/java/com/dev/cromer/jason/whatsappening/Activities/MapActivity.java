@@ -40,9 +40,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 
@@ -224,7 +222,9 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         else if(currentDraggedMarker != null){
             markerLatitude = currentDraggedMarker.getDraggedLatitude();
             markerLongitude = currentDraggedMarker.getDraggedLongitude();
-            //mLastMarker.remove();
+            if(mLastMarker != null){
+                mLastMarker.remove();
+            }
             currentDraggedMarker = null;
             hasLocation = true;
         }
@@ -258,12 +258,12 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         //Set up nearby markers
         LocalMarkers localMarkers = new LocalMarkers(mCurrentLocation, mMap);
         localMarkers.retrieveLocalMarkers();                                         //Set local markers based on current position
-        currentLocalMarkersHashMap = localMarkers.mapLocalMarkers();                 // display local markers from other users
-        compareNearbyMarkers(currentLocalMarkersHashMap);
+        currentLocalMarkersHashMap = localMarkers.getLocalMarkersList();                 // display local markers from other users
+        compareAndMapLocalMarkers(currentLocalMarkersHashMap);
     }
 
 
-    public void compareNearbyMarkers(HashMap<MarkerOptions, Integer> currentLocalHashMap) {
+    public void compareAndMapLocalMarkers(HashMap<MarkerOptions, Integer> currentLocalHashMap) {
         if(!currentLocalHashMap.isEmpty()){
             Iterator iterator = currentLocalHashMap.entrySet().iterator();
             while(iterator.hasNext()){
@@ -272,14 +272,22 @@ public class MapActivity extends FragmentActivity implements LocationListener,
                 HashMap.Entry<MarkerOptions, Integer> pair = (HashMap.Entry<MarkerOptions, Integer>)iterator.next();
                 final Integer currentVal = Integer.parseInt(String.valueOf(pair.getValue()));
 
-                //if GET markers don't show up in our postable hashmap, add it
+                //if GET markers don't show up in our postable hashmap, add them
                 if(!postableMarkersHashMap.containsValue(currentVal)){
                     postableMarkersHashMap.put(pair.getKey(), pair.getValue());
                     Log.d("SIZE", String.valueOf(postableMarkersHashMap.size()));
-
+                    mMap.addMarker(pair.getKey());
+                }
+                //Otherwise, delete them from the map
+                else{
+                    mMap.addMarker(pair.getKey()).remove();
                 }
                 iterator.remove();
             }
+        }
+        //If no markers in local area, clear the current list of postable markers
+        else{
+            postableMarkersHashMap.clear();
         }
 
     }
@@ -320,10 +328,10 @@ public class MapActivity extends FragmentActivity implements LocationListener,
 
     @Override
     public void onLocationChanged(Location location) {
-        showLocation(location);
         if(mLastMarker != null) {
             mLastMarker.remove();
         }
+        showLocation(location);
     }
 
     @Override
@@ -413,7 +421,7 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         //Get center of map
         LatLng center = mMap.getCameraPosition().target;
 
-        //Get nearby posted markers
+        //Get current centered location
         mCurrentMarkerLocation.setLatitude(center.latitude);
         mCurrentMarkerLocation.setLongitude(center.longitude);
 
@@ -421,15 +429,23 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         //Compare previous center marker with current one
         final double camLat = center.latitude;
         final double camLng = center.longitude;
+        
         if(lastCameraPosition != null) {
-            if((lastCameraPosition.target.latitude-1 <= camLat && camLat <= lastCameraPosition.target.latitude+1) &&
-                    (lastCameraPosition.target.longitude-1 <= camLng && camLng <= lastCameraPosition.target.longitude+1)){
+            final double latUpperBound = lastCameraPosition.target.latitude+1.5;
+            final double latLowerBound = lastCameraPosition.target.latitude-1.5;
+            final double lngUpperBound = lastCameraPosition.target.longitude+1.5;
+            final double lngLowerBound = lastCameraPosition.target.longitude-1.5;
+
+            //If camera moves within bounds, attempt to retrieve and update new markers in local area
+            if((latLowerBound <= camLat && camLat <= latUpperBound) && (lngLowerBound <= camLng && camLng <= lngUpperBound)){
                 getNearbyMarkers(mCurrentMarkerLocation);
             }
-            //If not in range of last centered marker(by 1 lat and lng), then get new markers and clear map
+            //If camera moves out of bounds then get new markers and clear map and postable markers list
             else{
                 mMap.clear();
+                postableMarkersHashMap.clear();
                 getNearbyMarkers(mCurrentMarkerLocation);
+
             }
         }
         lastCameraPosition = cameraPosition;
