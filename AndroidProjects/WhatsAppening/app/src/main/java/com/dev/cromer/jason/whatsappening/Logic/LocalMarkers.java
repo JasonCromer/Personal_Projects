@@ -2,6 +2,7 @@ package com.dev.cromer.jason.whatsappening.Logic;
 
 
 import android.location.Location;
+import android.util.Log;
 
 import com.dev.cromer.jason.whatsappening.Networking.HttpGetRequest;
 import com.google.android.gms.maps.GoogleMap;
@@ -41,7 +42,9 @@ public class LocalMarkers {
 
             //Returned data from API as String-list, i.e. [[item1, item2, item3,]]
             String receivedData = getRequest.execute(url).get();
-            receivedData = receivedData.replace("[", "").replace("]", "").replace("\"", "");            //replace brackets and quotations
+            receivedData = receivedData.replace("[", "");
+            receivedData = receivedData.replace("]", "");
+            receivedData = receivedData.replace("\"", "");            //replace brackets and quotations
             markerItemsList = Arrays.asList(receivedData.split("\\s*,\\s*"));                           //filter out whitespace and turn into List
 
         }
@@ -62,6 +65,9 @@ public class LocalMarkers {
                 final String thisLatitude = markerItemsList.get(i);
                 final String thisLongitude = markerItemsList.get(i + 1);
                 final String thisTitle = markerItemsList.get(i + 2);
+                Log.d("lat:", thisLatitude);
+                Log.d(", lng:", thisLongitude);
+                Log.d(", title:", thisTitle);
 
                 final Marker currentMarker = this.mMap.addMarker(new MarkerOptions().position(new LatLng(Float.valueOf(thisLatitude),
                         Float.valueOf(thisLongitude))).title(thisTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));

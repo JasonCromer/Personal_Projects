@@ -39,7 +39,7 @@
         android:layout_alignBottom="@+id/postNewPinButton"
         android:layout_centerHorizontal="true"
         android:visibility="gone"
-        android:maxLength="20"/>
+        android:maxLength="18"/>
 
     <Button
         android:layout_width="wrap_content"

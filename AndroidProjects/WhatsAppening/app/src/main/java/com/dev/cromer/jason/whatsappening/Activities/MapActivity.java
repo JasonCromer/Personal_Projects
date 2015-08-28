@@ -229,7 +229,7 @@ public class MapActivity extends FragmentActivity implements LocationListener,
 
         if(hasLocation) {
             //Create params object holding all the data and a new postRequest object
-            PostRequestParams params = new PostRequestParams(postRequestURL, markerLatitude, markerLongitude, markerTitle);
+            PostRequestParams params = new PostRequestParams(postRequestURL, markerLatitude, markerLongitude, markerTitle.replace(","," "));
             HttpPostRequest postRequest = new HttpPostRequest();
 
             //Post the marker and Toast the user a confirmation
@@ -393,12 +393,13 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         if(lastCameraPosition != null) {
             if((lastCameraPosition.target.latitude-1 <= camLat && camLat <= lastCameraPosition.target.latitude+1) &&
                     (lastCameraPosition.target.longitude-1 <= camLng && camLng <= lastCameraPosition.target.longitude+1)){
-                Log.d("TAG", "START PRINT NEW MARKERSSSSS");
-
+                getNearbyMarkers(mCurrentMarkerLocation);
             }
+            //If not in range of last centered marker(by 1 lat and lng), then get new markers and clear map
             else{
                 mMap.clear();
                 getNearbyMarkers(mCurrentMarkerLocation);
+                someBool = false;
             }
         }
         lastCameraPosition = cameraPosition;
