@@ -7,8 +7,10 @@ import com.dev.cromer.jason.whatsappening.Networking.HttpGetRequest;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +21,7 @@ public class LocalMarkers {
     Location markerLatLngLocation;
     GoogleMap mMap;
     List<String> markerItemsList = Collections.emptyList();
-    List<String> lastMarkerItemsList = Collections.emptyList();
+    List<Marker> markers = new ArrayList<>();
 
     public LocalMarkers(Location markerLatLngLocation, GoogleMap mMap) {
         this.markerLatLngLocation = markerLatLngLocation;
@@ -30,8 +32,8 @@ public class LocalMarkers {
     public void getLocalMarkers() {
 
         //url to endpoint containing user's local latitude and longitude
-        final String url = "http://10.0.2.2:5000/api/get_markers/"+String.valueOf(this.markerLatLngLocation.getLatitude())+
-                String.valueOf("/"+this.markerLatLngLocation.getLongitude());
+        final String url = "http://10.0.2.2:5000/api/get_markers/"+String.valueOf(markerLatLngLocation.getLatitude())+
+                String.valueOf("/"+markerLatLngLocation.getLongitude());
 
 
         try{
@@ -40,7 +42,8 @@ public class LocalMarkers {
             //Returned data from API as String-list, i.e. [[item1, item2, item3,]]
             String receivedData = getRequest.execute(url).get();
             receivedData = receivedData.replace("[", "").replace("]", "").replace("\"", "");            //replace brackets and quotations
-            this.markerItemsList = Arrays.asList(receivedData.split("\\s*,\\s*"));                     //filter out whitespace and turn into List
+            markerItemsList = Arrays.asList(receivedData.split("\\s*,\\s*"));                           //filter out whitespace and turn into List
+
         }
         catch (ExecutionException | InterruptedException | NullPointerException e) {
             e.printStackTrace();
@@ -60,21 +63,18 @@ public class LocalMarkers {
                 final String thisLongitude = markerItemsList.get(i + 1);
                 final String thisTitle = markerItemsList.get(i + 2);
 
-                for(int j = 0; j < lastMarkerItemsList.size(); i+=3) {
-                    //Add new marker with the coordinates and title of each marker in the list
-                    this.mMap.addMarker(new MarkerOptions().position(new LatLng(Float.valueOf(thisLatitude), Float.valueOf(thisLongitude)))
-                            .title(thisTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
-                }
+                final Marker currentMarker = this.mMap.addMarker(new MarkerOptions().position(new LatLng(Float.valueOf(thisLatitude),
+                        Float.valueOf(thisLongitude))).title(thisTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
 
-
+                markers.add(currentMarker);
             }
-
-            lastMarkerItemsList = markerItemsList;
         }
 
         else{
             //If no markers in radius, clear markers on map
-            mMap.clear();
+            this.mMap.clear();
         }
     }
+
+
 }

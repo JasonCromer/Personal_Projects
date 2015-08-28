@@ -54,10 +54,13 @@ public class MapActivity extends FragmentActivity implements LocationListener,
     private EditText setPinTitleText;
     private Button backMeUpButton;
     private Marker mLastMarker;
-    Marker lastOpenedMarker = null;
+    private CameraPosition lastCameraPosition = null;
+    private Marker lastOpenedMarker = null;
 
     static DraggedMarker currentDraggedMarker = null;
     static int CAMERA_ZOOM = 15;
+    boolean someBool = true;
+
 
 
     //Autofill search bar
@@ -202,24 +205,21 @@ public class MapActivity extends FragmentActivity implements LocationListener,
             LatLng markerLocation = mLastMarker.getPosition();
             markerLatitude = String.valueOf(markerLocation.latitude);
             markerLongitude = String.valueOf(markerLocation.longitude);
-            Log.d("TAG", "2");
             mLastMarker.remove();
             currentDraggedMarker = null;
             hasLocation = true;
         }
         //If dragged marker is null, and current location isn't, use current location
         else if(currentDraggedMarker == null && currentLocation != null) {
-            Log.d("TAG", "3");
             markerLatitude = String.valueOf(currentLocation.getLatitude());
             markerLongitude = String.valueOf(currentLocation.getLongitude());
             hasLocation = true;
         }
         //If dragged marker isn't null, use dragged marker location
         else if(currentDraggedMarker != null){
-            Log.d("TAG", "4");
             markerLatitude = currentDraggedMarker.getDraggedLatitude();
             markerLongitude = currentDraggedMarker.getDraggedLongitude();
-            mLastMarker.remove();
+            //mLastMarker.remove();
             currentDraggedMarker = null;
             hasLocation = true;
         }
@@ -248,13 +248,12 @@ public class MapActivity extends FragmentActivity implements LocationListener,
 
 
 
-    protected void getNearbyMarkers(Location mCurrentLocation) {
+    public void getNearbyMarkers(Location mCurrentLocation) {
         //Set up nearby markers
         LocalMarkers localMarkers = new LocalMarkers(mCurrentLocation, mMap);
         localMarkers.getLocalMarkers();                                         //Set local markers based on current position
         localMarkers.mapLocalMarkers();                                     // display local markers from other users
     }
-
 
 
 
@@ -381,15 +380,28 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         final Marker mCurrentMarker;
         final Location mCurrentMarkerLocation = new Location("CenteredMarkerLocation");
 
+
         //Get center of map
         LatLng center = mMap.getCameraPosition().target;
 
         //Get nearby posted markers
         mCurrentMarkerLocation.setLatitude(center.latitude);
         mCurrentMarkerLocation.setLongitude(center.longitude);
-        getNearbyMarkers(mCurrentMarkerLocation);
-        // TODO: create a global instance of markers, and handle them from there
 
+        final double camLat = center.latitude;
+        final double camLng = center.longitude;
+        if(lastCameraPosition != null) {
+            if((lastCameraPosition.target.latitude-1 <= camLat && camLat <= lastCameraPosition.target.latitude+1) &&
+                    (lastCameraPosition.target.longitude-1 <= camLng && camLng <= lastCameraPosition.target.longitude+1)){
+                Log.d("TAG", "START PRINT NEW MARKERSSSSS");
+
+            }
+            else{
+                mMap.clear();
+                getNearbyMarkers(mCurrentMarkerLocation);
+            }
+        }
+        lastCameraPosition = cameraPosition;
 
         //Place marker at center of map, each time the camera moves
         mCurrentMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(center.latitude, center.longitude))
