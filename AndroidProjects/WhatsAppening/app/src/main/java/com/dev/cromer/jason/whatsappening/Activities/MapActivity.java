@@ -39,6 +39,10 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 
@@ -59,7 +63,8 @@ public class MapActivity extends FragmentActivity implements LocationListener,
 
     static DraggedMarker currentDraggedMarker = null;
     static int CAMERA_ZOOM = 15;
-    boolean someBool = true;
+
+    HashMap<MarkerOptions, Integer> postableMarkersHashMap = new HashMap<>();
 
 
 
@@ -249,10 +254,34 @@ public class MapActivity extends FragmentActivity implements LocationListener,
 
 
     public void getNearbyMarkers(Location mCurrentLocation) {
+        HashMap<MarkerOptions, Integer> currentLocalMarkersHashMap;
         //Set up nearby markers
         LocalMarkers localMarkers = new LocalMarkers(mCurrentLocation, mMap);
-        localMarkers.getLocalMarkers();                                         //Set local markers based on current position
-        localMarkers.mapLocalMarkers();                                     // display local markers from other users
+        localMarkers.retrieveLocalMarkers();                                         //Set local markers based on current position
+        currentLocalMarkersHashMap = localMarkers.mapLocalMarkers();                 // display local markers from other users
+        compareNearbyMarkers(currentLocalMarkersHashMap);
+    }
+
+
+    public void compareNearbyMarkers(HashMap<MarkerOptions, Integer> currentLocalHashMap) {
+        if(!currentLocalHashMap.isEmpty()){
+            Iterator iterator = currentLocalHashMap.entrySet().iterator();
+            while(iterator.hasNext()){
+
+                @SuppressWarnings("unchecked")
+                HashMap.Entry<MarkerOptions, Integer> pair = (HashMap.Entry<MarkerOptions, Integer>)iterator.next();
+                final Integer currentVal = Integer.parseInt(String.valueOf(pair.getValue()));
+
+                //if GET markers don't show up in our postable hashmap, add it
+                if(!postableMarkersHashMap.containsValue(currentVal)){
+                    postableMarkersHashMap.put(pair.getKey(), pair.getValue());
+                    Log.d("SIZE", String.valueOf(postableMarkersHashMap.size()));
+
+                }
+                iterator.remove();
+            }
+        }
+
     }
 
 
@@ -388,6 +417,8 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         mCurrentMarkerLocation.setLatitude(center.latitude);
         mCurrentMarkerLocation.setLongitude(center.longitude);
 
+
+        //Compare previous center marker with current one
         final double camLat = center.latitude;
         final double camLng = center.longitude;
         if(lastCameraPosition != null) {
@@ -399,7 +430,6 @@ public class MapActivity extends FragmentActivity implements LocationListener,
             else{
                 mMap.clear();
                 getNearbyMarkers(mCurrentMarkerLocation);
-                someBool = false;
             }
         }
         lastCameraPosition = cameraPosition;
