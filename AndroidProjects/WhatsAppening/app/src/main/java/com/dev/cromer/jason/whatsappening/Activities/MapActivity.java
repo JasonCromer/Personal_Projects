@@ -1,12 +1,11 @@
 package com.dev.cromer.jason.whatsappening.Activities;
 
 
+import android.location.Geocoder;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,13 +20,9 @@ import com.dev.cromer.jason.whatsappening.Networking.HttpPostRequest;
 import com.dev.cromer.jason.whatsappening.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -40,22 +35,26 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
 public class MapActivity extends FragmentActivity implements LocationListener,
                                                                 GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener,
-                                                                View.OnClickListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraChangeListener, AdapterView.OnItemClickListener, OnMapReadyCallback {
+                                                                View.OnClickListener, GoogleMap.OnMarkerDragListener,
+                                                                 GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraChangeListener, OnMapReadyCallback {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private GoogleApiClient mGoogleApiClient;
 
     private ImageButton postNewPinButton;
-    private EditText setPinTitleText;
+    private EditText pinTitleEditText;
     private Button backMeUpButton;
+    private Button searchButton;
     private Marker mLastMarker;
     private CameraPosition lastCameraPosition = null;
     private Marker lastOpenedMarker = null;
@@ -68,12 +67,11 @@ public class MapActivity extends FragmentActivity implements LocationListener,
 
 
     //Autofill search bar
-    private static final String LOG_TAG = "MapActivity";
     private static final int GOOGLE_API_CLIENT_ID = 0;
-    static AutoCompleteTextView mAutocompleteTextView;
-    private PlaceArrayAdapter mPlaceArrayAdapter;
-    private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
-            new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
+    static AutoCompleteTextView AutocompleteTextView;
+    private PlaceArrayAdapter PlaceArrayAdapter;
+    private static final LatLngBounds GLOBAL_BOUNDS = new LatLngBounds(
+            new LatLng(-85.0, -180.0), new LatLng(85.0, 180.0));
 
 
     @Override
@@ -81,15 +79,15 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        mAutocompleteTextView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
+        AutocompleteTextView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
         postNewPinButton = (ImageButton) findViewById(R.id.postNewPinButton);
-        setPinTitleText = (EditText) findViewById(R.id.pinTitleEditText);
+        pinTitleEditText = (EditText) findViewById(R.id.pinTitleEditText);
         backMeUpButton = (Button) findViewById(R.id.backMeUpButton);
+        searchButton = (Button) findViewById(R.id.searchButton);
 
-
+        searchButton.setOnClickListener(this);
         backMeUpButton.setOnClickListener(this);
         postNewPinButton.setOnClickListener(this);
-        mAutocompleteTextView.setOnItemClickListener(this);
 
         //Setup the autocomplete feature and googleApiClient
         setUpGoogeApiClient();
@@ -114,11 +112,11 @@ public class MapActivity extends FragmentActivity implements LocationListener,
 
 
     private void setUpAutocompleteView() {
-        mAutocompleteTextView.setThreshold(3);
+        AutocompleteTextView.setThreshold(3);
 
-        mPlaceArrayAdapter = new PlaceArrayAdapter(this, android.R.layout.simple_list_item_1,
-                BOUNDS_MOUNTAIN_VIEW, null);
-        mAutocompleteTextView.setAdapter(mPlaceArrayAdapter);
+        PlaceArrayAdapter = new PlaceArrayAdapter(this, android.R.layout.simple_list_item_1,
+                GLOBAL_BOUNDS, null);
+        AutocompleteTextView.setAdapter(PlaceArrayAdapter);
     }
 
     private void setUpGoogeApiClient() {
@@ -162,26 +160,36 @@ public class MapActivity extends FragmentActivity implements LocationListener,
 
     @Override
     public void onClick(View v) {
-        if (v == postNewPinButton) {
-            if (setPinTitleText.getVisibility() == View.GONE) {
-                setPinTitleText.setVisibility(View.VISIBLE);
+        if (v == postNewPinButton){
+            if (pinTitleEditText.getVisibility() == View.GONE) {
+                pinTitleEditText.setVisibility(View.VISIBLE);
                 backMeUpButton.setVisibility(View.VISIBLE);
+                searchButton.setVisibility(View.VISIBLE);
+                AutocompleteTextView.setVisibility(View.VISIBLE);
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                mAutocompleteTextView.setVisibility(View.VISIBLE);
 
             }
-            else if(setPinTitleText.getVisibility() == View.VISIBLE){
-                setPinTitleText.setVisibility(View.GONE);
+            else if(pinTitleEditText.getVisibility() == View.VISIBLE){
+                pinTitleEditText.setVisibility(View.GONE);
                 backMeUpButton.setVisibility(View.GONE);
+                searchButton.setVisibility(View.GONE);
+                AutocompleteTextView.setVisibility(View.GONE);
+                AutocompleteTextView.setText("");
+
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
-                mAutocompleteTextView.setVisibility(View.GONE);
             }
         }
-        if(v == backMeUpButton) {
-            if(!setPinTitleText.getText().toString().isEmpty()){
+        if(v == backMeUpButton){
+            if(!pinTitleEditText.getText().toString().isEmpty()){
                 setMarker();
-                setPinTitleText.setText("");
-                mAutocompleteTextView.setText("");
+                pinTitleEditText.setText("");
+                AutocompleteTextView.setText("");
+            }
+        }
+        if(v == searchButton){
+            LatLng addressLatLng = getLocationFromAddress(AutocompleteTextView.getText().toString());
+            if(addressLatLng != null) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(addressLatLng,CAMERA_ZOOM));
             }
         }
     }
@@ -196,7 +204,7 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         String markerLatitude = "";
         String markerLongitude = "";
         final String postRequestURL = "http://10.0.2.2:5000/api/add_marker";
-        final String markerTitle = setPinTitleText.getText().toString();
+        final String markerTitle = pinTitleEditText.getText().toString();
         final Location currentLocation = mMap.getMyLocation();
         boolean hasLocation = false;
 
@@ -295,30 +303,27 @@ public class MapActivity extends FragmentActivity implements LocationListener,
 
 
 
+    private LatLng getLocationFromAddress(String strAddress){
+        Geocoder geocoder = new Geocoder(this);
+        final int MAX_LOCATION_RESULTS = 1;
 
-    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
-            = new ResultCallback<PlaceBuffer>() {
-        @Override
-        public void onResult(PlaceBuffer places) {
-            if (!places.getStatus().isSuccess()) {
-                Log.e(LOG_TAG, "Place query did not complete. Error: " +
-                        places.getStatus().toString());
-                return;
+        if(strAddress != null && !strAddress.isEmpty()){
+            try{
+                List<android.location.Address> addressList = geocoder.getFromLocationName(strAddress, MAX_LOCATION_RESULTS);
+                if(addressList != null && addressList.size() > 0) {
+                    double lat = addressList.get(0).getLatitude();
+                    double lng = addressList.get(0).getLongitude();
+
+                    return new LatLng(lat,lng);
+                }
             }
-            // Selecting the first object buffer.
-            final Place place = places.get(0);
-            CharSequence attributions = places.getAttributions();
-
-            //mNameTextView.setText(Html.fromHtml(place.getName() + ""));
-            //mAddressTextView.setText(Html.fromHtml(place.getAddress() + ""));
-            //mIdTextView.setText(Html.fromHtml(place.getId() + ""));
-            //mPhoneTextView.setText(Html.fromHtml(place.getPhoneNumber() + ""));
-            //mWebTextView.setText(place.getWebsiteUri() + "");
-            //if (attributions != null) {
-                //mAttTextView.setText(Html.fromHtml(attributions.toString()));
-            //}
+            catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-    };
+
+        return null;
+    }
 
 
 
@@ -372,14 +377,14 @@ public class MapActivity extends FragmentActivity implements LocationListener,
     @Override
     public void onConnected(Bundle connectionHint) {
         Location mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        mPlaceArrayAdapter.setGoogleApiClient(mGoogleApiClient);
+        PlaceArrayAdapter.setGoogleApiClient(mGoogleApiClient);
         showLocation(mCurrentLocation);
         startLocationUpdates();
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        mPlaceArrayAdapter.setGoogleApiClient(null);
+        PlaceArrayAdapter.setGoogleApiClient(null);
     }
 
     @Override
@@ -470,16 +475,5 @@ public class MapActivity extends FragmentActivity implements LocationListener,
             mLastMarker.remove();
         }
         mLastMarker = mCurrentMarker;
-    }
-
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem(position);
-        final String placeId = String.valueOf(item.placeId);
-        Log.i(LOG_TAG, "Selected: " + item.description);
-        PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
-        placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
-        Log.i(LOG_TAG, "Fetching details for ID: " + item.placeId);
     }
 }
