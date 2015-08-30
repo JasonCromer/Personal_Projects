@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:id="@+id/map"
         tools:context="com.dev.cromer.jason.whatsappening.Activities.MapActivity"
-        android:name="com.google.android.gms.maps.SupportMapFragment">
+        android:name="com.google.android.gms.maps.MapFragment">
     </fragment>
 
     <ImageButton

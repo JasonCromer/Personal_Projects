@@ -22,13 +22,13 @@ public class MainActivity extends AppCompatActivity implements PermissionChecker
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if(getApplicationContext().checkCallingOrSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
-            startIntent();
-        }
-        else {
-            requestPermissions(PERMS_ARRAY, INITIAL_REQUEST);
-        }
+        startIntent();
+        //if(getApplicationContext().checkCallingOrSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
+        //    startIntent();
+       // }
+        //else {
+        //    requestPermissions(PERMS_ARRAY, INITIAL_REQUEST);
+       // }
     }
 
     @Override
