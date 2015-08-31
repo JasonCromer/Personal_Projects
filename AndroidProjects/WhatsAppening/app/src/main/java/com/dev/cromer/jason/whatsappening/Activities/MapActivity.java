@@ -254,6 +254,8 @@ public class MapActivity extends FragmentActivity implements LocationListener,
             catch (ExecutionException | InterruptedException | NullPointerException e) {
                 e.printStackTrace();
             }
+
+            //After posting, refresh area that user posted in
             final Location postMarkerLocation = new Location("Post-Marker location");
             postMarkerLocation.setLatitude(Double.valueOf(markerLatitude));
             postMarkerLocation.setLongitude(Double.valueOf(markerLongitude));
