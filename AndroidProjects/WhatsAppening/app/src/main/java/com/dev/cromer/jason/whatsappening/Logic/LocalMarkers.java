@@ -38,12 +38,14 @@ public class LocalMarkers {
         try{
             HttpGetRequest getRequest = new HttpGetRequest();
 
-            //Returned data from API as String-list, i.e. [[item1, item2, item3,]]
+            //Returned data from API as String-list, i.e. [[item1, item2, item3, item4]]
             String receivedData = getRequest.execute(url).get();
+            //replace brackets and quotations
             receivedData = receivedData.replace("[", "");
             receivedData = receivedData.replace("]", "");
-            receivedData = receivedData.replace("\"", "");            //replace brackets and quotations
-            markerItemsList = Arrays.asList(receivedData.split("\\s*,\\s*"));                           //filter out whitespace and turn into List
+            receivedData = receivedData.replace("\"", "");
+            //filter out whitespace and turn into List
+            markerItemsList = Arrays.asList(receivedData.split("\\s*,\\s*"));
 
         }
         catch (ExecutionException | InterruptedException | NullPointerException e) {
@@ -54,11 +56,11 @@ public class LocalMarkers {
 
     public HashMap<MarkerOptions, Integer> getLocalMarkersList() {
         /*
-            List includes a pattern of: [latitude, longitude, Title, latitude, long...]
+            List includes a pattern of: [latitude, longitude, Title, ID, latitude, long...]
             so we must assign values based on chunks of three, then iterate by 3.
          */
 
-        if(markerItemsList.size() > 2) {                                            //If size is < 3, not a valid list
+        if(markerItemsList.size() > 3) {                                            //If size is < 4, not a valid list
             for(int i = 0; i < markerItemsList.size(); i+=4) {
                 final String thisLatitude = markerItemsList.get(i);
                 final String thisLongitude = markerItemsList.get(i + 1);
@@ -68,7 +70,7 @@ public class LocalMarkers {
                 final MarkerOptions currentMarker = new MarkerOptions().position(new LatLng(Float.valueOf(thisLatitude),
                         Float.valueOf(thisLongitude))).title(thisTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
 
-                //mMap.addMarker(currentMarker);
+                //Add marker to HashMap
                 markers.put(currentMarker, Integer.parseInt(thisId));
             }
 

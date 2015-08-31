@@ -131,7 +131,6 @@ public class MapActivity extends FragmentActivity implements LocationListener,
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .addApi(Places.GEO_DATA_API)
-                .enableAutoManage(this, GOOGLE_API_CLIENT_ID, this)
                 .build();
     }
 
@@ -459,8 +458,11 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         if(lastOpenedMarker != null){
             lastOpenedMarker.hideInfoWindow();
 
+            //is the marker already open
             if(lastOpenedMarker.equals(marker)){
+                //if so, nullify it
                 lastOpenedMarker = null;
+                //return true so it doesn't open again
                 return true;
             }
         }
@@ -471,7 +473,7 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         marker.showInfoWindow();
         lastOpenedMarker = marker;
 
-        return true;
+        return false;
     }
 
     @Override
