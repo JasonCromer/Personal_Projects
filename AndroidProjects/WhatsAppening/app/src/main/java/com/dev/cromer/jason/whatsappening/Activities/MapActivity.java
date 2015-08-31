@@ -1,8 +1,11 @@
 package com.dev.cromer.jason.whatsappening.Activities;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.location.Geocoder;
 import android.location.Location;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,7 +56,8 @@ public class MapActivity extends FragmentActivity implements LocationListener,
                                                                 GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener,
                                                                 View.OnClickListener, GoogleMap.OnMarkerDragListener,
-                                                                 GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraChangeListener, OnMapReadyCallback, AdapterView.OnItemClickListener {
+                                                                 GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraChangeListener,
+                                                                OnMapReadyCallback, AdapterView.OnItemClickListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private GoogleApiClient mGoogleApiClient;
@@ -131,6 +135,7 @@ public class MapActivity extends FragmentActivity implements LocationListener,
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .addApi(Places.GEO_DATA_API)
+                .enableAutoManage(this, GOOGLE_API_CLIENT_ID, this)
                 .build();
     }
 
@@ -167,6 +172,9 @@ public class MapActivity extends FragmentActivity implements LocationListener,
     public void onClick(View v) {
         if (v == postNewPinButton){
             if (pinTitleEditText.getVisibility() == View.GONE) {
+                //call our intent to add a marker title
+                Intent resultIntent = new Intent(this, PostNewMarkerActivity.class);
+                startActivityForResult(resultIntent, 0);
                 pinTitleEditText.setVisibility(View.VISIBLE);
                 setPinButton.setVisibility(View.VISIBLE);
                 autocompleteTextView.setVisibility(View.VISIBLE);
@@ -183,7 +191,8 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         }
         if(v == setPinButton){
             if(!pinTitleEditText.getText().toString().isEmpty()){
-                setMarker();
+                finish();
+                //setMarker();
                 pinTitleEditText.setText("");
                 autocompleteTextView.setText("");
                 hideSoftKeyboard();
@@ -476,6 +485,7 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         return false;
     }
 
+
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         final Marker mCurrentMarker;
@@ -531,5 +541,18 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         final String placeId = String.valueOf(item.placeId);
         PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
         placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case(0):
+                if(resultCode == Activity.RESULT_OK){
+                    String newText = data.getStringExtra("TITLE");
+                    Toast.makeText(getApplicationContext(), newText, Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
     }
 }
