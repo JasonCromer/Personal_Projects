@@ -67,7 +67,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:hint="Enter Place Here"
-        android:maxLines="1"
+        android:singleLine="true"
         android:textColor="#000000"
         android:padding="10dp"
         android:visibility="gone"/>

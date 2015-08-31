@@ -243,14 +243,21 @@ public class MapActivity extends FragmentActivity implements LocationListener,
             //Post the marker and Toast the user a confirmation
             try{
                 String receivedData = postRequest.execute(params).get();
-                Toast.makeText(getApplicationContext(), receivedData, Toast.LENGTH_SHORT).show();
+                if(receivedData.equals("Marker Posted!")){
+                    Toast.makeText(getApplicationContext(), receivedData, Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Sorry, the database is sleeping!", Toast.LENGTH_SHORT).show();
+                }
+
             }
             catch (ExecutionException | InterruptedException | NullPointerException e) {
                 e.printStackTrace();
             }
-
-            Location myLocation = mMap.getMyLocation();
-            onLocationChanged(myLocation);
+            final Location postMarkerLocation = new Location("Post-Marker location");
+            postMarkerLocation.setLatitude(Double.valueOf(markerLatitude));
+            postMarkerLocation.setLongitude(Double.valueOf(markerLongitude));
+            getNearbyMarkers(postMarkerLocation);
         }
     }
 
