@@ -3,36 +3,25 @@ package com.dev.cromer.jason.whatsappening.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.dev.cromer.jason.whatsappening.Logic.DraggedMarker;
 import com.dev.cromer.jason.whatsappening.Logic.LocalMarkers;
-import com.dev.cromer.jason.whatsappening.Logic.PlaceArrayAdapter;
 import com.dev.cromer.jason.whatsappening.Logic.PostRequestParams;
 import com.dev.cromer.jason.whatsappening.Networking.HttpPostRequest;
 import com.dev.cromer.jason.whatsappening.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -41,14 +30,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
@@ -57,7 +43,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
                                                                 GoogleApiClient.OnConnectionFailedListener,
                                                                 View.OnClickListener, GoogleMap.OnMarkerDragListener,
                                                                  GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraChangeListener,
-                                                                OnMapReadyCallback, AdapterView.OnItemClickListener {
+                                                                OnMapReadyCallback {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private GoogleApiClient mGoogleApiClient;
@@ -72,15 +58,13 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     static DraggedMarker currentDraggedMarker = null;
     static int CAMERA_ZOOM = 18;
+    private static final int GOOGLE_API_CLIENT_ID = 0;
 
     //Hashmap for storing local, non-duplicate local markers
     private HashMap<MarkerOptions, Integer> postableMarkersHashMap = new HashMap<>();
 
     //Autocomplete search bar
-    private static final int GOOGLE_API_CLIENT_ID = 0;
     static AutoCompleteTextView autocompleteTextView;
-    private PlaceArrayAdapter placeArrayAdapter;
-    private static final LatLngBounds GLOBAL_BOUNDS = new LatLngBounds(new LatLng(-85.0, -180.0), new LatLng(85.0, 180.0));
 
 
 
@@ -105,7 +89,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
         //Setup the autocomplete feature and googleApiClient
         setUpGoogeApiClient();
-        setUpAutocompleteView();
 
         //Instantiate the map
         ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
@@ -122,15 +105,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         mMap.setOnMarkerClickListener(this);
         mMap.setOnCameraChangeListener(this);
         mMap.setPadding(0, 120, 0, 0);
-    }
-
-
-    private void setUpAutocompleteView() {
-        autocompleteTextView.setThreshold(3);
-
-        placeArrayAdapter = new PlaceArrayAdapter(this, android.R.layout.simple_list_item_1,
-                GLOBAL_BOUNDS, null);
-        autocompleteTextView.setAdapter(placeArrayAdapter);
     }
 
     private void setUpGoogeApiClient() {
@@ -301,71 +275,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     }
 
 
-
-    private LatLng getLocationFromAddress(String strAddress){
-        Geocoder geocoder = new Geocoder(this);
-        final int MAX_LOCATION_RESULTS = 1;
-
-        if(strAddress != null && !strAddress.isEmpty()){
-            try{
-                List<android.location.Address> addressList = geocoder.getFromLocationName(strAddress, MAX_LOCATION_RESULTS);
-                if(addressList != null && addressList.size() > 0) {
-                    double lat = addressList.get(0).getLatitude();
-                    double lng = addressList.get(0).getLongitude();
-
-                    return new LatLng(lat,lng);
-                }
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-
-
-    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
-            = new ResultCallback<PlaceBuffer>() {
-        @Override
-        public void onResult(PlaceBuffer places) {
-            if (!places.getStatus().isSuccess()) {
-                Log.e("TAG", "Place query did not complete. Error: " +
-                        places.getStatus().toString());
-                return;
-            }
-            // Selecting the first object buffer.
-            final Place place = places.get(0);
-
-            //Get address and return a latlng location
-            final String address = String.valueOf(place.getAddress());
-            LatLng thisAddress = getLocationFromAddress(address);
-
-            if(thisAddress != null) {
-                //move camera to latlng location and clear search box
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thisAddress, CAMERA_ZOOM));
-                autocompleteTextView.setText("");
-                hideSoftKeyboard();
-            }
-
-            //mNameTextView.setText(Html.fromHtml(place.getName() + ""));
-            //mAddressTextView.setText(Html.fromHtml(place.getAddress() + ""));
-            //mIdTextView.setText(Html.fromHtml(place.getId() + ""));
-            //mPhoneTextView.setText(Html.fromHtml(place.getPhoneNumber() + ""));
-            //mWebTextView.setText(place.getWebsiteUri() + "");
-        }
-    };
-
-
-
-
-    public void hideSoftKeyboard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(autocompleteTextView.getWindowToken(), 0);
-    }
-
-
-
     /*
         Override Methods
      */
@@ -381,7 +290,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     @Override
     public void onLocationChanged(Location location) {
-        if(mLastMarker != null) {
+        if (mLastMarker != null) {
             mLastMarker.remove();
         }
         showLocation(location);
@@ -416,7 +325,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     @Override
     public void onConnected(Bundle connectionHint) {
         Location mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        placeArrayAdapter.setGoogleApiClient(mGoogleApiClient);
         showLocation(mCurrentLocation);
         startLocationUpdates();
     }
@@ -424,39 +332,12 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     @Override
     public void onConnectionSuspended(int i) {
-        placeArrayAdapter.setGoogleApiClient(null);
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
     }
 
-
-
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_post_new_marker, menu);
-        super.onCreateOptionsMenu(menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
 
 
@@ -549,14 +430,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         mLastMarker = mCurrentMarker;
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        final PlaceArrayAdapter.PlaceAutocomplete item = placeArrayAdapter.getItem(position);
-        final String placeId = String.valueOf(item.placeId);
-        PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
-        placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
-    }
-
 
     //This returns data from a previously opened activity
     @Override
@@ -570,6 +443,11 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
                     setMarker(newText);
                 }
                 break;
+            case(SEARCH_PLACE_REQ_CODE):
+                if(resultCode == Activity.RESULT_OK) {
+                    final LatLng searchedAddress = data.getParcelableExtra("SEARCHED_LOCATION");
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchedAddress, CAMERA_ZOOM));
+                }
         }
     }
 }

@@ -1,12 +1,12 @@
 package com.dev.cromer.jason.whatsappening.Activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -21,16 +21,14 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.io.IOException;
 import java.util.List;
 
-public class SearchPlaceActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-
-    static int CAMERA_ZOOM = 18;
+public class SearchPlaceActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, GoogleApiClient.ConnectionCallbacks,
+                                                                        GoogleApiClient.OnConnectionFailedListener {
 
     //Autocomplete search bar
     static GoogleApiClient mGoogleApiClient;
@@ -95,14 +93,13 @@ public class SearchPlaceActivity extends AppCompatActivity implements AdapterVie
                 //move camera to latlng location and clear search box
                 //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thisAddress, CAMERA_ZOOM));
                 autocompleteTextView.setText("");
-                //hideSoftKeyboard();
-            }
 
-            //mNameTextView.setText(Html.fromHtml(place.getName() + ""));
-            //mAddressTextView.setText(Html.fromHtml(place.getAddress() + ""));
-            //mIdTextView.setText(Html.fromHtml(place.getId() + ""));
-            //mPhoneTextView.setText(Html.fromHtml(place.getPhoneNumber() + ""));
-            //mWebTextView.setText(place.getWebsiteUri() + "");
+                //Start intent to pass latlng to map activity
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("SEARCHED_LOCATION", thisAddress);
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
+            }
         }
     };
 
@@ -141,25 +138,18 @@ public class SearchPlaceActivity extends AppCompatActivity implements AdapterVie
 
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
-    }
-
-
-    @Override
     public void onConnected(Bundle bundle) {
+        //Connect our adapter to the googleApiClient
         placeArrayAdapter.setGoogleApiClient(mGoogleApiClient);
-
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        placeArrayAdapter.setGoogleApiClient(null);
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
     }
+
 }
