@@ -1,31 +1,42 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:layout_height="match_parent"
+    android:background="#E0E0E0"
     tools:context="com.dev.cromer.jason.whatsappening.Activities.PostNewMarkerActivity">
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/markerTitleEditText"
         android:hint="Enter Title Here"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/top_bottom_border"
         android:singleLine="true"
         android:textColor="#000000"
         android:visibility="visible"
-        android:maxLength="18"
-        android:layout_gravity="center_horizontal|top" />
+        android:maxLength="18" />
 
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        android:alpha=".8"
-        android:text="Post it!"
-        android:textColor="#000000"
-        android:id="@+id/setMarkerButton"
-        android:visibility="visible"
-        android:layout_gravity="center" />
+        android:text="Last Post:"
+        android:padding="10dp"
+        android:textColor="#00BCD4"
+        android:id="@+id/cyanTitleTextView"
+        android:layout_below="@+id/markerTitleEditText"
+        android:layout_centerHorizontal="true" />
 
-</FrameLayout>
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="sdfdsf"
+        android:gravity="center"
+        android:padding="10dp"
+        android:background="@drawable/textview_border"
+        android:id="@+id/lastTitleTextView"
+        android:layout_below="@+id/cyanTitleTextView"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>

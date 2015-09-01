@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.location.Geocoder;
 import android.location.Location;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -63,8 +62,6 @@ public class MapActivity extends FragmentActivity implements LocationListener,
     private GoogleApiClient mGoogleApiClient;
 
     private ImageButton postNewPinButton;
-    private EditText pinTitleEditText;
-    private Button setPinButton;
     private Marker mLastMarker;
     private CameraPosition lastCameraPosition = null;
     private Marker lastOpenedMarker = null;
@@ -91,10 +88,7 @@ public class MapActivity extends FragmentActivity implements LocationListener,
 
         autocompleteTextView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
         postNewPinButton = (ImageButton) findViewById(R.id.postNewPinButton);
-        pinTitleEditText = (EditText) findViewById(R.id.pinTitleEditText);
-        setPinButton = (Button) findViewById(R.id.backMeUpButton);
 
-        setPinButton.setOnClickListener(this);
         postNewPinButton.setOnClickListener(this);
         autocompleteTextView.setOnItemClickListener(this);
 
@@ -171,32 +165,9 @@ public class MapActivity extends FragmentActivity implements LocationListener,
     @Override
     public void onClick(View v) {
         if (v == postNewPinButton){
-            if (pinTitleEditText.getVisibility() == View.GONE) {
-                //call our intent to add a marker title
-                Intent resultIntent = new Intent(this, PostNewMarkerActivity.class);
-                startActivityForResult(resultIntent, 0);
-                pinTitleEditText.setVisibility(View.VISIBLE);
-                setPinButton.setVisibility(View.VISIBLE);
-                autocompleteTextView.setVisibility(View.VISIBLE);
-
-            }
-            else if(pinTitleEditText.getVisibility() == View.VISIBLE){
-                pinTitleEditText.setVisibility(View.GONE);
-                setPinButton.setVisibility(View.GONE);
-                autocompleteTextView.setVisibility(View.GONE);
-                autocompleteTextView.setText("");
-                pinTitleEditText.setText("");
-                hideSoftKeyboard();
-            }
-        }
-        if(v == setPinButton){
-            if(!pinTitleEditText.getText().toString().isEmpty()){
-                finish();
-                //setMarker();
-                pinTitleEditText.setText("");
-                autocompleteTextView.setText("");
-                hideSoftKeyboard();
-            }
+            //Start intent for user to add marker title
+            Intent resultIntent = new Intent(this, PostNewMarkerActivity.class);
+            startActivityForResult(resultIntent, 0);
         }
     }
 
@@ -206,11 +177,10 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         Priority is given to the centered marker, then dragged marker, and
         lastly, the current location
      */
-    protected void setMarker() {
+    protected void setMarker(String markerTitle) {
         String markerLatitude = "";
         String markerLongitude = "";
         final String postRequestURL = "http://10.0.2.2:5000/api/add_marker";
-        final String markerTitle = pinTitleEditText.getText().toString();
         final Location currentLocation = mMap.getMyLocation();
         boolean hasLocation = false;
 
@@ -219,7 +189,9 @@ public class MapActivity extends FragmentActivity implements LocationListener,
             LatLng markerLocation = mLastMarker.getPosition();
             markerLatitude = String.valueOf(markerLocation.latitude);
             markerLongitude = String.valueOf(markerLocation.longitude);
-            mLastMarker.remove();
+            if(mLastMarker != null){
+                mLastMarker.remove();
+            }
             currentDraggedMarker = null;
             hasLocation = true;
         }
@@ -549,8 +521,9 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         switch (requestCode){
             case(0):
                 if(resultCode == Activity.RESULT_OK){
-                    String newText = data.getStringExtra("TITLE");
-                    Toast.makeText(getApplicationContext(), newText, Toast.LENGTH_SHORT).show();
+                    //Get title inputted by user in previous activity
+                    final String newText = data.getStringExtra("TITLE");
+                    setMarker(newText);
                 }
                 break;
         }
