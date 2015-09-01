@@ -67,6 +67,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     private CameraPosition lastCameraPosition = null;
     private Marker lastOpenedMarker = null;
 
+    private static final int POST_NEW_MARKER_REQ_CODE = 0;
+    private static final int SEARCH_PLACE_REQ_CODE = 1;
+
     static DraggedMarker currentDraggedMarker = null;
     static int CAMERA_ZOOM = 18;
 
@@ -96,7 +99,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         postNewPinButton = (ImageButton) findViewById(R.id.postNewPinButton);
 
         postNewPinButton.setOnClickListener(this);
-        autocompleteTextView.setOnItemClickListener(this);
+        //autocompleteTextView.setOnItemClickListener(this);
+        autocompleteTextView.setOnClickListener(this);
 
 
         //Setup the autocomplete feature and googleApiClient
@@ -117,7 +121,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         mMap.setOnMarkerDragListener(this);
         mMap.setOnMarkerClickListener(this);
         mMap.setOnCameraChangeListener(this);
-        mMap.setPadding(0,120,0,0);
+        mMap.setPadding(0, 120, 0, 0);
     }
 
 
@@ -166,7 +170,12 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         if (v == postNewPinButton){
             //Start intent for user to add marker title
             Intent resultIntent = new Intent(this, PostNewMarkerActivity.class);
-            startActivityForResult(resultIntent, 0);
+            startActivityForResult(resultIntent, POST_NEW_MARKER_REQ_CODE);
+        }
+        if(v == autocompleteTextView){
+            //Start intent for user to search a place
+            Intent searchIntent = new Intent(this, SearchPlaceActivity.class);
+            startActivityForResult(searchIntent, SEARCH_PLACE_REQ_CODE);
         }
     }
 
@@ -554,7 +563,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
-            case(0):
+            case(POST_NEW_MARKER_REQ_CODE):
                 if(resultCode == Activity.RESULT_OK){
                     //Get title inputted by user in previous activity
                     final String newText = data.getStringExtra("TITLE");
