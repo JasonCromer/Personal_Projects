@@ -5,9 +5,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.location.Geocoder;
 import android.location.Location;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -49,7 +52,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
-public class MapActivity extends FragmentActivity implements LocationListener,
+public class MapActivity extends AppCompatActivity implements LocationListener,
                                                                 GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener,
                                                                 View.OnClickListener, GoogleMap.OnMarkerDragListener,
@@ -70,8 +73,6 @@ public class MapActivity extends FragmentActivity implements LocationListener,
     //Hashmap for storing local, non-duplicate local markers
     private HashMap<MarkerOptions, Integer> postableMarkersHashMap = new HashMap<>();
 
-
-
     //Autocomplete search bar
     private static final int GOOGLE_API_CLIENT_ID = 0;
     static AutoCompleteTextView autocompleteTextView;
@@ -79,10 +80,17 @@ public class MapActivity extends FragmentActivity implements LocationListener,
     private static final LatLngBounds GLOBAL_BOUNDS = new LatLngBounds(new LatLng(-85.0, -180.0), new LatLng(85.0, 180.0));
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        //Set up the action bar
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.show();
+        }
 
         autocompleteTextView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
         postNewPinButton = (ImageButton) findViewById(R.id.postNewPinButton);
@@ -110,7 +118,6 @@ public class MapActivity extends FragmentActivity implements LocationListener,
         mMap.setOnMarkerClickListener(this);
         mMap.setOnCameraChangeListener(this);
         mMap.setPadding(0,120,0,0);
-        showLocation(mMap.getMyLocation());
     }
 
 
@@ -134,19 +141,12 @@ public class MapActivity extends FragmentActivity implements LocationListener,
 
 
     protected void showLocation(Location mCurrentLocation) {
-
         if (mCurrentLocation != null) {
             getNearbyMarkers(mCurrentLocation);
 
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())
                     ,CAMERA_ZOOM));
         }
-
-        //show centered marker
-        LatLng center = mMap.getCameraPosition().target;
-        mLastMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(center.latitude, center.longitude))
-                .draggable(true));
-
     }
 
     
@@ -207,6 +207,7 @@ public class MapActivity extends FragmentActivity implements LocationListener,
             if(mLastMarker != null){
                 mLastMarker.remove();
             }
+            //Set null to remove the dragged marker
             currentDraggedMarker = null;
             hasLocation = true;
         }
@@ -238,6 +239,10 @@ public class MapActivity extends FragmentActivity implements LocationListener,
             final Location postMarkerLocation = new Location("Post-Marker location");
             postMarkerLocation.setLatitude(Double.valueOf(markerLatitude));
             postMarkerLocation.setLongitude(Double.valueOf(markerLongitude));
+
+            //zoom to newly posted marker
+            //final LatLng postedMarkerLatLng = new LatLng(Double.valueOf(markerLatitude), Double.valueOf(markerLongitude));
+            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(postedMarkerLatLng, CAMERA_ZOOM));
             getNearbyMarkers(postMarkerLocation);
         }
     }
@@ -416,6 +421,34 @@ public class MapActivity extends FragmentActivity implements LocationListener,
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
     }
+
+
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_post_new_marker, menu);
+        super.onCreateOptionsMenu(menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
 
     @Override

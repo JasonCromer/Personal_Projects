@@ -70,11 +70,11 @@ public class PostNewMarkerActivity extends AppCompatActivity implements TextView
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        SharedPreferences preferences = this.getPreferences(Context.MODE_PRIVATE);
         if(actionId == EditorInfo.IME_ACTION_DONE) {
             if(!markerTitleEditText.getText().toString().isEmpty()){
                 //Set last title for the current activity
                 lastTitle = markerTitleEditText.getText().toString();
-                SharedPreferences preferences = this.getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("lastTitle", lastTitle);
                 editor.apply();

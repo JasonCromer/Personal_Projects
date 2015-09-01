@@ -37,11 +37,11 @@
 
         <activity
             android:name=".Activities.MapActivity"
-            android:label="@string/title_activity_map">
+            android:label="@string/app_name">
         </activity>
         <activity
             android:name=".Activities.PostNewMarkerActivity"
-            android:label="@string/title_activity_post_new_marker" >
+            android:label="@string/app_name" >
         </activity>
     </application>
 
