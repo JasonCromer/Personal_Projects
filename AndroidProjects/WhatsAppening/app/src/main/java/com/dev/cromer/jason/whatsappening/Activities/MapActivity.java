@@ -68,7 +68,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     private Marker lastOpenedMarker = null;
 
     static DraggedMarker currentDraggedMarker = null;
-    static int CAMERA_ZOOM = 15;
+    static int CAMERA_ZOOM = 18;
 
     //Hashmap for storing local, non-duplicate local markers
     private HashMap<MarkerOptions, Integer> postableMarkersHashMap = new HashMap<>();
