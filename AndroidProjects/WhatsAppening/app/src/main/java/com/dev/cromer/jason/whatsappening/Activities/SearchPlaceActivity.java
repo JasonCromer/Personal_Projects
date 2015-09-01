@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 
@@ -46,6 +47,7 @@ public class SearchPlaceActivity extends AppCompatActivity implements AdapterVie
 
         setupGoogleApiClient();
         mGoogleApiClient.connect();
+        showKeyboard();
         setUpAutocompleteView();
     }
 
@@ -58,14 +60,16 @@ public class SearchPlaceActivity extends AppCompatActivity implements AdapterVie
                 .addApi(Places.GEO_DATA_API)
                 .enableAutoManage(this, GOOGLE_API_CLIENT_ID, this)
                 .build();
-
     }
 
 
     private void setUpAutocompleteView() {
-        autocompleteTextView.setThreshold(3);
         autocompleteTextView.setOnItemClickListener(this);
 
+        //Threshold defines the number of characters the user must enter before location querying starts
+        autocompleteTextView.setThreshold(3);
+
+        //Instantiate an adapter with search bounds for global locations
         placeArrayAdapter = new PlaceArrayAdapter(this, android.R.layout.simple_list_item_1,
                 GLOBAL_BOUNDS, null);
         autocompleteTextView.setAdapter(placeArrayAdapter);
@@ -73,8 +77,7 @@ public class SearchPlaceActivity extends AppCompatActivity implements AdapterVie
 
 
 
-    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
-            = new ResultCallback<PlaceBuffer>() {
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = new ResultCallback<PlaceBuffer>() {
         @Override
         public void onResult(PlaceBuffer places) {
             if (!places.getStatus().isSuccess()) {
@@ -91,7 +94,6 @@ public class SearchPlaceActivity extends AppCompatActivity implements AdapterVie
 
             if(thisAddress != null) {
                 //move camera to latlng location and clear search box
-                //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thisAddress, CAMERA_ZOOM));
                 autocompleteTextView.setText("");
 
                 //Start intent to pass latlng to map activity
@@ -107,7 +109,7 @@ public class SearchPlaceActivity extends AppCompatActivity implements AdapterVie
 
     private LatLng getLocationFromAddress(String strAddress){
         Geocoder geocoder = new Geocoder(this);
-        final int MAX_LOCATION_RESULTS = 1;
+        final int MAX_LOCATION_RESULTS = 3;
 
         if(strAddress != null && !strAddress.isEmpty()){
             try{
@@ -126,6 +128,10 @@ public class SearchPlaceActivity extends AppCompatActivity implements AdapterVie
         return null;
     }
 
+
+    private void showKeyboard() {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+    }
 
 
     @Override

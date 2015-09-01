@@ -45,20 +45,23 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
                                                                  GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraChangeListener,
                                                                 OnMapReadyCallback {
 
-    private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    // mMap might be null if Google Play services APK is not available.
+    private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
 
+    //Map objects. Nullify objects that must not exist at activity creation
     private ImageButton postNewPinButton;
-    private Marker mLastMarker;
+    private Marker mLastMarker = null;
     private CameraPosition lastCameraPosition = null;
     private Marker lastOpenedMarker = null;
+    private DraggedMarker currentDraggedMarker = null;
 
+    //constants
+    private static final int CAMERA_ZOOM = 18;
+    private static final int GOOGLE_API_CLIENT_ID = 0;
+    private static final double LAT_LNG_OFFSET = 1.5;
     private static final int POST_NEW_MARKER_REQ_CODE = 0;
     private static final int SEARCH_PLACE_REQ_CODE = 1;
-
-    static DraggedMarker currentDraggedMarker = null;
-    static int CAMERA_ZOOM = 18;
-    private static final int GOOGLE_API_CLIENT_ID = 0;
 
     //Hashmap for storing local, non-duplicate local markers
     private HashMap<MarkerOptions, Integer> postableMarkersHashMap = new HashMap<>();
@@ -329,7 +332,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         startLocationUpdates();
     }
 
-
     @Override
     public void onConnectionSuspended(int i) {
     }
@@ -400,10 +402,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         final double camLng = center.longitude;
 
         if(lastCameraPosition != null) {
-            final double latUpperBound = lastCameraPosition.target.latitude+1.5;
-            final double latLowerBound = lastCameraPosition.target.latitude-1.5;
-            final double lngUpperBound = lastCameraPosition.target.longitude+1.5;
-            final double lngLowerBound = lastCameraPosition.target.longitude-1.5;
+            final double latUpperBound = lastCameraPosition.target.latitude+ LAT_LNG_OFFSET;
+            final double latLowerBound = lastCameraPosition.target.latitude- LAT_LNG_OFFSET;
+            final double lngUpperBound = lastCameraPosition.target.longitude+ LAT_LNG_OFFSET;
+            final double lngLowerBound = lastCameraPosition.target.longitude- LAT_LNG_OFFSET;
 
             //If camera moves within bounds, attempt to retrieve and update new markers in local area
             if((latLowerBound <= camLat && camLat <= latUpperBound) && (lngLowerBound <= camLng && camLng <= lngUpperBound)){
@@ -418,15 +420,15 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         }
         lastCameraPosition = cameraPosition;
 
+        //Remove previous marker to refrain from duplicate markers
+        if(mLastMarker != null) {
+            mLastMarker.remove();
+        }
 
         //Place marker at center of map, each time the camera moves
         mCurrentMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(center.latitude, center.longitude))
                 .draggable(true));
 
-        //Remove previous marker to refrain from duplicate markers
-        if(mLastMarker != null) {
-            mLastMarker.remove();
-        }
         mLastMarker = mCurrentMarker;
     }
 

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -34,7 +35,7 @@ public class PostNewMarkerActivity extends AppCompatActivity implements TextView
         SharedPreferences preferences = this.getPreferences(Context.MODE_PRIVATE);
         lastTitle = preferences.getString("lastTitle", "");
         setLastTitleTextView();
-
+        showKeyboard();
     }
 
 
@@ -42,6 +43,11 @@ public class PostNewMarkerActivity extends AppCompatActivity implements TextView
         lastTitleTextView.setText(lastTitle);
     }
 
+
+    private void showKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
 
 
     @Override
