@@ -86,12 +86,11 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         postNewPinButton = (ImageButton) findViewById(R.id.postNewPinButton);
 
         postNewPinButton.setOnClickListener(this);
-        //searchBarEditText.setOnItemClickListener(this);
         searchBarEditText.setOnClickListener(this);
 
 
         //Setup the autocomplete feature and googleApiClient
-        setUpGoogeApiClient();
+        setUpGoogleApiClient();
 
         //Instantiate the map
         ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
@@ -110,7 +109,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         mMap.setPadding(0, 120, 0, 0);
     }
 
-    private void setUpGoogeApiClient() {
+
+    private void setUpGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -423,9 +423,12 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
             mLastMarker.remove();
         }
 
+        //Nullify currentDraggedMarker to avoid marker posting its locationSo
+        currentDraggedMarker = null;
+
         //Place marker at center of map, each time the camera moves
         mCurrentMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(center.latitude, center.longitude))
-                .draggable(true));
+                .draggable(true).anchor(.5f, .5f));
 
         mLastMarker = mCurrentMarker;
     }
@@ -439,8 +442,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
             case(POST_NEW_MARKER_REQ_CODE):
                 if(resultCode == Activity.RESULT_OK){
                     //Get title inputted by user in previous activity
-                    final String newText = data.getStringExtra("TITLE");
-                    setMarker(newText);
+                    final String newMarkerTitle = data.getStringExtra("TITLE");
+                    setMarker(newMarkerTitle);
                 }
                 break;
             case(SEARCH_PLACE_REQ_CODE):
