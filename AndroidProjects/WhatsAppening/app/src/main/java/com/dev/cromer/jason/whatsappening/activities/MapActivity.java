@@ -1,4 +1,4 @@
-package com.dev.cromer.jason.whatsappening.Activities;
+package com.dev.cromer.jason.whatsappening.activities;
 
 
 import android.app.Activity;
@@ -8,14 +8,14 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.dev.cromer.jason.whatsappening.Logic.DraggedMarker;
-import com.dev.cromer.jason.whatsappening.Logic.LocalMarkers;
-import com.dev.cromer.jason.whatsappening.Logic.PostRequestParams;
-import com.dev.cromer.jason.whatsappening.Networking.HttpPostRequest;
+import com.dev.cromer.jason.whatsappening.logic.DraggedMarker;
+import com.dev.cromer.jason.whatsappening.logic.LocalMarkers;
+import com.dev.cromer.jason.whatsappening.logic.PostRequestParams;
+import com.dev.cromer.jason.whatsappening.networking.HttpPostRequest;
 import com.dev.cromer.jason.whatsappening.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -66,8 +66,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     //Hashmap for storing local, non-duplicate local markers
     private HashMap<MarkerOptions, Integer> postableMarkersHashMap = new HashMap<>();
 
-    //Autocomplete search bar
-    static AutoCompleteTextView autocompleteTextView;
+    //EditText search bar
+    private static EditText searchBarEditText;
 
 
 
@@ -82,12 +82,12 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
             actionBar.show();
         }
 
-        autocompleteTextView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
+        searchBarEditText = (EditText) findViewById(R.id.searchBarEditText);
         postNewPinButton = (ImageButton) findViewById(R.id.postNewPinButton);
 
         postNewPinButton.setOnClickListener(this);
-        //autocompleteTextView.setOnItemClickListener(this);
-        autocompleteTextView.setOnClickListener(this);
+        //searchBarEditText.setOnItemClickListener(this);
+        searchBarEditText.setOnClickListener(this);
 
 
         //Setup the autocomplete feature and googleApiClient
@@ -149,7 +149,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
             Intent resultIntent = new Intent(this, PostNewMarkerActivity.class);
             startActivityForResult(resultIntent, POST_NEW_MARKER_REQ_CODE);
         }
-        if(v == autocompleteTextView){
+        if(v == searchBarEditText){
             //Start intent for user to search a place
             Intent searchIntent = new Intent(this, SearchPlaceActivity.class);
             startActivityForResult(searchIntent, SEARCH_PLACE_REQ_CODE);
@@ -225,10 +225,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
             final Location postMarkerLocation = new Location("Post-Marker location");
             postMarkerLocation.setLatitude(Double.valueOf(markerLatitude));
             postMarkerLocation.setLongitude(Double.valueOf(markerLongitude));
-
-            //zoom to newly posted marker
-            //final LatLng postedMarkerLatLng = new LatLng(Double.valueOf(markerLatitude), Double.valueOf(markerLongitude));
-            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(postedMarkerLatLng, CAMERA_ZOOM));
             getNearbyMarkers(postMarkerLocation);
         }
     }
@@ -317,6 +313,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         if (mGoogleApiClient.isConnected()) {
             startLocationUpdates();
         }
+        if(lastCameraPosition != null){
+            onCameraChange(lastCameraPosition);
+        }
     }
 
     @Override
@@ -327,8 +326,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        Location mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        showLocation(mCurrentLocation);
+        //Location mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         startLocationUpdates();
     }
 
@@ -449,7 +447,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
                 if(resultCode == Activity.RESULT_OK) {
                     final LatLng searchedAddress = data.getParcelableExtra("SEARCHED_LOCATION");
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchedAddress, CAMERA_ZOOM));
+                    //call Camera change on last location so centered marker appears
+                    onCameraChange(lastCameraPosition);
                 }
+                break;
         }
     }
 }

@@ -2,13 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E0E0E0"
-    tools:context="com.dev.cromer.jason.whatsappening.Activities.PostNewMarkerActivity">
+    tools:context="com.dev.cromer.jason.whatsappening.activities.PostNewMarkerActivity">
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/markerTitleEditText"
-        android:hint="Enter Title Here"
+        android:hint="@string/marker_bar_hint"
         android:padding="10dp"
         android:layout_margin="10dp"
         android:background="@drawable/top_bottom_border"
@@ -20,7 +20,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Last Post:"
+        android:text="@string/last_post_text_view"
         android:padding="10dp"
         android:textColor="#00BCD4"
         android:id="@+id/cyanTitleTextView"
@@ -30,7 +30,7 @@
     <TextView
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="sdfdsf"
+        android:text=""
         android:gravity="center"
         android:padding="10dp"
         android:background="@drawable/textview_border"

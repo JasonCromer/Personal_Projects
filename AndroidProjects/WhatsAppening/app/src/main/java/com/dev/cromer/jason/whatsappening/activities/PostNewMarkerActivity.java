@@ -1,4 +1,4 @@
-package com.dev.cromer.jason.whatsappening.Activities;
+package com.dev.cromer.jason.whatsappening.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,8 +7,8 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -45,8 +45,7 @@ public class PostNewMarkerActivity extends AppCompatActivity implements TextView
 
 
     private void showKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
 
@@ -69,6 +68,10 @@ public class PostNewMarkerActivity extends AppCompatActivity implements TextView
                 //close this activity
                 finish();
                 return true;
+            }
+            else{
+                finish();
+                return false;
             }
         }
         return false;

@@ -1,4 +1,4 @@
-package com.dev.cromer.jason.whatsappening.Logic;
+package com.dev.cromer.jason.whatsappening.logic;
 
 
 

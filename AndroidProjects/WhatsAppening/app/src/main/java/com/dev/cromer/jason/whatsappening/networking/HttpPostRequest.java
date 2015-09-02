@@ -1,9 +1,9 @@
-package com.dev.cromer.jason.whatsappening.Networking;
+package com.dev.cromer.jason.whatsappening.networking;
 
 
 import android.os.AsyncTask;
 
-import com.dev.cromer.jason.whatsappening.Logic.PostRequestParams;
+import com.dev.cromer.jason.whatsappening.logic.PostRequestParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;

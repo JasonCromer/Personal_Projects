@@ -1,4 +1,4 @@
-package com.dev.cromer.jason.whatsappening.Networking;
+package com.dev.cromer.jason.whatsappening.networking;
 
 
 import android.os.AsyncTask;

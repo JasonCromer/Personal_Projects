@@ -1,9 +1,9 @@
-package com.dev.cromer.jason.whatsappening.Logic;
+package com.dev.cromer.jason.whatsappening.logic;
 
 
 import android.location.Location;
 
-import com.dev.cromer.jason.whatsappening.Networking.HttpGetRequest;
+import com.dev.cromer.jason.whatsappening.networking.HttpGetRequest;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;

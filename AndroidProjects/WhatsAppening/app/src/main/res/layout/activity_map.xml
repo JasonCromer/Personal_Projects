@@ -8,14 +8,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/map"
-        tools:context="com.dev.cromer.jason.whatsappening.Activities.MapActivity"
+        tools:context="com.dev.cromer.jason.whatsappening.activities.MapActivity"
         android:name="com.google.android.gms.maps.MapFragment">
     </fragment>
 
     <ImageButton
         android:layout_width="38dp"
         android:layout_height="38dp"
-        android:contentDescription="Opens pin editText and Button"
+        android:contentDescription="@string/pin_intent_button"
         android:id="@+id/postNewPinButton"
         android:src="@drawable/ic_pin_drop_black_18dp"
         android:background="@drawable/maps_new_pin_button"
@@ -31,27 +31,23 @@
         android:layout_marginTop="100dp" />
 
 
-
-    <!-- AutoFill settings -->
-
-
-    <AutoCompleteTextView
-        android:id="@+id/autoCompleteTextView"
+    <EditText
+        android:id="@+id/searchBarEditText"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:background="@drawable/textview_border"
         android:alpha=".8"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:hint="Enter Place Here"
+        android:hint="@string/search_bar_hint"
         android:singleLine="true"
         android:textColor="#000000"
-        android:padding="8dp"
-        android:visibility="visible"/>
+        android:padding="8dp" />
 
 
     <ImageView
         android:id="@+id/poweredBy"
+        android:contentDescription="@string/powered_by_google_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/powered_by_google_light"

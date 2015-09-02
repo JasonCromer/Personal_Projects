@@ -1,4 +1,4 @@
-package com.dev.cromer.jason.whatsappening.Activities;
+package com.dev.cromer.jason.whatsappening.activities;
 
 import android.content.Context;
 import android.content.Intent;
