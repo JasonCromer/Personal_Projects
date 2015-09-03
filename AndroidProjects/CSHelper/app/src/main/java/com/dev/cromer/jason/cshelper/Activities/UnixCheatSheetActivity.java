@@ -3,22 +3,19 @@ package com.dev.cromer.jason.cshelper.Activities;
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.dev.cromer.jason.cshelper.R;
 
-public class UnixCheatSheetActivity extends AppCompatActivity implements View.OnClickListener {
+public class UnixCheatSheetActivity extends AppCompatActivity {
 
     private WebView thisWebView;
-    private ImageView thisBackButton;
+    private static final String THIS_URL = "http://www.math.utah.edu/lab/unix/unix-commands.html";
 
-    static String THIS_URL = "http://www.math.utah.edu/lab/unix/unix-commands.html";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +24,6 @@ public class UnixCheatSheetActivity extends AppCompatActivity implements View.On
         setContentView(R.layout.activity_unix_cheat_sheet);
 
         thisWebView = (WebView) findViewById(R.id.unixSheetWebView);
-        thisBackButton = (ImageView) findViewById(R.id.unixSheetBackButton);
-        thisBackButton.setOnClickListener(this);
 
         initializeWebView();
     }
@@ -48,18 +43,10 @@ public class UnixCheatSheetActivity extends AppCompatActivity implements View.On
         //Handle errors loading webview
         thisWebView.setWebViewClient(new WebViewClient() {
             public void onReceivedError(WebView view, int errorCode, String description, String failingURL) {
-                Toast.makeText(thisActivity, "Oh no! " + description, Toast.LENGTH_SHORT).show();
+                Log.d("Oh no!", description);
             }
         });
 
         thisWebView.loadUrl(THIS_URL);
     }
-
-    @Override
-    public void onClick(View v) {
-        if(v == thisBackButton) {
-            finish();
-        }
-    }
-
 }
