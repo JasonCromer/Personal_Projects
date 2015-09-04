@@ -313,6 +313,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        Toast.makeText(getApplicationContext(), "Oh no! Looks like we've got some network issues.", Toast.LENGTH_SHORT).show();
     }
 
 

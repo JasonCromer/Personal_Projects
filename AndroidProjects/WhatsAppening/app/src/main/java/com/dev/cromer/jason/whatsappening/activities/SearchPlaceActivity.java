@@ -7,10 +7,14 @@ import android.location.Geocoder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dev.cromer.jason.whatsappening.logic.PlaceArrayAdapter;
 import com.dev.cromer.jason.whatsappening.R;
@@ -29,7 +33,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class SearchPlaceActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, GoogleApiClient.ConnectionCallbacks,
-                                                                        GoogleApiClient.OnConnectionFailedListener {
+                                                                        GoogleApiClient.OnConnectionFailedListener, TextView.OnEditorActionListener {
 
     //Autocomplete search bar
     static GoogleApiClient mGoogleApiClient;
@@ -65,6 +69,7 @@ public class SearchPlaceActivity extends AppCompatActivity implements AdapterVie
 
     private void setUpAutocompleteView() {
         autocompleteTextView.setOnItemClickListener(this);
+        autocompleteTextView.setOnEditorActionListener(this);
 
         //Threshold defines the number of characters the user must enter before location querying starts
         autocompleteTextView.setThreshold(3);
@@ -142,6 +147,18 @@ public class SearchPlaceActivity extends AppCompatActivity implements AdapterVie
         placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
     }
 
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if(actionId == EditorInfo.IME_ACTION_DONE){
+            if(autocompleteTextView.getText().toString().isEmpty()){
+                //close intent if user presses done on empty input
+                finish();
+                return false;
+            }
+        }
+        return false;
+    }
+
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -151,11 +168,13 @@ public class SearchPlaceActivity extends AppCompatActivity implements AdapterVie
 
     @Override
     public void onConnectionSuspended(int i) {
+        //conserve battery
         placeArrayAdapter.setGoogleApiClient(null);
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        Toast.makeText(getApplicationContext(), "Oh no! Looks like we've got some network issues.", Toast.LENGTH_SHORT).show();
     }
 
 }

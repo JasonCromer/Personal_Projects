@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements PermissionResult 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Get the shared preference (default value is false in case this is a first time)
+        //Get the shared preference (default value is false in case this is a first time user)
         SharedPreferences preferences = this.getPreferences(Context.MODE_PRIVATE);
         hasAcceptedMapAgreement = preferences.getBoolean("hasAccepted", false);
 
