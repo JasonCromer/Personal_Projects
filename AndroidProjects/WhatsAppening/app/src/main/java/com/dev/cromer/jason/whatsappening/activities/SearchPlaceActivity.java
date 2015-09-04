@@ -155,6 +155,10 @@ public class SearchPlaceActivity extends AppCompatActivity implements AdapterVie
                 finish();
                 return false;
             }
+            else{
+                //Do nothing and keep keyboard up
+                return true;
+            }
         }
         return false;
     }
