@@ -2,17 +2,18 @@ package com.dev.cromer.jason.whatsappening.activities;
 
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.dev.cromer.jason.whatsappening.logic.DraggedMarker;
 import com.dev.cromer.jason.whatsappening.logic.LocalMarkers;
 import com.dev.cromer.jason.whatsappening.logic.PostRequestParams;
 import com.dev.cromer.jason.whatsappening.networking.HttpPostRequest;
@@ -28,6 +29,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -41,20 +43,18 @@ import java.util.concurrent.ExecutionException;
 public class MapActivity extends AppCompatActivity implements LocationListener,
                                                                 GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener,
-                                                                View.OnClickListener, GoogleMap.OnMarkerDragListener,
-                                                                 GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraChangeListener,
-                                                                OnMapReadyCallback {
+                                                                View.OnClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraChangeListener,
+                                                                OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMapClickListener {
 
     // mMap might be null if Google Play services APK is not available.
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
 
     //Map objects. Nullify objects that must not exist at activity creation
-    private ImageButton postNewPinButton;
-    private Marker mLastMarker = null;
+    private Marker temporaryPlacedMarker = null;
+    private Marker temporarySearchedMarker = null;
     private CameraPosition lastCameraPosition = null;
     private Marker lastOpenedMarker = null;
-    private DraggedMarker currentDraggedMarker = null;
 
     //constants
     private static final int CAMERA_ZOOM = 18;
@@ -62,6 +62,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     private static final double LAT_LNG_OFFSET = 1.5;
     private static final int POST_NEW_MARKER_REQ_CODE = 0;
     private static final int SEARCH_PLACE_REQ_CODE = 1;
+    private static final int WAIT_IN_MILLISECONDS = 500;
 
     //Hashmap for storing local, non-duplicate local markers
     private HashMap<MarkerOptions, Integer> postableMarkersHashMap = new HashMap<>();
@@ -83,9 +84,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         }
 
         searchBarEditText = (EditText) findViewById(R.id.searchBarEditText);
-        postNewPinButton = (ImageButton) findViewById(R.id.postNewPinButton);
-
-        postNewPinButton.setOnClickListener(this);
         searchBarEditText.setOnClickListener(this);
 
 
@@ -100,13 +98,18 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     //This should only be called once and when we are sure that mMap is not null.
     private void setUpMap() {
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMap.setMyLocationEnabled(true);
-        mMap.setOnMarkerDragListener(this);
+        mMap.isBuildingsEnabled();
+
+        //For adding new markers
         mMap.setOnMarkerClickListener(this);
+        mMap.setOnMapClickListener(this);
+
+        mMap.setOnMapLongClickListener(this);
         mMap.setOnCameraChangeListener(this);
-        mMap.setPadding(0, 120, 0, 0);
     }
 
 
@@ -126,7 +129,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
             getNearbyMarkers(mCurrentLocation);
 
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())
-                    ,CAMERA_ZOOM));
+                    , CAMERA_ZOOM));
         }
     }
 
@@ -144,11 +147,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     @Override
     public void onClick(View v) {
-        if (v == postNewPinButton){
-            //Start intent for user to add marker title
-            Intent resultIntent = new Intent(this, PostNewMarkerActivity.class);
-            startActivityForResult(resultIntent, POST_NEW_MARKER_REQ_CODE);
-        }
         if(v == searchBarEditText){
             //Start intent for user to search a place
             Intent searchIntent = new Intent(this, SearchPlaceActivity.class);
@@ -157,44 +155,20 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     }
 
 
-    /* This function sets a marker at a location based on whether or not the user's
-        maker has been dragged, or if they have a current location or not.
-        Priority is given to the centered marker, then dragged marker, and
-        lastly, the current location
+    /* This function sets a marker at a location where the user has pressed and held down
+        on the map.
      */
     protected void setMarker(String markerTitle) {
         String markerLatitude = "";
         String markerLongitude = "";
         final String postRequestURL = "http://10.0.2.2:5000/api/add_marker";
-        final Location currentLocation = mMap.getMyLocation();
         boolean hasLocation = false;
 
         //Give centered marker first priority
-        if(mLastMarker != null && currentDraggedMarker == null){
-            LatLng markerLocation = mLastMarker.getPosition();
+        if(temporaryPlacedMarker != null){
+            LatLng markerLocation = temporaryPlacedMarker.getPosition();
             markerLatitude = String.valueOf(markerLocation.latitude);
             markerLongitude = String.valueOf(markerLocation.longitude);
-            if(mLastMarker != null){
-                mLastMarker.remove();
-            }
-            currentDraggedMarker = null;
-            hasLocation = true;
-        }
-        //If dragged marker is null, and current location isn't, use current location
-        else if(currentDraggedMarker == null && currentLocation != null) {
-            markerLatitude = String.valueOf(currentLocation.getLatitude());
-            markerLongitude = String.valueOf(currentLocation.getLongitude());
-            hasLocation = true;
-        }
-        //If dragged marker isn't null, use dragged marker location
-        else if(currentDraggedMarker != null){
-            markerLatitude = currentDraggedMarker.getDraggedLatitude();
-            markerLongitude = currentDraggedMarker.getDraggedLongitude();
-            if(mLastMarker != null){
-                mLastMarker.remove();
-            }
-            //Set null to remove the dragged marker
-            currentDraggedMarker = null;
             hasLocation = true;
         }
         else{
@@ -221,7 +195,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
                 e.printStackTrace();
             }
 
-            //After posting, refresh area that user posted in
+            //After posting, refresh area that user posted in and delete the temporary marker
             final Location postMarkerLocation = new Location("Post-Marker location");
             postMarkerLocation.setLatitude(Double.valueOf(markerLatitude));
             postMarkerLocation.setLongitude(Double.valueOf(markerLongitude));
@@ -274,6 +248,19 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     }
 
 
+    private void delayTitleIntent(){
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent resultIntent = new Intent(getApplicationContext(), PostNewMarkerActivity.class);
+                startActivityForResult(resultIntent, POST_NEW_MARKER_REQ_CODE);
+
+            }
+        }, WAIT_IN_MILLISECONDS);
+    }
+
+
     /*
         Override Methods
      */
@@ -289,18 +276,12 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     @Override
     public void onLocationChanged(Location location) {
-        if (mLastMarker != null) {
-            mLastMarker.remove();
-        }
         showLocation(location);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if(mLastMarker != null){
-            mLastMarker.remove();
-        }
         //stop location updates to conserve battery
         LocationServices.FusedLocationApi.removeLocationUpdates(
                 mGoogleApiClient, this);
@@ -326,7 +307,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        //Location mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         startLocationUpdates();
     }
 
@@ -340,30 +320,31 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
 
 
-
     @Override
-    public void onMarkerDragStart(Marker marker) {
+    public void onMapLongClick(LatLng latLng) {
+        //Add temporary marker so user knows they're posting one in long-clicked location
+        temporaryPlacedMarker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+
+        //Give a slight delay between intent and posted marker so user can see where they're posting
+        delayTitleIntent();
     }
 
-    @Override
-    public void onMarkerDrag(Marker marker) {
-    }
 
     @Override
-    public void onMarkerDragEnd(Marker marker) {
-        //Get dragged marker Position
-        LatLng markerPos = marker.getPosition();
-        currentDraggedMarker = new DraggedMarker(String.valueOf(markerPos.latitude),
-                String.valueOf(markerPos.longitude));
+    public void onMapClick(LatLng latLng) {
+        //Remove searched Marker
+        if(temporarySearchedMarker != null){
+            temporarySearchedMarker.remove();
+        }
     }
+
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        if(lastOpenedMarker != null){
-            lastOpenedMarker.hideInfoWindow();
+        if(lastOpenedMarker != null) {
 
             //is the marker already open
-            if(lastOpenedMarker.equals(marker)){
+            if (lastOpenedMarker.equals(marker)) {
                 //if so, nullify it
                 lastOpenedMarker = null;
                 //return true so it doesn't open again
@@ -381,11 +362,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     }
 
 
+    //This function refreshes the locally posted markers based on camera coordinates
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
-        final Marker mCurrentMarker;
         final Location mCurrentMarkerLocation = new Location("CenteredMarkerLocation");
-
 
         //Get center of map
         LatLng center = mMap.getCameraPosition().target;
@@ -411,26 +391,12 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
             }
             //If camera moves out of bounds then get new markers and clear map and postable markers list
             else{
-                mMap.clear();
+                //mMap.clear();
                 postableMarkersHashMap.clear();
                 getNearbyMarkers(mCurrentMarkerLocation);
             }
         }
         lastCameraPosition = cameraPosition;
-
-        //Remove previous marker to refrain from duplicate markers
-        if(mLastMarker != null) {
-            mLastMarker.remove();
-        }
-
-        //Nullify currentDraggedMarker to avoid marker posting its locationSo
-        currentDraggedMarker = null;
-
-        //Place marker at center of map, each time the camera moves
-        mCurrentMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(center.latitude, center.longitude))
-                .draggable(true).anchor(.5f, .5f));
-
-        mLastMarker = mCurrentMarker;
     }
 
 
@@ -440,6 +406,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case(POST_NEW_MARKER_REQ_CODE):
+                //remove temporary marker because a new one will be placed with the title
+                temporaryPlacedMarker.remove();
+
                 if(resultCode == Activity.RESULT_OK){
                     //Get title inputted by user in previous activity
                     final String newMarkerTitle = data.getStringExtra("TITLE");
@@ -450,8 +419,11 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
                 if(resultCode == Activity.RESULT_OK) {
                     final LatLng searchedAddress = data.getParcelableExtra("SEARCHED_LOCATION");
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchedAddress, CAMERA_ZOOM));
-                    //call Camera change on last location so centered marker appears
-                    onCameraChange(lastCameraPosition);
+                    if(temporarySearchedMarker != null){
+                        temporarySearchedMarker.remove();
+                    }
+                    Log.d("LATLNG", String.valueOf(searchedAddress));
+                    temporarySearchedMarker = mMap.addMarker(new MarkerOptions().position(searchedAddress).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).draggable(true));
                 }
                 break;
         }

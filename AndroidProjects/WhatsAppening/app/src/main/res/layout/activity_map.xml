@@ -12,24 +12,6 @@
         android:name="com.google.android.gms.maps.MapFragment">
     </fragment>
 
-    <ImageButton
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:contentDescription="@string/pin_intent_button"
-        android:id="@+id/postNewPinButton"
-        android:src="@drawable/ic_pin_drop_black_18dp"
-        android:background="@drawable/maps_new_pin_button"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        android:alpha=".7"
-        android:padding="5dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="100dp" />
-
 
     <EditText
         android:id="@+id/searchBarEditText"
