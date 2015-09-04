@@ -2,14 +2,12 @@ package com.dev.cromer.jason.whatsappening.activities;
 
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -55,6 +53,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     private Marker temporarySearchedMarker = null;
     private CameraPosition lastCameraPosition = null;
     private Marker lastOpenedMarker = null;
+    private boolean hasSearched = false;
+    private LatLng searchedAddress;
 
     //constants
     private static final int CAMERA_ZOOM = 18;
@@ -294,9 +294,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         if (mGoogleApiClient.isConnected()) {
             startLocationUpdates();
         }
-        if(lastCameraPosition != null){
-            onCameraChange(lastCameraPosition);
-        }
     }
 
     @Override
@@ -323,7 +320,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     @Override
     public void onMapLongClick(LatLng latLng) {
         //Add temporary marker so user knows they're posting one in long-clicked location
-        temporaryPlacedMarker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+        temporaryPlacedMarker = mMap.addMarker(new MarkerOptions().position(latLng)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
 
         //Give a slight delay between intent and posted marker so user can see where they're posting
         delayTitleIntent();
@@ -351,7 +349,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
                 return true;
             }
         }
-        if(!marker.isDraggable()){
+        if(!marker.isDraggable() && !marker.isFlat()){
             marker.setAlpha(.4f);
         }
 
@@ -365,14 +363,14 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     //This function refreshes the locally posted markers based on camera coordinates
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
-        final Location mCurrentMarkerLocation = new Location("CenteredMarkerLocation");
+        final Location currentCenteredScreenLocation = new Location("CenteredScreenLocation");
 
         //Get center of map
         LatLng center = mMap.getCameraPosition().target;
 
         //Get current centered location
-        mCurrentMarkerLocation.setLatitude(center.latitude);
-        mCurrentMarkerLocation.setLongitude(center.longitude);
+        currentCenteredScreenLocation.setLatitude(center.latitude);
+        currentCenteredScreenLocation.setLongitude(center.longitude);
 
 
         //Compare previous center marker with current one
@@ -387,14 +385,19 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
             //If camera moves within bounds, attempt to retrieve and update new markers in local area
             if((latLowerBound <= camLat && camLat <= latUpperBound) && (lngLowerBound <= camLng && camLng <= lngUpperBound)){
-                getNearbyMarkers(mCurrentMarkerLocation);
+                getNearbyMarkers(currentCenteredScreenLocation);
             }
             //If camera moves out of bounds then get new markers and clear map and postable markers list
             else{
-                //mMap.clear();
+                mMap.clear();
                 postableMarkersHashMap.clear();
-                getNearbyMarkers(mCurrentMarkerLocation);
+                getNearbyMarkers(currentCenteredScreenLocation);
             }
+        }
+
+        //If location has been searched, drop a pin at that location
+        if(hasSearched){
+            dropSearchedLocationPin();
         }
         lastCameraPosition = cameraPosition;
     }
@@ -417,15 +420,17 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
                 break;
             case(SEARCH_PLACE_REQ_CODE):
                 if(resultCode == Activity.RESULT_OK) {
-                    final LatLng searchedAddress = data.getParcelableExtra("SEARCHED_LOCATION");
+                    searchedAddress = data.getParcelableExtra("SEARCHED_LOCATION");
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchedAddress, CAMERA_ZOOM));
-                    if(temporarySearchedMarker != null){
-                        temporarySearchedMarker.remove();
-                    }
-                    Log.d("LATLNG", String.valueOf(searchedAddress));
-                    temporarySearchedMarker = mMap.addMarker(new MarkerOptions().position(searchedAddress).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).draggable(true));
+                    hasSearched = true;
                 }
                 break;
         }
+    }
+
+    private void dropSearchedLocationPin(){
+        temporarySearchedMarker = mMap.addMarker(new MarkerOptions().position(searchedAddress)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).flat(true));
+        hasSearched = false;
     }
 }

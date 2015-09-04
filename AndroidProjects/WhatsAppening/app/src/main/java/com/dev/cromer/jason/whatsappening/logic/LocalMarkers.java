@@ -79,7 +79,7 @@ public class LocalMarkers {
 
         else{
             //If no markers in radius, clear markers on map
-            this.mMap.clear();
+            //this.mMap.clear();
 
             return markers;
         }
