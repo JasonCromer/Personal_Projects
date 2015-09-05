@@ -99,10 +99,11 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     //This should only be called once and when we are sure that mMap is not null.
     private void setUpMap() {
         mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMapToolbarEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMap.isBuildingsEnabled();
+        mMap.setBuildingsEnabled(true);
 
         //For adding new markers
         mMap.setOnMarkerClickListener(this);
@@ -126,6 +127,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     protected void showLocation(Location mCurrentLocation) {
         if (mCurrentLocation != null) {
+            //Update nearby markers
             getNearbyMarkers(mCurrentLocation);
 
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())
@@ -195,7 +197,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
                 e.printStackTrace();
             }
 
-            //After posting, refresh area that user posted in and delete the temporary marker
+            //After posting, refresh area that user posted in
             final Location postMarkerLocation = new Location("Post-Marker location");
             postMarkerLocation.setLatitude(Double.valueOf(markerLatitude));
             postMarkerLocation.setLongitude(Double.valueOf(markerLongitude));
@@ -226,11 +228,13 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
                 @SuppressWarnings("unchecked")
                 HashMap.Entry<MarkerOptions, Integer> pair = (HashMap.Entry<MarkerOptions, Integer>)iterator.next();
-                final Integer currentVal = Integer.parseInt(String.valueOf(pair.getValue()));
+                //Store markerID from the current marker in the HashList
+                final Integer markerID = Integer.parseInt(String.valueOf(pair.getValue()));
 
-                //if GET markers don't show up in our postable hashmap, add them
-                if(!postableMarkersHashMap.containsValue(currentVal)){
+                //If the postable Hashmap doesn't contain the ID in the current Hashmap, add it
+                if(!postableMarkersHashMap.containsValue(markerID)){
                     postableMarkersHashMap.put(pair.getKey(), pair.getValue());
+                    //Show marker on map
                     mMap.addMarker(pair.getKey());
                 }
                 //Otherwise, delete them from the map
@@ -248,6 +252,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     }
 
 
+
+    //Delay the PostNewMarkerActivity intent for a short time, declared by the WAIT_IN_MILLISECONDS
+    //constant, so that user can see that they are putting down a marker before the intent initiates.
     private void delayTitleIntent(){
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -269,7 +276,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.getUiSettings().setMapToolbarEnabled(true);
         setUpMap();
     }
 
