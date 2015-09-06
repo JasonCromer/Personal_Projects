@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -296,9 +297,11 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("TAG", "ON RESUME");
         //Resume location updates
         if (mGoogleApiClient.isConnected()) {
             startLocationUpdates();
+            Log.d("TAG", "CONNECTED");
         }
     }
 
@@ -311,6 +314,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     @Override
     public void onConnected(Bundle connectionHint) {
         startLocationUpdates();
+        Log.d("TAG", "IS CONNECTED");
     }
 
     @Override
@@ -319,6 +323,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.d("TAG", "CONNECTION FAILED");
         Toast.makeText(getApplicationContext(), "Oh no! Looks like we've got some network issues.", Toast.LENGTH_SHORT).show();
     }
 
