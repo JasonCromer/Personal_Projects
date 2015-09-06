@@ -55,6 +55,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     private CameraPosition lastCameraPosition = null;
     private Marker lastOpenedMarker = null;
     private boolean hasSearched = false;
+    private boolean initialLocationShown = false;
     private LatLng searchedAddress;
 
     //constants
@@ -92,19 +93,18 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         setUpGoogleApiClient();
 
         //Instantiate the map
-        ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
 
 
     //This should only be called once and when we are sure that mMap is not null.
     private void setUpMap() {
+        Log.d("TAG", "..................SETTING UP MAP");
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(true);
-        mMap.getUiSettings().setCompassEnabled(true);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMap.setBuildingsEnabled(true);
 
         //For adding new markers
         mMap.setOnMarkerClickListener(this);
@@ -129,7 +129,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     protected void showLocation(Location mCurrentLocation) {
         if (mCurrentLocation != null) {
             //Update nearby markers
-            getNearbyMarkers(mCurrentLocation);
+            //getNearbyMarkers(mCurrentLocation);
 
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())
                     , CAMERA_ZOOM));
@@ -202,7 +202,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
             final Location postMarkerLocation = new Location("Post-Marker location");
             postMarkerLocation.setLatitude(Double.valueOf(markerLatitude));
             postMarkerLocation.setLongitude(Double.valueOf(markerLongitude));
-            getNearbyMarkers(postMarkerLocation);
+            //getNearbyMarkers(postMarkerLocation);
         }
     }
 
@@ -283,7 +283,11 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     @Override
     public void onLocationChanged(Location location) {
-        showLocation(location);
+        Log.d("TAG", "............LOCATION CHANGED");
+        if(!initialLocationShown){
+            showLocation(location);
+            initialLocationShown = true;
+        }
     }
 
     @Override
@@ -308,6 +312,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d("TAG", "......................ON START");
         mGoogleApiClient.connect();
     }
 
@@ -397,13 +402,13 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
             //If camera moves within bounds, attempt to retrieve and update new markers in local area
             if((latLowerBound <= camLat && camLat <= latUpperBound) && (lngLowerBound <= camLng && camLng <= lngUpperBound)){
-                getNearbyMarkers(currentCenteredScreenLocation);
+                //getNearbyMarkers(currentCenteredScreenLocation);
             }
             //If camera moves out of bounds then get new markers and clear map and postable markers list
             else{
                 mMap.clear();
                 postableMarkersHashMap.clear();
-                getNearbyMarkers(currentCenteredScreenLocation);
+                //getNearbyMarkers(currentCenteredScreenLocation);
             }
         }
 
@@ -427,7 +432,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
                 if(resultCode == Activity.RESULT_OK){
                     //Get title inputted by user in previous activity
                     final String newMarkerTitle = data.getStringExtra("TITLE");
-                    setMarker(newMarkerTitle);
+                    //setMarker(newMarkerTitle);
                 }
                 break;
             case(SEARCH_PLACE_REQ_CODE):

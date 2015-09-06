@@ -23,7 +23,9 @@ public class MainActivity extends AppCompatActivity implements PermissionResult 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        startIntent();
 
+        /*
         //Get the shared preference (default value is false in case this is a first time user)
         SharedPreferences preferences = this.getPreferences(Context.MODE_PRIVATE);
         hasAcceptedMapAgreement = preferences.getBoolean("hasAccepted", false);
@@ -33,7 +35,9 @@ public class MainActivity extends AppCompatActivity implements PermissionResult 
         }
         else {
             requestPermissions(PERMS_ARRAY, INITIAL_REQUEST);
+            startIntent();
         }
+        */
     }
 
     @Override

@@ -8,8 +8,8 @@ android {
         applicationId "com.dev.cromer.jason.whatsappening"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.001"
+        versionCode 3
+        versionName "1.003"
     }
     buildTypes {
         release {
