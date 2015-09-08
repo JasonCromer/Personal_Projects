@@ -129,7 +129,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     protected void showLocation(Location mCurrentLocation) {
         if (mCurrentLocation != null) {
             //Update nearby markers
-            //getNearbyMarkers(mCurrentLocation);
+            getNearbyMarkers(mCurrentLocation);
 
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())
                     , CAMERA_ZOOM));
@@ -164,7 +164,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     protected void setMarker(String markerTitle) {
         String markerLatitude = "";
         String markerLongitude = "";
-        final String postRequestURL = "http://10.0.2.2:5000/api/add_marker";
+        final String postRequestURL = "whatsappeningmarkerapi.elasticbeanstalk.com/api/add_marker";
         boolean hasLocation = false;
 
         //Give centered marker first priority
@@ -202,7 +202,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
             final Location postMarkerLocation = new Location("Post-Marker location");
             postMarkerLocation.setLatitude(Double.valueOf(markerLatitude));
             postMarkerLocation.setLongitude(Double.valueOf(markerLongitude));
-            //getNearbyMarkers(postMarkerLocation);
+            getNearbyMarkers(postMarkerLocation);
         }
     }
 
@@ -402,13 +402,13 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
             //If camera moves within bounds, attempt to retrieve and update new markers in local area
             if((latLowerBound <= camLat && camLat <= latUpperBound) && (lngLowerBound <= camLng && camLng <= lngUpperBound)){
-                //getNearbyMarkers(currentCenteredScreenLocation);
+                getNearbyMarkers(currentCenteredScreenLocation);
             }
             //If camera moves out of bounds then get new markers and clear map and postable markers list
             else{
                 mMap.clear();
                 postableMarkersHashMap.clear();
-                //getNearbyMarkers(currentCenteredScreenLocation);
+                getNearbyMarkers(currentCenteredScreenLocation);
             }
         }
 
@@ -432,7 +432,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
                 if(resultCode == Activity.RESULT_OK){
                     //Get title inputted by user in previous activity
                     final String newMarkerTitle = data.getStringExtra("TITLE");
-                    //setMarker(newMarkerTitle);
+                    setMarker(newMarkerTitle);
                 }
                 break;
             case(SEARCH_PLACE_REQ_CODE):
