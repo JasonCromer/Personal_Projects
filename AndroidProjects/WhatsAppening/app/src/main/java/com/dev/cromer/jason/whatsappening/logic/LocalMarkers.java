@@ -31,7 +31,7 @@ public class LocalMarkers {
     public void retrieveLocalMarkers() {
 
         //url to endpoint containing user's local latitude and longitude
-        final String url = "whatsappeningmarkerapi.elasticbeanstalk.com/api/get_markers/"+String.valueOf(markerLatLngLocation.getLatitude())+
+        final String url = "http://whatsappeningmarkerapi.elasticbeanstalk.com/api/get_markers/"+String.valueOf(markerLatLngLocation.getLatitude())+
                 String.valueOf("/"+markerLatLngLocation.getLongitude());
 
 
@@ -41,11 +41,13 @@ public class LocalMarkers {
             //Returned data from API as String-list, i.e. [[item1, item2, item3, item4]]
             String receivedData = getRequest.execute(url).get();
             //replace brackets and quotations
-            receivedData = receivedData.replace("[", "");
-            receivedData = receivedData.replace("]", "");
-            receivedData = receivedData.replace("\"", "");
-            //filter out whitespace and turn into List
-            markerItemsList = Arrays.asList(receivedData.split("\\s*,\\s*"));
+            if(receivedData != null) {
+                receivedData = receivedData.replace("[", "");
+                receivedData = receivedData.replace("]", "");
+                receivedData = receivedData.replace("\"", "");
+                //filter out whitespace and turn into List
+                markerItemsList = Arrays.asList(receivedData.split("\\s*,\\s*"));
+            }
 
         }
         catch (ExecutionException | InterruptedException | NullPointerException e) {

@@ -101,7 +101,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     //This should only be called once and when we are sure that mMap is not null.
     private void setUpMap() {
-        Log.d("TAG", "..................SETTING UP MAP");
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -128,11 +127,15 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     protected void showLocation(Location mCurrentLocation) {
         if (mCurrentLocation != null) {
+            if(!initialLocationShown){
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())
+                        , CAMERA_ZOOM));
+
+                initialLocationShown = true;
+            }
+
             //Update nearby markers
             getNearbyMarkers(mCurrentLocation);
-
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())
-                    , CAMERA_ZOOM));
         }
     }
 
@@ -164,7 +167,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     protected void setMarker(String markerTitle) {
         String markerLatitude = "";
         String markerLongitude = "";
-        final String postRequestURL = "whatsappeningmarkerapi.elasticbeanstalk.com/api/add_marker";
+        final String postRequestURL = "http://whatsappeningmarkerapi.elasticbeanstalk.com/api/add_marker";
         boolean hasLocation = false;
 
         //Give centered marker first priority
@@ -202,6 +205,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
             final Location postMarkerLocation = new Location("Post-Marker location");
             postMarkerLocation.setLatitude(Double.valueOf(markerLatitude));
             postMarkerLocation.setLongitude(Double.valueOf(markerLongitude));
+            Log.d("TAG", markerLatitude + ", " + markerLongitude);
             getNearbyMarkers(postMarkerLocation);
         }
     }
@@ -283,11 +287,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d("TAG", "............LOCATION CHANGED");
-        if(!initialLocationShown){
-            showLocation(location);
-            initialLocationShown = true;
-        }
+        showLocation(location);
     }
 
     @Override
@@ -301,25 +301,21 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("TAG", "ON RESUME");
         //Resume location updates
         if (mGoogleApiClient.isConnected()) {
             startLocationUpdates();
-            Log.d("TAG", "CONNECTED");
         }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d("TAG", "......................ON START");
         mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnected(Bundle connectionHint) {
         startLocationUpdates();
-        Log.d("TAG", "IS CONNECTED");
     }
 
     @Override
@@ -328,7 +324,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d("TAG", "CONNECTION FAILED");
         Toast.makeText(getApplicationContext(), "Oh no! Looks like we've got some network issues.", Toast.LENGTH_SHORT).show();
     }
 
