@@ -175,6 +175,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
             LatLng markerLocation = temporaryPlacedMarker.getPosition();
             markerLatitude = String.valueOf(markerLocation.latitude);
             markerLongitude = String.valueOf(markerLocation.longitude);
+
+            //remove temporary marker because a new one will be placed with the title
+            temporaryPlacedMarker.remove();
+
             hasLocation = true;
         }
         else{
@@ -421,8 +425,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case(POST_NEW_MARKER_REQ_CODE):
-                //remove temporary marker because a new one will be placed with the title
-                temporaryPlacedMarker.remove();
 
                 if(resultCode == Activity.RESULT_OK){
                     //Get title inputted by user in previous activity
@@ -430,6 +432,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
                     setMarker(newMarkerTitle);
                 }
                 break;
+
             case(SEARCH_PLACE_REQ_CODE):
                 if(resultCode == Activity.RESULT_OK) {
                     searchedAddress = data.getParcelableExtra("SEARCHED_LOCATION");
