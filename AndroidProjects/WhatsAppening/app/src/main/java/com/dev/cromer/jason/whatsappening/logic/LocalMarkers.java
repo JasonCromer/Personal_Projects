@@ -31,7 +31,7 @@ public class LocalMarkers {
     public void retrieveLocalMarkers() {
 
         //url to endpoint containing user's local latitude and longitude
-        final String url = "http://whatsappeningapi.elasticbeanstalk.com/api/get_markers/"+String.valueOf(markerLatLngLocation.getLatitude())+
+        final String url = "http://whatsappeningapi-production.elasticbeanstalk.com/api/get_markers/"+String.valueOf(markerLatLngLocation.getLatitude())+
                 String.valueOf("/"+markerLatLngLocation.getLongitude());
 
 

@@ -167,7 +167,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     protected void setMarker(String markerTitle, String markerDescription) {
         String markerLatitude = "";
         String markerLongitude = "";
-        final String postRequestURL = "http://whatsappeningapi.elasticbeanstalk.com/api/add_marker";
+        final String postRequestURL = "http://whatsappeningapi-production.elasticbeanstalk.com/api/add_marker";
         boolean hasLocation = false;
 
         //Give centered marker first priority
