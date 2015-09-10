@@ -68,6 +68,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     //Hashmap for storing local, non-duplicate local markers
     private HashMap<MarkerOptions, Integer> postableMarkersHashMap = new HashMap<>();
+    private HashMap<String, Integer> markerIDHashMap = new HashMap<>();
 
     //EditText search bar
     private static EditText searchBarEditText;
@@ -167,7 +168,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     protected void setMarker(String markerTitle, String markerDescription) {
         String markerLatitude = "";
         String markerLongitude = "";
-        final String postRequestURL = "http://whatsappeningapi-production.elasticbeanstalk.com/api/add_marker";
+        final String postRequestURL = "http://whatsappeningapi.elasticbeanstalk.com/api/add_marker";
         boolean hasLocation = false;
 
         //Give centered marker first priority
@@ -239,12 +240,13 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
                 //If the postable Hashmap doesn't contain the ID in the current Hashmap, add it
                 if(!postableMarkersHashMap.containsValue(markerID)){
                     postableMarkersHashMap.put(pair.getKey(), pair.getValue());
-                    //Show marker on map
-                    mMap.addMarker(pair.getKey());
-                }
-                //Otherwise, delete them from the map
-                else{
-                    mMap.addMarker(pair.getKey()).remove();
+
+                    //Add marker to map (the Key of the Hashmap is the marker object)
+                    Marker mappedMarker = mMap.addMarker(pair.getKey());
+
+                    //Add google map's marker id with database ID to Hashmap
+                    markerIDHashMap.put(mappedMarker.getId(), markerID);
+
                 }
                 iterator.remove();
             }
@@ -351,13 +353,15 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     @Override
     public boolean onMarkerClick(Marker marker) {
+
         if(lastOpenedMarker != null) {
 
             //is the marker already open
             if (lastOpenedMarker.equals(marker)) {
+                Log.d("CLICKED ID: ", String.valueOf(markerIDHashMap.get(marker.getId())));
                 //if so, nullify it
                 lastOpenedMarker = null;
-                //return true so it doesn't open again
+                //return true to close info window
                 return true;
             }
         }

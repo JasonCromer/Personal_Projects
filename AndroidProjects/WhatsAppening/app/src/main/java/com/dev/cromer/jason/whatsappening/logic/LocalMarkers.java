@@ -31,7 +31,7 @@ public class LocalMarkers {
     public void retrieveLocalMarkers() {
 
         //url to endpoint containing user's local latitude and longitude
-        final String url = "http://whatsappeningapi-production.elasticbeanstalk.com/api/get_markers/"+String.valueOf(markerLatLngLocation.getLatitude())+
+        final String url = "http://whatsappeningapi.elasticbeanstalk.com/api/get_markers/"+String.valueOf(markerLatLngLocation.getLatitude())+
                 String.valueOf("/"+markerLatLngLocation.getLongitude());
 
 
@@ -62,16 +62,15 @@ public class LocalMarkers {
             so we must assign values based on chunks of three, then iterate by 3.
          */
 
-        if(markerItemsList.size() > 4) {                                            //If size is not greater than 4, its not a valid list
-            for(int i = 0; i < markerItemsList.size(); i+=5) {
+        if(markerItemsList.size() > 3) {                                            //If size is not greater than 3, its not a valid list
+            for(int i = 0; i < markerItemsList.size(); i+=4) {
                 final String thisLatitude = markerItemsList.get(i);
                 final String thisLongitude = markerItemsList.get(i + 1);
                 final String thisTitle = markerItemsList.get(i + 2);
                 final String thisId = markerItemsList.get(i + 3);
-                final String thisDescription = markerItemsList.get(i + 4);
 
                 final MarkerOptions currentMarker = new MarkerOptions().position(new LatLng(Float.valueOf(thisLatitude),
-                        Float.valueOf(thisLongitude))).snippet(thisDescription).title(thisTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+                        Float.valueOf(thisLongitude))).title(thisTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
 
                 //Add marker to HashMap
                 markers.put(currentMarker, Integer.parseInt(thisId));
@@ -87,6 +86,7 @@ public class LocalMarkers {
             return markers;
         }
     }
+
 
 
 }
