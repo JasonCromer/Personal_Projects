@@ -9,4 +9,5 @@
     <string name="pin_intent_button">Opens Intent to setting a new marker</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_marker_description">MarkerDescriptionActivity</string>
 </resources>

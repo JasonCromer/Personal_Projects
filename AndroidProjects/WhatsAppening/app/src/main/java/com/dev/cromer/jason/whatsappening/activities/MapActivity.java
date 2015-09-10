@@ -296,8 +296,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     protected void onPause() {
         super.onPause();
         //stop location updates to conserve battery
-        LocationServices.FusedLocationApi.removeLocationUpdates(
-                mGoogleApiClient, this);
+        if(mGoogleApiClient.isConnected()){
+            LocationServices.FusedLocationApi.removeLocationUpdates(
+                    mGoogleApiClient, this);
+        }
     }
 
     @Override
@@ -359,6 +361,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
             //is the marker already open
             if (lastOpenedMarker.equals(marker)) {
                 Log.d("CLICKED ID: ", String.valueOf(markerIDHashMap.get(marker.getId())));
+                Intent descriptionIntent = new Intent(getApplicationContext(), MarkerDescriptionActivity.class);
+                descriptionIntent.putExtra("MARKER_ID", String.valueOf(markerIDHashMap.get(marker.getId())));
+                startActivity(descriptionIntent);
+
                 //if so, nullify it
                 lastOpenedMarker = null;
                 //return true to close info window
