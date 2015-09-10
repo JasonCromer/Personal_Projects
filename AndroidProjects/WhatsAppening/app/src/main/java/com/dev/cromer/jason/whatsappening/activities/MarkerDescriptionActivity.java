@@ -13,8 +13,8 @@ import java.util.concurrent.ExecutionException;
 public class MarkerDescriptionActivity extends AppCompatActivity {
 
     private TextView markerDescription;
-    private String markerID;
     private String description = "";
+    static String markerID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +40,8 @@ public class MarkerDescriptionActivity extends AppCompatActivity {
 
         try{
             description = httpGetRequest.execute(url).get();
+
+            //Remove quotations from description
             description = description.replace("\"", "");
         }
         catch(ExecutionException | InterruptedException e){
