@@ -9,12 +9,14 @@ public class PostRequestParams {
     String latitude;
     String longitude;
     String markerTitle;
+    String markerDescription;
 
-    public PostRequestParams(String url, String latitude, String longitude, String markerTitle) {
+    public PostRequestParams(String url, String latitude, String longitude, String markerTitle, String markerDescription) {
         this.url = url;
         this.latitude = latitude;
         this.longitude = longitude;
         this.markerTitle = markerTitle;
+        this.markerDescription = markerDescription;
     }
 
     public String getUrl() {
@@ -32,5 +34,9 @@ public class PostRequestParams {
 
     public String getMarkerTitle() {
         return this.markerTitle;
+    }
+
+    public String getMarkerDescription() {
+        return this.markerDescription;
     }
 }

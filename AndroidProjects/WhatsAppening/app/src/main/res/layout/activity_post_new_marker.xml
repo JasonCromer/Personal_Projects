@@ -2,19 +2,20 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E0E0E0"
-    tools:context="com.dev.cromer.jason.whatsappening.activities.PostNewMarkerActivity">
+    tools:context="com.dev.cromer.jason.whatsappening.activities.SetMarkerTitleActivity">
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/markerTitleEditText"
-        android:hint="@string/marker_bar_hint"
+        android:imeOptions="actionNext"
+        android:inputType="textAutoCorrect|textCapSentences"
+        android:hint="@string/marker_title_hint"
         android:padding="10dp"
         android:layout_margin="10dp"
         android:background="@drawable/top_bottom_border"
         android:singleLine="true"
         android:textColor="#000000"
-        android:visibility="visible"
         android:maxLength="18" />
 
     <TextView

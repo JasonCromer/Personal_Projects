@@ -17,7 +17,7 @@
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name" >
@@ -40,11 +40,15 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".activities.PostNewMarkerActivity"
+            android:name=".activities.SetMarkerTitleActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".activities.SearchPlaceActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".activities.SetMarkerDescriptionActivity"
             android:label="@string/app_name" >
         </activity>
     </application>

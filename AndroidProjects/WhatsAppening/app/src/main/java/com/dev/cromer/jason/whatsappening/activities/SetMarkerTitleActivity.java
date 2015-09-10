@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -14,11 +15,13 @@ import android.widget.TextView;
 
 import com.dev.cromer.jason.whatsappening.R;
 
-public class PostNewMarkerActivity extends AppCompatActivity implements TextView.OnEditorActionListener {
+public class SetMarkerTitleActivity extends AppCompatActivity implements TextView.OnEditorActionListener {
 
     private EditText markerTitleEditText;
     private TextView lastTitleTextView;
     private String lastTitle = "";
+    private static final int MARKER_DESCRIPTION_REQ_CODE = 3;
+    private String markerDescription = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +54,7 @@ public class PostNewMarkerActivity extends AppCompatActivity implements TextView
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if(actionId == EditorInfo.IME_ACTION_DONE) {
+        if(actionId == EditorInfo.IME_ACTION_NEXT) {
             if(!markerTitleEditText.getText().toString().isEmpty()){
 
                 //Set title for the current posted marker
@@ -62,13 +65,10 @@ public class PostNewMarkerActivity extends AppCompatActivity implements TextView
                 editor.putString("lastTitle", lastTitle);
                 editor.apply();
 
-                //Create new intent to pass title to Map Activity
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("TITLE", markerTitleEditText.getText().toString());
-                setResult(Activity.RESULT_OK, resultIntent);
+                //Open intent to create description
+                startDescriptionIntent();
 
-                //close this activity
-                finish();
+                //close keyboard and finish onEditorAction call
                 return true;
             }
             else{
@@ -78,5 +78,40 @@ public class PostNewMarkerActivity extends AppCompatActivity implements TextView
             }
         }
         return false;
+    }
+
+
+    private void startDescriptionIntent(){
+        Intent descriptionIntent = new Intent(getApplicationContext(), SetMarkerDescriptionActivity.class);
+        startActivityForResult(descriptionIntent, MARKER_DESCRIPTION_REQ_CODE);
+    }
+
+
+    private void startResultIntent(){
+        //Create new intent to pass title to Map Activity
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("TITLE", markerTitleEditText.getText().toString());
+        resultIntent.putExtra("MARKER_DESCRIPTION", markerDescription);
+        setResult(Activity.RESULT_OK, resultIntent);
+
+        //close this activity
+        finish();
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case(MARKER_DESCRIPTION_REQ_CODE):;
+                if(resultCode == Activity.RESULT_OK){
+                    //retrieve description from previous intent and set it to class-local string
+                    markerDescription = data.getStringExtra("MARKER_DESCRIPTION");
+                }
+                break;
+        }
+
+        //Start intent to take us back to MapActivity
+        startResultIntent();
     }
 }

@@ -62,8 +62,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     private static final int CAMERA_ZOOM = 18;
     private static final int GOOGLE_API_CLIENT_ID = 0;
     private static final double LAT_LNG_OFFSET = 1.5;
-    private static final int POST_NEW_MARKER_REQ_CODE = 0;
-    private static final int SEARCH_PLACE_REQ_CODE = 1;
+    private static final int POST_NEW_MARKER_REQ_CODE = 1;
+    private static final int SEARCH_PLACE_REQ_CODE = 2;
     private static final int WAIT_IN_MILLISECONDS = 500;
 
     //Hashmap for storing local, non-duplicate local markers
@@ -164,10 +164,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     /* This function sets a marker at a location where the user has pressed and held down
         on the map.
      */
-    protected void setMarker(String markerTitle) {
+    protected void setMarker(String markerTitle, String markerDescription) {
         String markerLatitude = "";
         String markerLongitude = "";
-        final String postRequestURL = "http://whatsappeningmarkerapi.elasticbeanstalk.com/api/add_marker";
+        final String postRequestURL = "http://whatsappeningapi.elasticbeanstalk.com/api/add_marker";
         boolean hasLocation = false;
 
         //Give centered marker first priority
@@ -175,10 +175,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
             LatLng markerLocation = temporaryPlacedMarker.getPosition();
             markerLatitude = String.valueOf(markerLocation.latitude);
             markerLongitude = String.valueOf(markerLocation.longitude);
-
-            //remove temporary marker because a new one will be placed with the title
-            temporaryPlacedMarker.remove();
-
             hasLocation = true;
         }
         else{
@@ -187,7 +183,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
         if(hasLocation) {
             //Create params object holding all the data and a new postRequest object
-            PostRequestParams params = new PostRequestParams(postRequestURL, markerLatitude, markerLongitude, markerTitle.replace(","," "));
+            PostRequestParams params = new PostRequestParams(postRequestURL, markerLatitude, markerLongitude, markerTitle.replace(","," "),
+                    markerDescription.replace(",", " "));
             HttpPostRequest postRequest = new HttpPostRequest();
 
             //Post the marker and Toast the user a confirmation
@@ -209,7 +206,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
             final Location postMarkerLocation = new Location("Post-Marker location");
             postMarkerLocation.setLatitude(Double.valueOf(markerLatitude));
             postMarkerLocation.setLongitude(Double.valueOf(markerLongitude));
-            Log.d("TAG", markerLatitude + ", " + markerLongitude);
             getNearbyMarkers(postMarkerLocation);
         }
     }
@@ -262,14 +258,14 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
 
 
-    //Delay the PostNewMarkerActivity intent for a short time, declared by the WAIT_IN_MILLISECONDS
+    //Delay the SetMarkerTitleActivity intent for a short time, declared by the WAIT_IN_MILLISECONDS
     //constant, so that user can see that they are putting down a marker before the intent initiates.
     private void delayTitleIntent(){
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent resultIntent = new Intent(getApplicationContext(), PostNewMarkerActivity.class);
+                Intent resultIntent = new Intent(getApplicationContext(), SetMarkerTitleActivity.class);
                 startActivityForResult(resultIntent, POST_NEW_MARKER_REQ_CODE);
 
             }
@@ -425,11 +421,14 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case(POST_NEW_MARKER_REQ_CODE):
+                //remove temporary marker because a new one will be placed with the title
+                temporaryPlacedMarker.remove();
 
                 if(resultCode == Activity.RESULT_OK){
                     //Get title inputted by user in previous activity
                     final String newMarkerTitle = data.getStringExtra("TITLE");
-                    setMarker(newMarkerTitle);
+                    final String newMarkerDescription = data.getStringExtra("MARKER_DESCRIPTION");
+                    setMarker(newMarkerTitle, newMarkerDescription);
                 }
                 break;
 
