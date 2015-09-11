@@ -157,6 +157,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         if(v == searchBarEditText){
             //Start intent for user to search a place
             Intent searchIntent = new Intent(this, SearchPlaceActivity.class);
+            searchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivityForResult(searchIntent, SEARCH_PLACE_REQ_CODE);
         }
     }
@@ -268,6 +269,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
             @Override
             public void run() {
                 Intent resultIntent = new Intent(getApplicationContext(), SetMarkerTitleActivity.class);
+                resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(resultIntent, POST_NEW_MARKER_REQ_CODE);
 
             }
@@ -363,10 +365,12 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
                 Log.d("CLICKED ID: ", String.valueOf(markerIDHashMap.get(marker.getId())));
                 Intent descriptionIntent = new Intent(getApplicationContext(), MarkerDescriptionActivity.class);
                 descriptionIntent.putExtra("MARKER_ID", String.valueOf(markerIDHashMap.get(marker.getId())));
+                descriptionIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(descriptionIntent);
 
                 //if so, nullify it
                 lastOpenedMarker = null;
+
                 //return true to close info window
                 return true;
             }
@@ -444,6 +448,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
             case(SEARCH_PLACE_REQ_CODE):
                 if(resultCode == Activity.RESULT_OK) {
+                    if(temporarySearchedMarker != null){
+                        temporarySearchedMarker.remove();
+                    }
                     searchedAddress = data.getParcelableExtra("SEARCHED_LOCATION");
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchedAddress, CAMERA_ZOOM));
                     hasSearched = true;

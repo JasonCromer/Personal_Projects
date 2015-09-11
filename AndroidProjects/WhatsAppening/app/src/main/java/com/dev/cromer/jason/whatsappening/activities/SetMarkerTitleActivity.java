@@ -103,15 +103,15 @@ public class SetMarkerTitleActivity extends AppCompatActivity implements TextVie
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
-            case(MARKER_DESCRIPTION_REQ_CODE):;
+            case(MARKER_DESCRIPTION_REQ_CODE):
                 if(resultCode == Activity.RESULT_OK){
                     //retrieve description from previous intent and set it to class-local string
                     markerDescription = data.getStringExtra("MARKER_DESCRIPTION");
+
+                    //Start intent to take us back to MapActivity
+                    startResultIntent();
                 }
                 break;
         }
-
-        //Start intent to take us back to MapActivity
-        startResultIntent();
     }
 }
