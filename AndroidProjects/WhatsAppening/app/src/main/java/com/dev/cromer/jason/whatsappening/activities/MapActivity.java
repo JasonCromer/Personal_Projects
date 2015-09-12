@@ -6,8 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -38,7 +37,7 @@ import java.util.Iterator;
 import java.util.concurrent.ExecutionException;
 
 
-public class MapActivity extends AppCompatActivity implements LocationListener,
+public class MapActivity extends FragmentActivity implements LocationListener,
                                                                 GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener,
                                                                 View.OnClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraChangeListener,
@@ -80,10 +79,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         setContentView(R.layout.activity_map);
 
         //Set up the action bar
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
-            actionBar.show();
-        }
+        //ActionBar actionBar = getSupportActionBar();
+        //if(actionBar != null){
+            //actionBar.show();
+        //}
 
         searchBarEditText = (EditText) findViewById(R.id.searchBarEditText);
         searchBarEditText.setOnClickListener(this);

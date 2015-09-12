@@ -8,16 +8,13 @@ android {
         applicationId "com.dev.cromer.jason.whatsappening"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 8
-        versionName "1.008"
+        versionCode 10
+        versionName "1.010"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug{
-            debuggable false
         }
     }
 }

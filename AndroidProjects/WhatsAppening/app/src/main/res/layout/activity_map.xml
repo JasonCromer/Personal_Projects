@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:id="@+id/map"
         tools:context="com.dev.cromer.jason.whatsappening.activities.MapActivity"
-        class="com.google.android.gms.maps.MapFragment">
+        android:name="com.google.android.gms.maps.MapFragment">
     </fragment>
 
 
