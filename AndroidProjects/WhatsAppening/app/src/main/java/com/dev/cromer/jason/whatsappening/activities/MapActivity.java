@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -28,7 +27,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -95,7 +93,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         setUpGoogleApiClient();
 
         //Instantiate the map
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
@@ -363,7 +361,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
             //is the marker already open
             if (lastOpenedMarker.equals(marker)) {
-                Log.d("CLICKED ID: ", String.valueOf(markerIDHashMap.get(marker.getId())));
                 Intent descriptionIntent = new Intent(getApplicationContext(), MarkerDescriptionActivity.class);
                 descriptionIntent.putExtra("MARKER_ID", String.valueOf(markerIDHashMap.get(marker.getId())));
                 descriptionIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
