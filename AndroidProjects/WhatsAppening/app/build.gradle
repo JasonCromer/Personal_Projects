@@ -1,26 +1,46 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            keyAlias 'client'
+            keyPassword 'Doorsshut1'
+            storeFile file('/home/jason/Desktop/Personal/AndroidKeys/my-release-key.keystore')
+            storePassword 'Doorsshut1'
+        }
+    }
     compileSdkVersion 23
-    buildToolsVersion "22.0.1"
-
+    buildToolsVersion "23.0.0"
     defaultConfig {
         applicationId "com.dev.cromer.jason.whatsappening"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 10
-        versionName "1.010"
+        versionCode 13
+        versionName "1.013"
+        signingConfig signingConfigs.release
     }
+    //signingConfigs {
+    //release {
+    //storeFile file("")
+    //storePassword ""
+    //keyAlias ""
+    //keyPassword ""
+    //}
+    //}
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
         }
+    }
+    productFlavors {
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.0.0'
     compile 'com.google.android.gms:play-services:7.8.0'
 }
