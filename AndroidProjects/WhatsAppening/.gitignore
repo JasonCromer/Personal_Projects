@@ -5,3 +5,7 @@
 .DS_Store
 /build
 /captures
+/app/src/main/res/values
+/app/src/debug/res/values
+/release
+/app/app-release.apk
