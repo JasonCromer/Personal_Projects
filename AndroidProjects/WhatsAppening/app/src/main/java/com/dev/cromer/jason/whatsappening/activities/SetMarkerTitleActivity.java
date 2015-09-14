@@ -56,14 +56,6 @@ public class SetMarkerTitleActivity extends AppCompatActivity implements TextVie
         if(actionId == EditorInfo.IME_ACTION_NEXT) {
             if(!markerTitleEditText.getText().toString().isEmpty()){
 
-                //Set title for the current posted marker
-                lastTitle = markerTitleEditText.getText().toString();
-                //Save the title for future use
-                SharedPreferences preferences = this.getPreferences(Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("lastTitle", lastTitle);
-                editor.apply();
-
                 //Open intent to create description
                 startDescriptionIntent();
 
@@ -78,6 +70,18 @@ public class SetMarkerTitleActivity extends AppCompatActivity implements TextVie
         }
         finish();
         return false;
+    }
+
+
+
+    private void saveLastTitle(){
+        //Set title for the current posted marker
+        lastTitle = markerTitleEditText.getText().toString();
+        //Save the title for future use
+        SharedPreferences preferences = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("lastTitle", lastTitle);
+        editor.apply();
     }
 
 
@@ -107,6 +111,9 @@ public class SetMarkerTitleActivity extends AppCompatActivity implements TextVie
                 if(resultCode == Activity.RESULT_OK){
                     //retrieve description from previous intent and set it to class-local string
                     markerDescription = data.getStringExtra("MARKER_DESCRIPTION");
+
+                    //save last title in SD card
+                    saveLastTitle();
 
                     //Start intent to take us back to MapActivity
                     startResultIntent();
