@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 
 public class LocalMarkers {
 
+    public static final String snippetText = "Click for info";
     Location markerLatLngLocation;
     GoogleMap mMap;
     List<String> markerItemsList = Collections.emptyList();
@@ -70,7 +71,7 @@ public class LocalMarkers {
                 final String thisId = markerItemsList.get(i + 3);
 
                 final MarkerOptions currentMarker = new MarkerOptions().position(new LatLng(Float.valueOf(thisLatitude),
-                        Float.valueOf(thisLongitude))).title(thisTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+                        Float.valueOf(thisLongitude))).snippet(snippetText).title(thisTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
 
                 //Add marker to HashMap
                 markers.put(currentMarker, Integer.parseInt(thisId));
