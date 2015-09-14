@@ -15,23 +15,14 @@ android {
         applicationId "com.dev.cromer.jason.whatsappening"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 13
-        versionName "1.013"
+        versionCode 14
+        versionName "1.014"
         signingConfig signingConfigs.release
     }
-    //signingConfigs {
-    //release {
-    //storeFile file("")
-    //storePassword ""
-    //keyAlias ""
-    //keyPassword ""
-    //}
-    //}
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            //signingConfig signingConfigs.release
             signingConfig signingConfigs.release
         }
     }
