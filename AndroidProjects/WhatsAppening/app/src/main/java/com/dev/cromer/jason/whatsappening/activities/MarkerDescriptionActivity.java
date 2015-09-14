@@ -59,4 +59,8 @@ public class MarkerDescriptionActivity extends AppCompatActivity {
         }
     }
 
+    /*TODO: Create thumbs up/down buttons for liking, and a textview to show likes
+        TODO: Create a class for POST requests for likes
+        TODO: Make function to perform GET request for likes (API side already done)
+    */
 }

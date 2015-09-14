@@ -167,6 +167,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     protected void setMarker(String markerTitle, String markerDescription) {
         String markerLatitude = "";
         String markerLongitude = "";
+        final Integer markerLikes = 0;
         final String postRequestURL = "http://whatsappeningapi.elasticbeanstalk.com/api/add_marker";
         boolean hasLocation = false;
 
@@ -184,7 +185,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         if(hasLocation) {
             //Create params object holding all the data and a new postRequest object
             PostRequestParams params = new PostRequestParams(postRequestURL, markerLatitude, markerLongitude, markerTitle.replace(","," "),
-                    markerDescription.replace(",", " "));
+                    markerDescription.replace(",", " "), markerLikes);
             HttpPostRequest postRequest = new HttpPostRequest();
 
             //Post the marker and Toast the user a confirmation
@@ -199,6 +200,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
             }
             catch (ExecutionException | InterruptedException | NullPointerException e) {
+                Toast.makeText(getApplicationContext(), "Cannot contact our server! Check your connection.", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
 
