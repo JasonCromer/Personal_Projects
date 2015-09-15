@@ -42,7 +42,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
                                                                 GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener,
                                                                 View.OnClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraChangeListener,
-                                                                OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMapClickListener {
+                                                                OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnInfoWindowClickListener {
 
     // mMap might be null if Google Play services APK is not available.
     private GoogleMap mMap;
@@ -106,6 +106,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
         //For adding new markers
         mMap.setOnMarkerClickListener(this);
+        mMap.setOnInfoWindowClickListener(this);
         mMap.setOnMapClickListener(this);
 
         mMap.setOnMapLongClickListener(this);
@@ -383,6 +384,16 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     }
 
 
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        //Open marker description
+        Intent descriptionIntent = new Intent(getApplicationContext(), MarkerDescriptionActivity.class);
+        descriptionIntent.putExtra("MARKER_ID", String.valueOf(markerIDHashMap.get(marker.getId())));
+        descriptionIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(descriptionIntent);
+    }
+
+
     //This function refreshes the locally posted markers based on camera coordinates
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
@@ -461,4 +472,5 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).flat(true));
         hasSearched = false;
     }
+
 }

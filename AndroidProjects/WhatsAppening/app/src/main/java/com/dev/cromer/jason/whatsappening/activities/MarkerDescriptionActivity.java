@@ -93,10 +93,10 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
 
     private void displayMarkerLikes(){
         if(markerLikes != null){
-            markerLikesTextView.setText(markerLikes);
+            markerLikesTextView.setText(markerLikes + " likes");
         }
         else{
-            markerLikesTextView.setText("0");
+            markerLikesTextView.setText("0 likes");
         }
     }
 
@@ -117,6 +117,10 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
             e.printStackTrace();
         }
 
+        //Update likes after submitting like/dislike
+        getMarkerLikes();
+        displayMarkerLikes();
+
     }
 
     @Override
@@ -124,10 +128,14 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
         if(v == upvoteButton){
             final String upVoteString = "upVote";
             updateMarkerLikes(upVoteString);
+            upvoteButton.setEnabled(false);
+            downvoteButton.setEnabled(true);
         }
         if(v == downvoteButton){
             final String downVoteString = "downVote";
             updateMarkerLikes(downVoteString);
+            downvoteButton.setEnabled(false);
+            upvoteButton.setEnabled(true);
         }
 
     }
