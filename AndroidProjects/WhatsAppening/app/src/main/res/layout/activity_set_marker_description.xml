@@ -19,4 +19,5 @@
         android:id="@+id/markerDescriptionEditText"
         android:padding="10dp"
         android:layout_margin="10dp"/>
+
 </RelativeLayout>

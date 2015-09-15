@@ -3,7 +3,7 @@ package com.dev.cromer.jason.whatsappening.networking;
 
 import android.os.AsyncTask;
 
-import com.dev.cromer.jason.whatsappening.logic.PostRequestParams;
+import com.dev.cromer.jason.whatsappening.logic.NewMarkerPostRequestParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,17 +17,16 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class HttpPostRequest extends AsyncTask<PostRequestParams, String, String> {
+public class NewMarkerHttpPostRequest extends AsyncTask<NewMarkerPostRequestParams, String, String> {
 
 
     @Override
-    protected String doInBackground(PostRequestParams... params) {
+    protected String doInBackground(NewMarkerPostRequestParams... params) {
         String httpURL = params[0].getUrl();
         String latitude = params[0].getLatitude();
         String longitude = params[0].getLongitude();
         String markerTitle = params[0].getMarkerTitle();
         String markerDescription = params[0].getMarkerDescription();
-        Integer markerLikes = params[0].getMarkerLikes();
 
         HttpURLConnection httpURLConnection;
         String data;
@@ -51,7 +50,6 @@ public class HttpPostRequest extends AsyncTask<PostRequestParams, String, String
             jsonObject.put("longitude", longitude);
             jsonObject.put("markerTitle", markerTitle);
             jsonObject.put("markerDescription", markerDescription);
-            jsonObject.put("markerLikes", markerLikes);
             data = jsonObject.toString();
 
             //Write the data to an output stream

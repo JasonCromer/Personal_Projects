@@ -3,22 +3,20 @@ package com.dev.cromer.jason.whatsappening.logic;
 
 
 
-public class PostRequestParams {
+public class NewMarkerPostRequestParams {
 
     String url;
     String latitude;
     String longitude;
     String markerTitle;
     String markerDescription;
-    Integer markerLikes;
 
-    public PostRequestParams(String url, String latitude, String longitude, String markerTitle, String markerDescription, Integer markerLikes) {
+    public NewMarkerPostRequestParams(String url, String latitude, String longitude, String markerTitle, String markerDescription) {
         this.url = url;
         this.latitude = latitude;
         this.longitude = longitude;
         this.markerTitle = markerTitle;
         this.markerDescription = markerDescription;
-        this.markerLikes = markerLikes;
     }
 
     public String getUrl() {
@@ -41,7 +39,4 @@ public class PostRequestParams {
         return this.markerDescription;
     }
 
-    public int getMarkerLikes() {
-        return this.markerLikes;
-    }
 }

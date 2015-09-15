@@ -5,14 +5,18 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.dev.cromer.jason.whatsappening.R;
 
-public class SetMarkerDescriptionActivity extends AppCompatActivity implements TextView.OnEditorActionListener {
+import org.w3c.dom.Text;
+
+public class SetMarkerDescriptionActivity extends AppCompatActivity implements TextView.OnEditorActionListener{
 
     private EditText markerDescription;
 

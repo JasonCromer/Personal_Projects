@@ -13,8 +13,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.dev.cromer.jason.whatsappening.logic.LocalMarkers;
-import com.dev.cromer.jason.whatsappening.logic.PostRequestParams;
-import com.dev.cromer.jason.whatsappening.networking.HttpPostRequest;
+import com.dev.cromer.jason.whatsappening.logic.NewMarkerPostRequestParams;
+import com.dev.cromer.jason.whatsappening.networking.NewMarkerHttpPostRequest;
 import com.dev.cromer.jason.whatsappening.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -167,7 +167,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     protected void setMarker(String markerTitle, String markerDescription) {
         String markerLatitude = "";
         String markerLongitude = "";
-        final Integer markerLikes = 0;
         final String postRequestURL = "http://whatsappeningapi.elasticbeanstalk.com/api/add_marker";
         boolean hasLocation = false;
 
@@ -184,9 +183,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
         if(hasLocation) {
             //Create params object holding all the data and a new postRequest object
-            PostRequestParams params = new PostRequestParams(postRequestURL, markerLatitude, markerLongitude, markerTitle.replace(","," "),
-                    markerDescription.replace(",", " "), markerLikes);
-            HttpPostRequest postRequest = new HttpPostRequest();
+            NewMarkerPostRequestParams params = new NewMarkerPostRequestParams(postRequestURL, markerLatitude, markerLongitude, markerTitle.replace(","," "),
+                    markerDescription.replace(",", " "));
+            NewMarkerHttpPostRequest postRequest = new NewMarkerHttpPostRequest();
 
             //Post the marker and Toast the user a confirmation
             try{
