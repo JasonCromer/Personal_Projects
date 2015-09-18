@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">WhatsHappening</string>
+    <string name="action_settings">Settings</string>
+    <string name="search_bar_hint">Enter Place Here</string>
+    <string name="marker_title_hint">Whats happening?</string>
+    <string name="marker_description_hint">Enter Description Here</string>
+    <string name="last_post_text_view">Last Post:</string>
+    <string name="powered_by_google_image">Required by google to inform of API usage</string>
+    <string name="pin_intent_button">Opens Intent to setting a new marker</string>
+
+    <string name="title_activity_marker_description">MarkerDescriptionActivity</string>
+    <string name="marker_voting_description">Upvote or downvote the marker</string>
+</resources>

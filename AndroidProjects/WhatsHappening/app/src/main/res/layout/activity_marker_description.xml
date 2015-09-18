@@ -1,0 +1,59 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E0E0E0"
+    tools:context="com.dev.cromer.jason.whatshappening.activities.MarkerDescriptionActivity">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/textview_border"
+        android:text=""
+        android:id="@+id/markerDescriptionTextView"
+        android:layout_centerHorizontal="true" />
+
+
+
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/upvoteButton"
+        android:contentDescription="@string/marker_voting_description"
+        android:background="@drawable/ic_thumb_up_black_24dp"
+        android:layout_gravity="center_vertical"
+        android:layout_below="@+id/markerDescriptionTextView"
+        android:layout_alignLeft="@+id/markerDescriptionTextView"
+        android:layout_alignStart="@+id/markerDescriptionTextView"
+        android:layout_marginLeft="110dp"
+        android:layout_marginStart="110dp"
+        android:layout_marginTop="60dp" />
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/downvoteButton"
+        android:contentDescription="@string/marker_voting_description"
+        android:background="@drawable/ic_thumb_down_black_24dp"
+        android:layout_gravity="center_vertical"
+        android:layout_alignTop="@+id/upvoteButton"
+        android:layout_alignRight="@+id/markerDescriptionTextView"
+        android:layout_alignEnd="@+id/markerDescriptionTextView"
+        android:layout_marginRight="110dp"
+        android:layout_marginEnd="110dp" />
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:gravity="center"
+        android:padding="10dp"
+        android:background="@drawable/textview_border"
+        android:id="@+id/markerLikesTextView"
+        android:layout_below="@+id/markerDescriptionTextView"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>
