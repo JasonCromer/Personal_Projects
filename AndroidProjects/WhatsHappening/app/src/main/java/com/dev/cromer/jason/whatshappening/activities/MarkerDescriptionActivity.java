@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -139,29 +140,30 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
     public void onClick(View v) {
         //Default likes is zero for first time vote case
         final int NUM_VOTES = preferences.getInt("NUM_VOTES", 0);
+        Log.d("TAG", String.valueOf(NUM_VOTES));
         //Create sharedpreference editor
         SharedPreferences.Editor editor = preferences.edit();
 
         if(v == upvoteButton){
-            if(NUM_VOTES < 6){
+            if(NUM_VOTES < 5){
                 final String upVoteString = "upVote";
                 updateMarkerLikes(upVoteString);
             }
         }
         if(v == downvoteButton){
-            if(NUM_VOTES < 6) {
+            if(NUM_VOTES < 5) {
                 final String downVoteString = "downVote";
                 updateMarkerLikes(downVoteString);
             }
         }
 
         //Create date stamp and compare for next day
-        if(NUM_VOTES > 5){
+        if(NUM_VOTES >= 5){
             Toast.makeText(this.getApplicationContext(), "Sorry, you've already voted 5 times today", Toast.LENGTH_SHORT).show();
             compareDates(editor);
         }
 
-        //Only increment to 5
+        //Only increment to 6 (any more is unnecessary as we catch any above 5
         if(NUM_VOTES < 5){
             //add vote to editor
             editor.putInt("NUM_VOTES", NUM_VOTES + 1);
