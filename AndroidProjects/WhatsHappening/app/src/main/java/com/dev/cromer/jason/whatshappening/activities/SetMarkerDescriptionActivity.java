@@ -2,7 +2,6 @@ package com.dev.cromer.jason.whatshappening.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
