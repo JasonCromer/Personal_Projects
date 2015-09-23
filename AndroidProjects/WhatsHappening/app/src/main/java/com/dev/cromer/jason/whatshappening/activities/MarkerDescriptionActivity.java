@@ -1,6 +1,8 @@
 package com.dev.cromer.jason.whatshappening.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +15,11 @@ import com.dev.cromer.jason.whatshappening.logic.MarkerLikesPostRequestParams;
 import com.dev.cromer.jason.whatshappening.networking.HttpGetRequest;
 import com.dev.cromer.jason.whatshappening.networking.UpdateMarkerLikesHttpPostRequest;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
 
 public class MarkerDescriptionActivity extends AppCompatActivity implements View.OnClickListener {
@@ -23,7 +30,8 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
     private ImageButton downvoteButton;
     private String markerDescription = "";
     private String markerLikes = "";
-    static String markerID;
+    private static String markerID;
+    private static SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +45,9 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
 
         upvoteButton.setOnClickListener(this);
         downvoteButton.setOnClickListener(this);
+
+        //Get the shared preference for amount of votes made by the user
+        preferences = this.getPreferences(Context.MODE_PRIVATE);
 
 
         //Get the ID from the marker thats been clicked on, on the map
@@ -91,6 +102,7 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
         }
     }
 
+
     private void displayMarkerLikes(){
         if(markerLikes != null){
             markerLikesTextView.setText(markerLikes + " likes");
@@ -120,23 +132,93 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
         //Update likes after submitting like/dislike
         getMarkerLikes();
         displayMarkerLikes();
-
     }
+
 
     @Override
     public void onClick(View v) {
+        //Default likes is zero for first time vote case
+        final int NUM_VOTES = preferences.getInt("NUM_VOTES", 0);
+        //Create sharedpreference editor
+        SharedPreferences.Editor editor = preferences.edit();
+
         if(v == upvoteButton){
-            final String upVoteString = "upVote";
-            updateMarkerLikes(upVoteString);
-            upvoteButton.setEnabled(false);
-            downvoteButton.setEnabled(true);
+            if(NUM_VOTES < 6){
+                final String upVoteString = "upVote";
+                updateMarkerLikes(upVoteString);
+            }
         }
         if(v == downvoteButton){
-            final String downVoteString = "downVote";
-            updateMarkerLikes(downVoteString);
-            downvoteButton.setEnabled(false);
-            upvoteButton.setEnabled(true);
+            if(NUM_VOTES < 6) {
+                final String downVoteString = "downVote";
+                updateMarkerLikes(downVoteString);
+            }
+        }
+
+        //Create date stamp and compare for next day
+        if(NUM_VOTES > 5){
+            Toast.makeText(this.getApplicationContext(), "Sorry, you've already voted 5 times today", Toast.LENGTH_SHORT).show();
+            compareDates(editor);
+        }
+
+        //Only increment to 5
+        if(NUM_VOTES < 5){
+            //add vote to editor
+            editor.putInt("NUM_VOTES", NUM_VOTES + 1);
+            editor.apply();
+        }
+    }
+
+
+    private void compareDates(SharedPreferences.Editor editor){
+        //Get old date from storage, and new date
+        final String oldDateString = preferences.getString("OLD_DATE", "NONE");
+        final String currentDateString = getCurrentDateString();
+        final Date oldDate;
+        final Date currentDate;
+
+        //Check if old date exists
+        if(!oldDateString.equals("NONE")){
+            //Convert date Strings to Date objects
+            oldDate = parseStringToDate(oldDateString);
+            currentDate = parseStringToDate(currentDateString);
+
+            //Compare dates to check if current date is after the old date
+            if(currentDate.after(oldDate)){
+                //Reset vote count since a day has passed
+                editor.putInt("NUM_VOTES", 0);
+                editor.apply();
+            }
+        }
+        else{
+            //Store current date as old date if first time voting
+            editor.putString("OLD_DATE", currentDateString);
+            editor.apply();
         }
 
     }
+
+
+    private Date parseStringToDate(String dateToParse){
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date parsedDate = new Date();
+        try{
+            parsedDate = dateFormatter.parse(dateToParse);
+            return parsedDate;
+        }
+        catch (ParseException e){
+            e.printStackTrace();
+        }
+        return parsedDate;
+    }
+
+    private String getCurrentDateString(){
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        return dateFormatter.format(new Date());
+    }
+
+
 }

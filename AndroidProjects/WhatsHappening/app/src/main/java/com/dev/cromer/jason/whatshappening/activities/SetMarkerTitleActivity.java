@@ -21,6 +21,7 @@ public class SetMarkerTitleActivity extends AppCompatActivity implements TextVie
     private String lastTitle = "";
     private static final int MARKER_DESCRIPTION_REQ_CODE = 3;
     private String markerDescription = "";
+    private static SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,7 @@ public class SetMarkerTitleActivity extends AppCompatActivity implements TextVie
         markerTitleEditText.setOnEditorActionListener(this);
 
         //Get last title posted by the user
-        SharedPreferences preferences = this.getPreferences(Context.MODE_PRIVATE);
+        preferences = this.getPreferences(Context.MODE_PRIVATE);
         lastTitle = preferences.getString("lastTitle", "");
         setLastTitleTextView();
         showKeyboard();
@@ -78,7 +79,6 @@ public class SetMarkerTitleActivity extends AppCompatActivity implements TextVie
         //Set title for the current posted marker
         lastTitle = markerTitleEditText.getText().toString();
         //Save the title for future use
-        SharedPreferences preferences = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("lastTitle", lastTitle);
         editor.apply();

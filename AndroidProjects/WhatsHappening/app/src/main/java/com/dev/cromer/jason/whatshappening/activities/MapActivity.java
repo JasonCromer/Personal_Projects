@@ -2,8 +2,6 @@ package com.dev.cromer.jason.whatshappening.activities;
 
 
 import android.app.Activity;
-import android.app.UiModeManager;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -97,8 +95,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        //Context thisConx = this.getApplicationContext();
-        //UiModeManager manager = (UiModeManager) thisConx.getSystemService(Context.UI_MODE_SERVICE);
     }
 
 
