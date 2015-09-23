@@ -2,6 +2,4 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.dev.cromer.jason.whatshappening.activities.MarkerDescriptionActivity">
-    <item android:id="@+id/action_send" android:title="@string/action_send"
-        android:icon="@drawable/ic_send_white_24dp" app:showAsAction="ifRoom" />
 </menu>
