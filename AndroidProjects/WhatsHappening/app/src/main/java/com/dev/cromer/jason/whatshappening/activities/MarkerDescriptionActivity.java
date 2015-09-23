@@ -204,7 +204,7 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
 
     private Date parseStringToDate(String dateToParse){
         SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        dateFormatter.setTimeZone(TimeZone.getDefault());
         Date parsedDate = new Date();
         try{
             parsedDate = dateFormatter.parse(dateToParse);
@@ -218,7 +218,7 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
 
     private String getCurrentDateString(){
         SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        dateFormatter.setTimeZone(TimeZone.getDefault());
 
         return dateFormatter.format(new Date());
     }
