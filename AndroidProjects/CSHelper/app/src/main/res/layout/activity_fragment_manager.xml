@@ -8,7 +8,7 @@
 
     <android.support.v4.view.PagerTitleStrip
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
         android:background="#1E88E5"

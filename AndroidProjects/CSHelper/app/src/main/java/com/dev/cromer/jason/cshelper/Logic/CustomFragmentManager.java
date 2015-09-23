@@ -51,7 +51,6 @@ public class CustomFragmentManager extends FragmentActivity {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -65,6 +64,15 @@ public class CustomFragmentManager extends FragmentActivity {
 
             }
         });
+
+        //Temporary solution to v23 appcompat bug that doesn't show titles initially
+        viewPager.setCurrentItem(1);
+        viewPager.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                viewPager.setCurrentItem(0);
+            }
+        },100);
     }
 
     public void showWelcomeScreen() {
