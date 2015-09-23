@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -180,6 +181,13 @@ public class SearchPlaceActivity extends AppCompatActivity implements AdapterVie
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Toast.makeText(getApplicationContext(), "Oh no! Looks like we've got some network issues.", Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
     }
 
 }

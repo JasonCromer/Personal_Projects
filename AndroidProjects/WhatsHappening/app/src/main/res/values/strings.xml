@@ -7,7 +7,7 @@
     <string name="last_post_text_view">Last Post:</string>
     <string name="powered_by_google_image">Required by google to inform of API usage</string>
     <string name="pin_intent_button">Opens Intent to setting a new marker</string>
-
+    <string name="action_send">Send</string>
     <string name="title_activity_marker_description">MarkerDescriptionActivity</string>
     <string name="marker_voting_description">Upvote or downvote the marker</string>
 </resources>

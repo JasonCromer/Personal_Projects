@@ -121,4 +121,11 @@ public class SetMarkerTitleActivity extends AppCompatActivity implements TextVie
                 break;
         }
     }
+
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
 }

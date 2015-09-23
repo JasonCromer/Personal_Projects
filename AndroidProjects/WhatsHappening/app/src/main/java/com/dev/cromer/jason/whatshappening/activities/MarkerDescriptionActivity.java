@@ -224,4 +224,10 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
     }
 
 
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
+
 }
