@@ -189,6 +189,7 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
             if(currentDate.after(oldDate)){
                 //Reset vote count since a day has passed
                 editor.putInt("NUM_VOTES", 0);
+                editor.putString("OLD_DATE", "NONE");
                 editor.apply();
             }
         }
