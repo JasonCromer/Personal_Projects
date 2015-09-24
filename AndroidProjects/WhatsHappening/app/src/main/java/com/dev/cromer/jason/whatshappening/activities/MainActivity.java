@@ -1,5 +1,6 @@
 package com.dev.cromer.jason.whatshappening.activities;
 
+import android.Manifest;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

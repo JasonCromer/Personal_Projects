@@ -5,22 +5,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dev.cromer.jason.whatshappening.R;
+import com.dev.cromer.jason.whatshappening.logic.DailyVoteHandler;
 import com.dev.cromer.jason.whatshappening.logic.MarkerLikesPostRequestParams;
 import com.dev.cromer.jason.whatshappening.networking.HttpGetRequest;
 import com.dev.cromer.jason.whatshappening.networking.UpdateMarkerLikesHttpPostRequest;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
 
 public class MarkerDescriptionActivity extends AppCompatActivity implements View.OnClickListener {
@@ -138,90 +133,42 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
 
     @Override
     public void onClick(View v) {
-        //Default likes is zero for first time vote case
+        //Create daily vote handler
+        DailyVoteHandler dailyVoteHandler = new DailyVoteHandler();
+
+        //Check if it is a new day, if so, then NUM_VOTES is reset to 0
+        final String oldDateString = preferences.getString("OLD_DATE", "NONE");
+        dailyVoteHandler.checkIfNewDay(oldDateString);
+
+        //Get number of votes. Default likes is set to zero for first time vote case
         final int NUM_VOTES = preferences.getInt("NUM_VOTES", 0);
-        Log.d("TAG", String.valueOf(NUM_VOTES));
-        //Create sharedpreference editor
-        SharedPreferences.Editor editor = preferences.edit();
 
-        if(v == upvoteButton){
-            if(NUM_VOTES < 5){
-                final String upVoteString = "upVote";
-                updateMarkerLikes(upVoteString);
-            }
+        if(v == upvoteButton && NUM_VOTES < 5){
+            incrementNumberOfVotes(NUM_VOTES);
+            final String upVoteString = "upVote";
+            updateMarkerLikes(upVoteString);
         }
-        if(v == downvoteButton){
-            if(NUM_VOTES < 5) {
-                final String downVoteString = "downVote";
-                updateMarkerLikes(downVoteString);
-            }
+        if(v == downvoteButton && NUM_VOTES < 5){
+            incrementNumberOfVotes(NUM_VOTES);
+            final String downVoteString = "downVote";
+            updateMarkerLikes(downVoteString);
         }
 
-        //Create date stamp and compare for next day
+        //Create date stamp to compare for future date checks
         if(NUM_VOTES >= 5){
             Toast.makeText(this.getApplicationContext(), "Sorry, you've already voted 5 times today", Toast.LENGTH_SHORT).show();
-            compareDates(editor);
-        }
-
-        //Only increment to 6 (any more is unnecessary as we catch any above 5
-        if(NUM_VOTES < 5){
-            //add vote to editor
-            editor.putInt("NUM_VOTES", NUM_VOTES + 1);
-            editor.apply();
+            dailyVoteHandler.storeOldDateInPreferences();
         }
     }
 
 
-    private void compareDates(SharedPreferences.Editor editor){
-        //Get old date from storage, and new date
-        final String oldDateString = preferences.getString("OLD_DATE", "NONE");
-        final String currentDateString = getCurrentDateString();
-        final Date oldDate;
-        final Date currentDate;
-
-        //Check if old date exists
-        if(!oldDateString.equals("NONE")){
-            //Convert date Strings to Date objects
-            oldDate = parseStringToDate(oldDateString);
-            currentDate = parseStringToDate(currentDateString);
-
-            //Compare dates to check if current date is after the old date
-            if(currentDate.after(oldDate)){
-                //Reset vote count since a day has passed
-                editor.putInt("NUM_VOTES", 0);
-                editor.putString("OLD_DATE", "NONE");
-                editor.apply();
-            }
-        }
-        else{
-            //Store current date as old date if first time voting
-            editor.putString("OLD_DATE", currentDateString);
-            editor.apply();
-        }
-
+    private void incrementNumberOfVotes(int NUM_VOTES){
+        SharedPreferences.Editor editor = preferences.edit();
+        //add vote to editor
+        editor.putInt("NUM_VOTES", NUM_VOTES + 1);
+        editor.apply();
     }
 
-
-    private Date parseStringToDate(String dateToParse){
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-        dateFormatter.setTimeZone(TimeZone.getDefault());
-        Date parsedDate = new Date();
-        try{
-            parsedDate = dateFormatter.parse(dateToParse);
-            return parsedDate;
-        }
-        catch (ParseException e){
-            e.printStackTrace();
-        }
-        return parsedDate;
-    }
-
-    private String getCurrentDateString(){
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-        dateFormatter.setTimeZone(TimeZone.getDefault());
-
-        return dateFormatter.format(new Date());
-    }
 
 
     @Override
