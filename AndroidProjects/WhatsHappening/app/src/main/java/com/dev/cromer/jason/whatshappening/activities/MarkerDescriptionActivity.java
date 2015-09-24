@@ -134,7 +134,7 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
     @Override
     public void onClick(View v) {
         //Create daily vote handler
-        DailyVoteHandler dailyVoteHandler = new DailyVoteHandler();
+        DailyVoteHandler dailyVoteHandler = new DailyVoteHandler(preferences);
 
         //Check if it is a new day, if so, then NUM_VOTES is reset to 0
         final String oldDateString = preferences.getString("OLD_DATE", "NONE");
@@ -164,7 +164,6 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
 
     private void incrementNumberOfVotes(int NUM_VOTES){
         SharedPreferences.Editor editor = preferences.edit();
-        //add vote to editor
         editor.putInt("NUM_VOTES", NUM_VOTES + 1);
         editor.apply();
     }

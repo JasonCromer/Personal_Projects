@@ -12,9 +12,12 @@ import java.util.TimeZone;
 public class DailyVoteHandler {
 
     SharedPreferences preferences;
+    SharedPreferences.Editor editor;
 
     public DailyVoteHandler(SharedPreferences preferences){
         this.preferences = preferences;
+        editor = this.preferences.edit();
+
     }
 
     public void checkIfNewDay(String oldDateString){
