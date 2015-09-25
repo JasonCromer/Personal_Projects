@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">Forgive Me</string>
-
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_home_page">HomePageActivity</string>
-</resources>
