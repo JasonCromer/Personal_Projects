@@ -29,6 +29,17 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
     private static String markerID;
     private static SharedPreferences preferences;
 
+    //constants
+    private static final int DEFAULT_LIKES = 0;
+    private static final String NUM_VOTES_PREFERENCE = "NUM_VOTES";
+    private static final String OLD_DATE_PREFERENCE = "OLD_DATE";
+    private static final String NO_OLD_DATE_AVAILABLE = "NONE";
+    private static final String UPVOTE_STRING = "upVote";
+    private static final String DOWNVOTE_STRING = "downVote";
+    private static final String GET_LIKES_ENDPOINT = "http://whatsappeningapi.elasticbeanstalk.com/api/get_marker_likes/";
+    private static final String GET_DESCRIPTION_ENDPOINT = "http://whatsappeningapi.elasticbeanstalk.com/api/get_marker_description/";
+    private static final String UPDATE_LIKES_ENDPOINT = "http://whatsappeningapi.elasticbeanstalk.com/api/update_marker_likes/";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +72,7 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
 
 
     private void getMarkerDescription(){
-        final String url = "http://whatsappeningapi.elasticbeanstalk.com/api/get_marker_description/" + markerID;
+        final String url = GET_DESCRIPTION_ENDPOINT + markerID;
         HttpGetRequest httpGetRequest = new HttpGetRequest();
 
         try{
@@ -87,7 +98,7 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
 
 
     private void getMarkerLikes(){
-        final String url = "http://whatsappeningapi.elasticbeanstalk.com/api/get_marker_likes/" + markerID;
+        final String url = GET_LIKES_ENDPOINT + markerID;
         HttpGetRequest httpGetRequest = new HttpGetRequest();
 
         try{
@@ -110,7 +121,7 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
 
 
     private void updateMarkerLikes(String voteType){
-        final String url = "http://whatsappeningapi.elasticbeanstalk.com/api/update_marker_likes/" + markerID;
+        final String url = UPDATE_LIKES_ENDPOINT + markerID;
 
         //Create an object containing necessary parameters for our post request
         MarkerLikesPostRequestParams params = new MarkerLikesPostRequestParams(url, voteType);
@@ -137,21 +148,19 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
         DailyVoteHandler dailyVoteHandler = new DailyVoteHandler(preferences);
 
         //Check if it is a new day, if so, then NUM_VOTES is reset to 0
-        final String oldDateString = preferences.getString("OLD_DATE", "NONE");
+        final String oldDateString = preferences.getString(OLD_DATE_PREFERENCE, NO_OLD_DATE_AVAILABLE);
         dailyVoteHandler.checkIfNewDay(oldDateString);
 
         //Get number of votes. Default likes is set to zero for first time vote case
-        final int NUM_VOTES = preferences.getInt("NUM_VOTES", 0);
+        final int NUM_VOTES = preferences.getInt(NUM_VOTES_PREFERENCE, DEFAULT_LIKES);
 
         if(v == upvoteButton && NUM_VOTES < 5){
             incrementNumberOfVotes(NUM_VOTES);
-            final String upVoteString = "upVote";
-            updateMarkerLikes(upVoteString);
+            updateMarkerLikes(UPVOTE_STRING);
         }
         if(v == downvoteButton && NUM_VOTES < 5){
             incrementNumberOfVotes(NUM_VOTES);
-            final String downVoteString = "downVote";
-            updateMarkerLikes(downVoteString);
+            updateMarkerLikes(DOWNVOTE_STRING);
         }
 
         //Create date stamp to compare for future date checks
@@ -164,7 +173,7 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
 
     private void incrementNumberOfVotes(int NUM_VOTES){
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("NUM_VOTES", NUM_VOTES + 1);
+        editor.putInt(NUM_VOTES_PREFERENCE, NUM_VOTES + 1);
         editor.apply();
     }
 

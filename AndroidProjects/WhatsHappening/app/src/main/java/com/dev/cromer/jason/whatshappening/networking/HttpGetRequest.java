@@ -11,6 +11,9 @@ import java.net.URL;
 
 public class HttpGetRequest extends AsyncTask<String, Void, String> {
 
+    private static final String REQUEST_METHOD = "GET";
+    private static final int READ_TIMEOUT = 15000;
+
 
 
     @Override
@@ -24,8 +27,8 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
         try {
             HttpURLConnection connection = (HttpURLConnection) ((new URL(stringURL).openConnection()));
 
-            connection.setRequestMethod("GET");
-            connection.setReadTimeout(15000);
+            connection.setRequestMethod(REQUEST_METHOD);
+            connection.setReadTimeout(READ_TIMEOUT);
 
             connection.connect();
 

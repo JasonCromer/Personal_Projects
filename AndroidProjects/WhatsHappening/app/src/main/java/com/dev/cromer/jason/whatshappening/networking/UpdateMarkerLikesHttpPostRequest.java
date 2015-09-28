@@ -19,6 +19,9 @@ import java.net.URL;
 
 public class UpdateMarkerLikesHttpPostRequest extends AsyncTask<MarkerLikesPostRequestParams, String, String> {
 
+    private static final String REQUEST_METHOD = "POST";
+    private static final String REQUEST_PROPERTY_JSON = "application/json";
+    private static final String CHARACTER_ENCODING = "UTF-8";
 
     @Override
     protected String doInBackground(MarkerLikesPostRequestParams... params) {
@@ -34,10 +37,10 @@ public class UpdateMarkerLikesHttpPostRequest extends AsyncTask<MarkerLikesPostR
             httpURLConnection.setDoOutput(true);
 
             //set headers
-            httpURLConnection.setRequestProperty("Content-Type", "application/json");
-            httpURLConnection.setRequestProperty("Accept", "application/json");
+            httpURLConnection.setRequestProperty("Content-Type", REQUEST_PROPERTY_JSON);
+            httpURLConnection.setRequestProperty("Accept", REQUEST_PROPERTY_JSON);
 
-            httpURLConnection.setRequestMethod("POST");
+            httpURLConnection.setRequestMethod(REQUEST_METHOD);
             httpURLConnection.connect();
 
             //Create a new JSON object
@@ -47,13 +50,13 @@ public class UpdateMarkerLikesHttpPostRequest extends AsyncTask<MarkerLikesPostR
 
             //Write the data to an output stream
             OutputStream outputStream = httpURLConnection.getOutputStream();
-            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, CHARACTER_ENCODING));
             bufferedWriter.write(data);
             bufferedWriter.close();
             outputStream.close();
 
             //Read incoming response from API
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream(), "UTF-8"));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream(), CHARACTER_ENCODING));
             String inputLine;
             StringBuilder stringBuilder = new StringBuilder();
 

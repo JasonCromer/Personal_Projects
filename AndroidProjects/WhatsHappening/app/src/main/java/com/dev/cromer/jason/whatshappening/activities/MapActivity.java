@@ -64,6 +64,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     private static final int POST_NEW_MARKER_REQ_CODE = 1;
     private static final int SEARCH_PLACE_REQ_CODE = 2;
     private static final int WAIT_IN_MILLISECONDS = 500;
+    private static final int LOCATION_REQUEST_INTERVAL_MILLISECONDS = 10000;
+    private static final int FASTEST_LOCATION_REQUEST_INTERBAL_MILLISECONDS = 5000;
 
     //Hashmap for storing local, non-duplicate local markers
     private HashMap<MarkerOptions, Integer> postableMarkersHashMap = new HashMap<>();
@@ -142,8 +144,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     
     protected void startLocationUpdates() {
         LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setInterval(LOCATION_REQUEST_INTERVAL_MILLISECONDS);
+        mLocationRequest.setFastestInterval(FASTEST_LOCATION_REQUEST_INTERBAL_MILLISECONDS);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         LocationServices.FusedLocationApi.requestLocationUpdates(
@@ -171,7 +173,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         final String postRequestURL = "http://whatsappeningapi.elasticbeanstalk.com/api/add_marker";
         boolean hasLocation = false;
 
-        //Give centered marker first priority
+        //Map Temporary placed marker
         if(temporaryPlacedMarker != null){
             LatLng markerLocation = temporaryPlacedMarker.getPosition();
             markerLatitude = String.valueOf(markerLocation.latitude);
@@ -356,7 +358,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-
         if(lastOpenedMarker != null) {
 
             //is the marker already open

@@ -17,11 +17,12 @@ import java.util.concurrent.ExecutionException;
 
 public class LocalMarkers {
 
-    public static final String snippetText = "Click for info";
     Location markerLatLngLocation;
     GoogleMap mMap;
     List<String> markerItemsList = Collections.emptyList();
     HashMap<MarkerOptions, Integer> markers = new HashMap<>();
+    private static final String snippetText = "Click for info";
+    private static final String GET_MARKERS_ENDPOINT = "http://whatsappeningapi.elasticbeanstalk.com/api/get_markers/";
 
     public LocalMarkers(Location markerLatLngLocation, GoogleMap mMap) {
         this.markerLatLngLocation = markerLatLngLocation;
@@ -32,7 +33,7 @@ public class LocalMarkers {
     public void retrieveLocalMarkers() {
 
         //url to endpoint containing user's local latitude and longitude
-        final String url = "http://whatsappeningapi.elasticbeanstalk.com/api/get_markers/"+String.valueOf(markerLatLngLocation.getLatitude())+
+        final String url = GET_MARKERS_ENDPOINT + String.valueOf(markerLatLngLocation.getLatitude())+
                 String.valueOf("/"+markerLatLngLocation.getLongitude());
 
 
@@ -63,7 +64,8 @@ public class LocalMarkers {
             so we must assign values based on chunks of three, then iterate by 3.
          */
 
-        if(markerItemsList.size() > 3) {                                            //If size is not greater than 3, its not a valid list
+        //If size is not greater than 3, its not a valid list
+        if(markerItemsList.size() > 3) {
             for(int i = 0; i < markerItemsList.size(); i+=4) {
                 final String thisLatitude = markerItemsList.get(i);
                 final String thisLongitude = markerItemsList.get(i + 1);
@@ -81,9 +83,7 @@ public class LocalMarkers {
         }
 
         else{
-            //If no markers in radius, clear markers on map
-            //this.mMap.clear();
-
+            //return empty HashMap
             return markers;
         }
     }

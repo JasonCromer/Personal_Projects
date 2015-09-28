@@ -19,9 +19,9 @@ public class SetMarkerTitleActivity extends AppCompatActivity implements TextVie
     private EditText markerTitleEditText;
     private TextView lastTitleTextView;
     private String lastTitle = "";
-    private static final int MARKER_DESCRIPTION_REQ_CODE = 3;
     private String markerDescription = "";
     private static SharedPreferences preferences;
+    private static final int MARKER_DESCRIPTION_REQ_CODE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
