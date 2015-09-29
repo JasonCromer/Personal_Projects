@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -15,6 +17,7 @@ public class UnixCheatSheetActivity extends AppCompatActivity {
 
     private WebView thisWebView;
     private static final String THIS_URL = "http://www.math.utah.edu/lab/unix/unix-commands.html";
+    private static final int SECOND_IN_MILLISECONDS = 1000;
 
 
     @Override
@@ -36,14 +39,15 @@ public class UnixCheatSheetActivity extends AppCompatActivity {
         //Set progress meter for webview loading
         thisWebView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
-                thisActivity.setProgress(progress * 1000);
+                thisActivity.setProgress(progress * SECOND_IN_MILLISECONDS);
             }
         });
 
         //Handle errors loading webview
         thisWebView.setWebViewClient(new WebViewClient() {
-            public void onReceivedError(WebView view, int errorCode, String description, String failingURL) {
-                Log.d("Oh no!", description);
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
             }
         });
 

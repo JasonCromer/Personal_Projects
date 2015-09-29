@@ -116,7 +116,7 @@ public class HomeScreen extends Fragment implements AdapterView.OnItemClickListe
 
         //SQL Cheat Sheet
         if(position == 5) {
-            Intent sqlSheetIntent = new Intent(getActivity(), SqlCheatSheetActivity.class);
+            Intent sqlSheetIntent = new Intent(getActivity().getApplicationContext(), SqlCheatSheetActivity.class);
             sqlSheetIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(sqlSheetIntent);
         }
