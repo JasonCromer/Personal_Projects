@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Take A Stand</string>
+    <string name="powered_by_google_image">Required by google to inform of API usage</string>
+
+    <string name="action_settings">Settings</string>
+</resources>
