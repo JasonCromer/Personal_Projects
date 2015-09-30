@@ -37,13 +37,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
 
-    private void startMapActivity(){
-        Intent mapIntent = new Intent(getApplicationContext(), MapsActivity.class);
-        mapIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(mapIntent);
-        finish();
-    }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -61,6 +54,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         else{
             finish();
         }
+    }
+
+
+
+    private void startMapActivity(){
+        Intent intent = new Intent(getApplicationContext(), MarkerCreationActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
 }
