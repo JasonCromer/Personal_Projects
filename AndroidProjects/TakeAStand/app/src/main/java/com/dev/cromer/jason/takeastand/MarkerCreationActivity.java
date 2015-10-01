@@ -6,11 +6,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class MarkerCreationActivity extends AppCompatActivity {
 
     static ArrayAdapter<String> spinnerArrayAdapter;
     private Spinner religionSpinner;
+    private TextView numOfUsersTextView;
     private String[] spinnerItems = {"Choose Your Religion", "Christian", "Islam", "Catholic", "Hindu", "Buddhist", "Agnostic", "Athiest"};
 
     @Override
@@ -18,6 +20,7 @@ public class MarkerCreationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marker_creation);
 
+        numOfUsersTextView = (TextView) findViewById(R.id.numOfUsersTextView);
         religionSpinner = (Spinner) findViewById(R.id.spinner);
         setUpSpinnerAdapter();
     }
@@ -43,13 +46,11 @@ public class MarkerCreationActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // Handle action bar item clicks here.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_send) {
             return true;
         }
 
