@@ -16,9 +16,12 @@
         android:popupBackground="#212121"
         android:backgroundTint="#FFFFFF"
         android:gravity="start"
+        android:layout_below="@+id/numOfUsersTextView"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp" />
 
     <TextView
         android:layout_width="wrap_content"
