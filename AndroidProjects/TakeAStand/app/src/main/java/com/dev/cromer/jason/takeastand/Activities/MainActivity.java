@@ -1,15 +1,16 @@
-package com.dev.cromer.jason.takeastand;
+package com.dev.cromer.jason.takeastand.Activities;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+
+import com.dev.cromer.jason.takeastand.R;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -32,7 +33,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             startMapActivity();
         }
         else{
-            requestPermissions(requestPerms, LOCATION_REQUEST_CODE);
+            //if API is 23 or greater, use default requestPermissions
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(requestPerms, LOCATION_REQUEST_CODE);
+            }
+            else{
+                //Otherwise, use the backwards compatible ActivityCompat requestPermissions
+                ActivityCompat.requestPermissions(this, requestPerms, LOCATION_REQUEST_CODE);
+            }
         }
     }
 
@@ -59,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 
     private void startMapActivity(){
-        Intent intent = new Intent(getApplicationContext(), MarkerCreationActivity.class);
+        Intent intent = new Intent(getApplicationContext(), StartScreenActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();

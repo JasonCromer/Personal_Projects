@@ -1,10 +1,11 @@
-package com.dev.cromer.jason.takeastand;
+package com.dev.cromer.jason.takeastand.Activities;
 
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.dev.cromer.jason.takeastand.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;

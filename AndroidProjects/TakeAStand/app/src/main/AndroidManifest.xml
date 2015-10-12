@@ -26,11 +26,11 @@
             android:value="@string/google_maps_debug_key" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".Activities.MapsActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MarkerCreationActivity"
+            android:name=".Activities.StartScreenActivity"
             android:label="@string/app_name" >
         </activity>
     </application>

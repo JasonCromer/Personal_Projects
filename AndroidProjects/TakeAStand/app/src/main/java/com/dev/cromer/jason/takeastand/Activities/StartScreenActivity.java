@@ -1,4 +1,4 @@
-package com.dev.cromer.jason.takeastand;
+package com.dev.cromer.jason.takeastand.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class MarkerCreationActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+import com.dev.cromer.jason.takeastand.R;
+
+public class StartScreenActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     static ArrayAdapter<String> spinnerArrayAdapter;
     private String userSelectedChoice;
