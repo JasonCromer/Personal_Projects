@@ -30,7 +30,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private void requestPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            startMapActivity();
+
+            startScreenIntent();
         }
         else{
             //if API is 23 or greater, use default requestPermissions
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             if(permissions.length == 1 &&
                     permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION) &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startMapActivity();
+                startScreenIntent();
             }
             else {
                 requestPermission();
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 
 
-    private void startMapActivity(){
+    private void startScreenIntent(){
         Intent intent = new Intent(getApplicationContext(), StartScreenActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);

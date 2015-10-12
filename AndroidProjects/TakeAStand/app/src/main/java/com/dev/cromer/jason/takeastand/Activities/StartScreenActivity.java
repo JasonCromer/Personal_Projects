@@ -1,8 +1,11 @@
 package com.dev.cromer.jason.takeastand.Activities;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,11 +14,18 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.dev.cromer.jason.takeastand.Networking.GenericHttpGetRequest;
 import com.dev.cromer.jason.takeastand.R;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import java.util.concurrent.ExecutionException;
 
 public class StartScreenActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     static ArrayAdapter<String> spinnerArrayAdapter;
+    static String recievedNumberOfUsers;
+    private String response;
     private String userSelectedChoice;
     private boolean itemSelected;
     private MenuItem sendButton;
@@ -24,13 +34,25 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
     private String[] spinnerItems = {"Choose Your Religion", "Christian", "Islam", "Catholic", "Hindu", "Buddhist", "Agnostic", "Athiest"};
 
     //constants
+    private static final String GET_NUM_USERS_URL = "http://takeastandapi.elasticbeanstalk.com/get_users";
     private static final String USER_RELIGION_CHOICE_EXTRA = "USER_CHOICE_EXTRA";
     private static final int DEFAULT_ITEM_POSITION = 0;
+    private static final String DEFAULT_TEXT_VIEW_NUM_VALUE = "many";
+    private static final String HTML_COLOR_WRAP_START = "<font color='#FDD835'>";
+    private static final String HTML_COLOR_WRAP_END = "</font>";
+    private static final String TEXT_VIEW_START = "Pick your religion and join ";
+    private static final String TEXT_VIEW_END = " other users around the world to take a stand";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_marker_creation);
+        setContentView(R.layout.activity_start_screen);
+
+        int googleServiceStatus = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this,googleServiceStatus, 10);
+        if(dialog!=null){
+            dialog.show();
+        }
 
         //set itemSelected to false as no items have been selected in onCreate
         itemSelected = false;
@@ -38,12 +60,18 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
         numOfUsersTextView = (TextView) findViewById(R.id.numOfUsersTextView);
         religionSpinner = (Spinner) findViewById(R.id.spinner);
         setUpSpinnerAdapter();
+
+        //set up the textview to show number of users
+        setNumberOfUsersTextView();
     }
 
 
     private void setUpSpinnerAdapter() {
+        //Create new instance of the spinner item
         spinnerArrayAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.custom_spinner_item,
                 spinnerItems);
+
+        //Use a custom dropdown with the spinner
         spinnerArrayAdapter.setDropDownViewResource(R.layout.custom_spinner_item);
         religionSpinner.setAdapter(spinnerArrayAdapter);
         religionSpinner.setOnItemSelectedListener(this);
@@ -66,13 +94,51 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
         mapIntent.putExtra(USER_RELIGION_CHOICE_EXTRA, chosenReligion);
 
         startActivity(mapIntent);
+        finish();
+    }
+
+
+    private String getNumberOfUsers(){
+        GenericHttpGetRequest httpGetRequest = new GenericHttpGetRequest();
+
+        //Connect and attempt to get users from url
+        try{
+            //We are recieving a string, but need to convert it to an integer
+            response = httpGetRequest.execute(GET_NUM_USERS_URL).get();
+        }
+        catch(ExecutionException | InterruptedException e){
+            e.printStackTrace();
+        }
+
+        Log.d("USERS:", response);
+        if(response != null){
+            return response;
+        }
+        else{
+            return null;
+        }
+    }
+
+    private void setNumberOfUsersTextView(){
+        recievedNumberOfUsers = getNumberOfUsers();
+
+        //Check for bad return
+        if(recievedNumberOfUsers != null){
+            final String formattedString = TEXT_VIEW_START + HTML_COLOR_WRAP_START + recievedNumberOfUsers
+                                                + HTML_COLOR_WRAP_END + TEXT_VIEW_END;
+            numOfUsersTextView.setText(Html.fromHtml(formattedString));
+        }
+        else{
+            final String formattedString = TEXT_VIEW_START + DEFAULT_TEXT_VIEW_NUM_VALUE + TEXT_VIEW_END;
+            numOfUsersTextView.setText(DEFAULT_TEXT_VIEW_NUM_VALUE);
+        }
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_marker_creation, menu);
+        getMenuInflater().inflate(R.menu.menu_start_screen, menu);
 
         //Instantiate send button and assign to object via id
         sendButton = menu.findItem(R.id.action_send);
@@ -92,7 +158,8 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_send) {
-            startMapIntent(userSelectedChoice);
+            String userChoice = getUserSelectedChoice();
+            startMapIntent(userChoice);
             return true;
         }
 
@@ -101,9 +168,12 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        //if we choose any options other than the default, show the send button in the menu
         if(position > DEFAULT_ITEM_POSITION){
             itemSelected = true;
-            userSelectedChoice = parent.getItemAtPosition(position).toString();
+
+            //Set the user selected choice for the class instance
+            setUserSelectedChoice(parent.getItemAtPosition(position).toString());
             showMenuSendButton();
         }
         //Hide button if default item is selected
@@ -116,4 +186,15 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
     }
+
+
+    public void setUserSelectedChoice(String selectedChoice){
+        this.userSelectedChoice = selectedChoice;
+    }
+
+    public String getUserSelectedChoice(){
+        return this.userSelectedChoice;
+    }
+
+
 }
