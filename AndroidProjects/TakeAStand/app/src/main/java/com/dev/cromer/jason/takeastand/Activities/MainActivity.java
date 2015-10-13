@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
 
-
     private void startScreenIntent(){
         Intent intent = new Intent(getApplicationContext(), StartScreenActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text=""
-        android:textAlignment="center"
+        android:gravity="center|center_horizontal"
         android:textColor="#FFFFFF"
         android:id="@+id/numOfUsersTextView"
         android:layout_alignParentTop="true"

@@ -35,7 +35,7 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
     //constants
     private static final String GET_NUM_USERS_URL = "http://takeastandapi.elasticbeanstalk.com/get_users";
     private static final String USER_RELIGION_CHOICE_EXTRA = "USER_CHOICE_EXTRA";
-    private static final int DEFAULT_ITEM_POSITION = 0;
+    private static final int DEFAULT_SPINNER_ITEM_POSITION = 0;
     private static final String DEFAULT_TEXT_VIEW_NUM_VALUE = "many";
     private static final String HTML_COLOR_WRAP_START = "<font color='#FDD835'>";
     private static final String HTML_COLOR_WRAP_END = "</font>";
@@ -180,7 +180,7 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         //if we choose any options other than the default, show the send button in the menu
-        if(position > DEFAULT_ITEM_POSITION){
+        if(position > DEFAULT_SPINNER_ITEM_POSITION){
             itemSelected = true;
 
             //Set the user selected choice for the class instance
@@ -188,7 +188,7 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
             showMenuSendButton();
         }
         //Hide button if default item is selected
-        else if(position == DEFAULT_ITEM_POSITION){
+        else if(position == DEFAULT_SPINNER_ITEM_POSITION){
             itemSelected = false;
             hideMenuSendButton();
         }

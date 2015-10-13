@@ -11,18 +11,23 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
+    private boolean initialLocationShown = false;
 
+    //Constants
     private static final int LOCATION_REQUEST_INTERVAL_MILLISECONDS = 10000;
     private static final int FASTEST_LOCATION_REQUEST_INTERVAL_MILLISECONDS = 5000;
+    private static final float CAMERA_ZOOM = 8;
 
 
 
@@ -66,7 +71,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mGoogleApiClient, mLocationRequest, this);
     }
 
+    //This method shows our current location only once each time the user opens the app
+    private void showLocation(Location myLocation){
+        if(myLocation != null){
+            if(!initialLocationShown){
+                LatLng latlngLocation = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlngLocation, CAMERA_ZOOM));
 
+                initialLocationShown = true;
+            }
+        }
+    }
 
 
     @Override
@@ -115,6 +130,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
+        showLocation(location);
     }
 
     @Override
@@ -122,4 +138,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         finish();
         return true;
     }
+
+
+    /*
+        TODO: Create methods/classes to handle creation of marker and get/put of all markers
+        1. maps intent opens
+        2. put request for our current marker (disable any future put requests)
+        3. get request for all markers
+     */
 }
