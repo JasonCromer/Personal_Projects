@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,7 +64,6 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
         setNumberOfUsersTextView();
     }
 
-
     private void setUpSpinnerAdapter() {
         //Create new instance of the spinner item
         spinnerArrayAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.custom_spinner_item,
@@ -77,16 +75,19 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
         religionSpinner.setOnItemSelectedListener(this);
     }
 
+    //This method hides the "send" button on the menu
     private void hideMenuSendButton(){
         sendButton.setVisible(false);
         invalidateOptionsMenu();
     }
 
+    //This method shows the "send" button on the menu
     private void showMenuSendButton() {
         sendButton.setVisible(true);
         invalidateOptionsMenu();
     }
 
+    //This method opens the map intent to display the Google Map
     private void startMapIntent(String chosenReligion){
         Intent mapIntent = new Intent(this, MapsActivity.class);
 
@@ -98,6 +99,12 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
     }
 
 
+    /*
+        This method creates a generic httpRequest to a constant URL that
+        retrieves the number of users in the server database.
+        @return String (If response is not null)
+        @return null (if http connection failed)
+     */
     private String getNumberOfUsers(){
         GenericHttpGetRequest httpGetRequest = new GenericHttpGetRequest();
 
@@ -110,7 +117,6 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
             e.printStackTrace();
         }
 
-        Log.d("USERS:", response);
         if(response != null){
             return response;
         }
@@ -119,6 +125,11 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
         }
     }
 
+    /*
+        This method sets the number of users based on the getNumberOfUsers() function.
+        If the returned String is not null, we add the number to our textview.
+        If the returned String is null, we set the text view to a default value
+     */
     private void setNumberOfUsersTextView(){
         recievedNumberOfUsers = getNumberOfUsers();
 
@@ -130,7 +141,7 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
         }
         else{
             final String formattedString = TEXT_VIEW_START + DEFAULT_TEXT_VIEW_NUM_VALUE + TEXT_VIEW_END;
-            numOfUsersTextView.setText(DEFAULT_TEXT_VIEW_NUM_VALUE);
+            numOfUsersTextView.setText(formattedString);
         }
     }
 
