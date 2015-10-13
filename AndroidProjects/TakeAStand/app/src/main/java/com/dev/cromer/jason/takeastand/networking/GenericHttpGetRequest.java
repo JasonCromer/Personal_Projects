@@ -1,4 +1,4 @@
-package com.dev.cromer.jason.takeastand.Networking;
+package com.dev.cromer.jason.takeastand.networking;
 
 import android.os.AsyncTask;
 

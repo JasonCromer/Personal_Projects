@@ -1,11 +1,13 @@
-package com.dev.cromer.jason.takeastand.Activities;
+package com.dev.cromer.jason.takeastand.activities;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.dev.cromer.jason.takeastand.R;
+import com.dev.cromer.jason.takeastand.objects.MarkerPostRequestParams;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -22,12 +24,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
+    private Intent mapsIntent;
+    private int userReligionID;
     private boolean initialLocationShown = false;
+    private Location userLocation;
 
     //Constants
+    private static final String POST_MARKER_URL = "takeastandapi.elasticbeanstalk.com/add_marker";
+    private static final String USER_RELIGION_CHOICE_EXTRA = "USER_CHOICE_EXTRA";
     private static final int LOCATION_REQUEST_INTERVAL_MILLISECONDS = 10000;
     private static final int FASTEST_LOCATION_REQUEST_INTERVAL_MILLISECONDS = 5000;
     private static final float CAMERA_ZOOM = 8;
+
+    //Religion integer constants
+    private static final int INT_CHRISTIAN = 1;
+    private static final int INT_ISLAM = 2;
+    private static final int INT_CATHOLIC = 3;
+    private static final int INT_HINDU = 4;
+    private static final int INT_BUDDHIST = 5;
+    private static final int INT_SPIRITUAL = 6;
+    private static final int INT_AGNOSTIC = 7;
+    private static final int INT_ATHIEST = 8;
+
 
 
 
@@ -40,6 +58,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        getExtras();
     }
 
 
@@ -82,6 +102,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
     }
+
+    /*
+        This method retrieves the integer associated with the user's religion.
+        The integers correspond to the position on the spinner that the user chooses from, i.e.:
+        1 = Christian
+        2 = Islam
+        3 = Catholic
+        ..and so on.
+        The default is set to Agnostic in the event that the extra did not go through,
+        as Agnostic is a more neutral viewpoint.
+     */
+    private void getExtras(){
+        mapsIntent = getIntent();
+        userReligionID = mapsIntent.getIntExtra(USER_RELIGION_CHOICE_EXTRA, INT_AGNOSTIC);
+    }
+
+
+    private void postUserMarker(){
+        if(userLocation != null){
+            MarkerPostRequestParams markerParams = new MarkerPostRequestParams(POST_MARKER_URL,
+                    (float)userLocation.getLatitude(), (float)userLocation.getLatitude(), userReligionID);
+        }
+
+    }
+
 
 
     @Override
@@ -131,6 +176,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onLocationChanged(Location location) {
         showLocation(location);
+        if(!initialLocationShown){
+            setUserLocation(location);
+        }
+    }
+
+    private void setUserLocation(Location location){
+        userLocation = location;
+    }
+
+    private Location getUserLocation(){
+        return userLocation;
     }
 
     @Override
@@ -138,6 +194,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         finish();
         return true;
     }
+
+
 
 
     /*

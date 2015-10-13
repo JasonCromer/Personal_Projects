@@ -1,4 +1,4 @@
-package com.dev.cromer.jason.takeastand.Activities;
+package com.dev.cromer.jason.takeastand.activities;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.dev.cromer.jason.takeastand.Networking.GenericHttpGetRequest;
+import com.dev.cromer.jason.takeastand.networking.GenericHttpGetRequest;
 import com.dev.cromer.jason.takeastand.R;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -25,12 +25,12 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
     static ArrayAdapter<String> spinnerArrayAdapter;
     static String recievedNumberOfUsers;
     private String response;
-    private String userSelectedChoice;
+    private int userSelectedChoice;
     private boolean itemSelected;
     private MenuItem sendButton;
     private Spinner religionSpinner;
     private TextView numOfUsersTextView;
-    private String[] spinnerItems = {"Choose Your Religion", "Christian", "Islam", "Catholic", "Hindu", "Buddhist", "Agnostic", "Athiest"};
+    private String[] spinnerItems = {"Choose Your Religion", "Christian", "Islam", "Catholic", "Hindu", "Buddhist", "Spiritual", "Agnostic", "Athiest"};
 
     //constants
     private static final String GET_NUM_USERS_URL = "http://takeastandapi.elasticbeanstalk.com/get_users";
@@ -88,11 +88,11 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
     }
 
     //This method opens the map intent to display the Google Map
-    private void startMapIntent(String chosenReligion){
+    private void startMapIntent(){
         Intent mapIntent = new Intent(this, MapsActivity.class);
 
         //add the users choice as an extra to pass into the map activity
-        mapIntent.putExtra(USER_RELIGION_CHOICE_EXTRA, chosenReligion);
+        mapIntent.putExtra(USER_RELIGION_CHOICE_EXTRA, getUserSelectedChoice());
 
         startActivity(mapIntent);
         finish();
@@ -169,8 +169,7 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_send) {
-            String userChoice = getUserSelectedChoice();
-            startMapIntent(userChoice);
+            startMapIntent();
             return true;
         }
 
@@ -184,7 +183,7 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
             itemSelected = true;
 
             //Set the user selected choice for the class instance
-            setUserSelectedChoice(parent.getItemAtPosition(position).toString());
+            setUserSelectedChoice(position);
             showMenuSendButton();
         }
         //Hide button if default item is selected
@@ -199,11 +198,11 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
     }
 
 
-    public void setUserSelectedChoice(String selectedChoice){
+    public void setUserSelectedChoice(int selectedChoice){
         this.userSelectedChoice = selectedChoice;
     }
 
-    public String getUserSelectedChoice(){
+    public int getUserSelectedChoice(){
         return this.userSelectedChoice;
     }
 

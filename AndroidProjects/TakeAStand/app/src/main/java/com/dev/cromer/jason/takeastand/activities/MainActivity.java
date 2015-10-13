@@ -1,4 +1,4 @@
-package com.dev.cromer.jason.takeastand.Activities;
+package com.dev.cromer.jason.takeastand.activities;
 
 import android.Manifest;
 import android.content.Intent;
