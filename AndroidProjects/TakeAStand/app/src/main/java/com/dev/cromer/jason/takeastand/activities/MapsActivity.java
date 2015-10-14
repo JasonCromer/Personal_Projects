@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.dev.cromer.jason.takeastand.Logic.PostUserMarkerHandler;
 import com.dev.cromer.jason.takeastand.R;
+import com.dev.cromer.jason.takeastand.networking.HttpMarkerPostRequest;
 import com.dev.cromer.jason.takeastand.objects.MarkerPostRequestParams;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -19,22 +22,24 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
+
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
-    private Intent mapsIntent;
+    protected Intent mapsIntent;
     private int userReligionID;
     private boolean initialLocationShown = false;
-    private Location userLocation;
 
     //Constants
-    private static final String POST_MARKER_URL = "takeastandapi.elasticbeanstalk.com/add_marker";
+    private static final String POST_MARKER_URL = "http://takeastandapi.elasticbeanstalk.com/add_marker";
     private static final String USER_RELIGION_CHOICE_EXTRA = "USER_CHOICE_EXTRA";
     private static final int LOCATION_REQUEST_INTERVAL_MILLISECONDS = 10000;
     private static final int FASTEST_LOCATION_REQUEST_INTERVAL_MILLISECONDS = 5000;
     private static final float CAMERA_ZOOM = 8;
+    private static final int RETURN_FAILED = -1;
+    private static final int RETURN_SUCCESS = 0;
 
     //Religion integer constants
     private static final int INT_CHRISTIAN = 1;
@@ -93,12 +98,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //This method shows our current location only once each time the user opens the app
     private void showLocation(Location myLocation){
+        final int result;
+
         if(myLocation != null){
             if(!initialLocationShown){
                 LatLng latlngLocation = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlngLocation, CAMERA_ZOOM));
 
                 initialLocationShown = true;
+
+                //post new marker
+                result = postUserMarker(myLocation);
+                processPostRequestResult(result);
             }
         }
     }
@@ -118,15 +129,38 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         userReligionID = mapsIntent.getIntExtra(USER_RELIGION_CHOICE_EXTRA, INT_AGNOSTIC);
     }
 
+    private int postUserMarker(Location myLocation){
+        final int result;
 
-    private void postUserMarker(){
-        if(userLocation != null){
+        if(myLocation != null){
+
+            //Populate the params object
             MarkerPostRequestParams markerParams = new MarkerPostRequestParams(POST_MARKER_URL,
-                    (float)userLocation.getLatitude(), (float)userLocation.getLatitude(), userReligionID);
-        }
+                    (float)myLocation.getLatitude(), (float)myLocation.getLongitude(), userReligionID);
 
+            //Create a new instance of the http post request class
+            HttpMarkerPostRequest markerPostRequest = new HttpMarkerPostRequest();
+
+            //Perform the post request using our parameter and request object
+            PostUserMarkerHandler userMarkerHandler = new PostUserMarkerHandler(markerPostRequest, markerParams);
+            result = userMarkerHandler.makeHttpMarkerPostRequest();
+
+            return result;
+        }
+        return RETURN_FAILED;
     }
 
+    //Perform any post processing if needed
+    private void processPostRequestResult(int result){
+        if(result == RETURN_SUCCESS){
+            //Success
+            Log.d("TAG", "SUCCESS");
+        }
+        else if(result == RETURN_FAILED){
+            //failed
+            Log.d("TAG", "SUCCESS");
+        }
+    }
 
 
     @Override
@@ -176,18 +210,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onLocationChanged(Location location) {
         showLocation(location);
-        if(!initialLocationShown){
-            setUserLocation(location);
-        }
     }
 
-    private void setUserLocation(Location location){
-        userLocation = location;
-    }
-
-    private Location getUserLocation(){
-        return userLocation;
-    }
 
     @Override
     public boolean onSupportNavigateUp(){

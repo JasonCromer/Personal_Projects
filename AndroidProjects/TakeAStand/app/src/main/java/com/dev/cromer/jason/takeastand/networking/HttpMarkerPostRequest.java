@@ -19,7 +19,7 @@ import java.net.URL;
 
 /*
  */
-public class HttpMarkerPutRequest extends AsyncTask<MarkerPostRequestParams, Void, Integer> {
+public class HttpMarkerPostRequest extends AsyncTask<MarkerPostRequestParams, Void, Integer> {
 
     protected HttpURLConnection httpURLConnection;
     protected URL urlContainer;
@@ -32,14 +32,16 @@ public class HttpMarkerPutRequest extends AsyncTask<MarkerPostRequestParams, Voi
     protected BufferedReader bufferedReader;
     protected String inputLine;
     protected StringBuilder stringBuilder;
-
     protected String data;
+    protected int result;
 
     //Constants
-    private static final int result = 0;
+    private static final int POST_SUCCESS = 0;
+    private static final int POST_FAILED = -1;
     private static final String REQUEST_METHOD = "POST";
     private static final String REQUEST_PROPERTY_JSON = "application/json";
     private static final String CHARACTER_ENCODING = "UTF-8";
+
 
     @Override
     protected Integer doInBackground(MarkerPostRequestParams... params) {
@@ -81,7 +83,7 @@ public class HttpMarkerPutRequest extends AsyncTask<MarkerPostRequestParams, Voi
             outputStreamWriter.close();
             outputStream.close();
 
-            /*
+
             //Read incoming response from API
             inputStream = httpURLConnection.getInputStream();
             inputStreamReader = new InputStreamReader(inputStream, CHARACTER_ENCODING);
@@ -97,11 +99,13 @@ public class HttpMarkerPutRequest extends AsyncTask<MarkerPostRequestParams, Voi
             bufferedReader.close();
             inputStreamReader.close();
             inputStream.close();
-            */
+
+
+            result = POST_SUCCESS;
         }
         catch (IOException | JSONException e){
             e.printStackTrace();
-            return -1;
+            result = POST_FAILED;
         }
 
         return result;
