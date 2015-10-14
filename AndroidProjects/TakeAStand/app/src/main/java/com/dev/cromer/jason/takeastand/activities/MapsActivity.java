@@ -24,7 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-                                                                GoogleApiClient.OnConnectionFailedListener, LocationListener {
+                                                                GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnMyLocationButtonClickListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -37,7 +37,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final String USER_RELIGION_CHOICE_EXTRA = "USER_CHOICE_EXTRA";
     private static final int LOCATION_REQUEST_INTERVAL_MILLISECONDS = 10000;
     private static final int FASTEST_LOCATION_REQUEST_INTERVAL_MILLISECONDS = 5000;
-    private static final float CAMERA_ZOOM = 8;
+    private static final float CAMERA_ZOOM = 3;
     private static final int RETURN_FAILED = -1;
     private static final int RETURN_SUCCESS = 0;
 
@@ -47,9 +47,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int INT_CATHOLIC = 3;
     private static final int INT_HINDU = 4;
     private static final int INT_BUDDHIST = 5;
-    private static final int INT_SPIRITUAL = 6;
-    private static final int INT_AGNOSTIC = 7;
-    private static final int INT_ATHIEST = 8;
+    private static final int INT_AGNOSTIC = 6;
+    private static final int INT_ATHIEST = 7;
 
 
 
@@ -82,6 +81,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(false); //disable UI features
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.setOnMyLocationButtonClickListener(this);
     }
 
 
@@ -102,15 +102,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if(myLocation != null){
             if(!initialLocationShown){
-                LatLng latlngLocation = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlngLocation, CAMERA_ZOOM));
-
                 initialLocationShown = true;
 
                 //post new marker
                 result = postUserMarker(myLocation);
                 processPostRequestResult(result);
             }
+
+            //Small focus zoom on user's location
+            LatLng latlngLocation = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlngLocation, CAMERA_ZOOM));
         }
     }
 
@@ -216,6 +217,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onSupportNavigateUp(){
         finish();
+        return true;
+    }
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+        final Location myLocation = mMap.getMyLocation();
+        if(myLocation != null){
+            showLocation(myLocation);
+        }
         return true;
     }
 

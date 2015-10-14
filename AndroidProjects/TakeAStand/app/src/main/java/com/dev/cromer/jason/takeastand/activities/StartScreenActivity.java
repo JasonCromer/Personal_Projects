@@ -30,7 +30,7 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
     private MenuItem sendButton;
     private Spinner religionSpinner;
     private TextView numOfUsersTextView;
-    private String[] spinnerItems = {"Choose Your Religion", "Christian", "Islam", "Catholic", "Hindu", "Buddhist", "Spiritual", "Agnostic", "Athiest"};
+    private String[] spinnerItems = {"Choose Your Religion", "Christian", "Islam", "Catholic", "Hindu", "Buddhist", "Agnostic", "Athiest"};
 
     //constants
     private static final String GET_NUM_USERS_URL = "http://takeastandapi.elasticbeanstalk.com/get_users";
