@@ -8,7 +8,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.dev.cromer.jason.takeastand.Logic.PostUserMarkerHandler;
+import com.dev.cromer.jason.takeastand.Logic.RetrieveAllMarkersHandler;
 import com.dev.cromer.jason.takeastand.R;
+import com.dev.cromer.jason.takeastand.networking.GenericHttpGetRequest;
 import com.dev.cromer.jason.takeastand.networking.HttpMarkerPostRequest;
 import com.dev.cromer.jason.takeastand.objects.MarkerPostRequestParams;
 import com.google.android.gms.common.ConnectionResult;
@@ -34,6 +36,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //Constants
     private static final String POST_MARKER_URL = "http://takeastandapi.elasticbeanstalk.com/add_marker";
+    private static final String GET_MARKERS_URL = "http://takeastandapi.elasticbeanstalk.com/get_markers";
     private static final String USER_RELIGION_CHOICE_EXTRA = "USER_CHOICE_EXTRA";
     private static final int LOCATION_REQUEST_INTERVAL_MILLISECONDS = 10000;
     private static final int FASTEST_LOCATION_REQUEST_INTERVAL_MILLISECONDS = 5000;
@@ -64,6 +67,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
 
         getExtras();
+
+        retrieveAllMarkers();
     }
 
 
@@ -104,8 +109,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if(!initialLocationShown){
                 initialLocationShown = true;
 
-                //post new marker
+                //post user's marker to database
                 result = postUserMarker(myLocation);
+
+                //Handle result in case marker could not be posted
                 processPostRequestResult(result);
             }
 
@@ -115,7 +122,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    /*
+
+    private void getExtras(){
+            /*
         This method retrieves the integer associated with the user's religion.
         The integers correspond to the position on the spinner that the user chooses from, i.e.:
         1 = Christian
@@ -125,7 +134,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         The default is set to Agnostic in the event that the extra did not go through,
         as Agnostic is a more neutral viewpoint.
      */
-    private void getExtras(){
         mapsIntent = getIntent();
         userReligionID = mapsIntent.getIntExtra(USER_RELIGION_CHOICE_EXTRA, INT_AGNOSTIC);
     }
@@ -151,8 +159,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return RETURN_FAILED;
     }
 
-    //Perform any post processing if needed
     private void processPostRequestResult(int result){
+        //Perform any post processing if needed
         if(result == RETURN_SUCCESS){
             //Success
             Log.d("TAG", "SUCCESS");
@@ -163,6 +171,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    private void retrieveAllMarkers(){
+        final String result;
+
+        //Create new instance of a GET request
+        GenericHttpGetRequest getRequest = new GenericHttpGetRequest();
+
+        //Pass our request object and URL into the handler class
+        RetrieveAllMarkersHandler markersHandler = new RetrieveAllMarkersHandler(GET_MARKERS_URL, getRequest);
+
+        //Retrieve the string result
+        result = markersHandler.fetchMarkers();
+        markersHandler.parseMarkerResult(result);
+
+    }
 
     @Override
     protected void onStart() {
@@ -229,13 +251,4 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return true;
     }
 
-
-
-
-    /*
-        TODO: Create methods/classes to handle creation of marker and get/put of all markers
-        1. maps intent opens
-        2. put request for our current marker (disable any future put requests)
-        3. get request for all markers
-     */
 }
