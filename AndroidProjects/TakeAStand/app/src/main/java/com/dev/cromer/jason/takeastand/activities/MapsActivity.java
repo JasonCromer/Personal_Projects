@@ -195,7 +195,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    private void MapMarkers(HashMap<MarkerOptions, Integer> hashMap){
+    private void mapMarkers(HashMap<MarkerOptions, Integer> hashMap){
 
         //Iterate through non-empty hashmap and add marker to the map
         if(!hashMap.isEmpty() && mMap != null){
@@ -211,7 +211,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void retrieveAndMapMarkers(){
         //Get all the markers and map them
         markersHashMap = retrieveAllMarkers();
-        MapMarkers(markersHashMap);
+        mapMarkers(markersHashMap);
     }
 
 
