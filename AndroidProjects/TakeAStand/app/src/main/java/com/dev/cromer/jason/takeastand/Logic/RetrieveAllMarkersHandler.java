@@ -81,6 +81,7 @@ public class RetrieveAllMarkersHandler {
 
                 //Create a marker and map the religion type to retrieve an appropriate marker Hue
                 currentMarker = new MarkerOptions().position(new LatLng(markerLatitude, markerLongitude))
+                        .title(getMarkerTitle(religionTypeMappedInteger))
                         .icon(BitmapDescriptorFactory.defaultMarker(getMarkerHue(religionTypeMappedInteger)));
 
                 //Add marker and religion-type integer to hashmap
@@ -109,6 +110,28 @@ public class RetrieveAllMarkersHandler {
                 return BitmapDescriptorFactory.HUE_YELLOW;
             default:
                 return BitmapDescriptorFactory.HUE_CYAN;
+        }
+    }
+
+    private String getMarkerTitle(int religionType){
+        //return hue depending on religion type
+        switch(religionType){
+            case INT_CHRISTIAN:
+                return "Christian";
+            case INT_ISLAM:
+                return "Islam";
+            case INT_CATHOLIC:
+                return "Catholic";
+            case INT_HINDU:
+                return "Hindu";
+            case INT_BUDDHIST:
+                return "Buddhist";
+            case INT_AGNOSTIC:
+                return "Agnostic";
+            case INT_ATHIEST:
+                return "Athiest";
+            default:
+                return "I Take a Stand!";
         }
     }
 }

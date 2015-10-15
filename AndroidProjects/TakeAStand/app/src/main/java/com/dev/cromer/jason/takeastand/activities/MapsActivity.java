@@ -23,18 +23,21 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-                                                                GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnMyLocationButtonClickListener {
+                                                                GoogleApiClient.OnConnectionFailedListener, LocationListener,
+                                                                GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     protected Intent mapsIntent;
     protected HashMap<MarkerOptions, Integer> markersHashMap;
+    private Marker lastOpenedMarker;
     private boolean initialLocationShown = false;
 
 
@@ -77,6 +80,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.getUiSettings().setMapToolbarEnabled(false); //disable UI features
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.setOnMyLocationButtonClickListener(this);
+        mMap.setOnMarkerClickListener(this);
     }
 
 
@@ -265,6 +269,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onSupportNavigateUp(){
         finish();
         return true;
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        if(lastOpenedMarker != null){
+
+            //Check if marker title is already open
+            if(lastOpenedMarker.equals(marker)){
+                lastOpenedMarker = null;
+
+                //close the title window
+                return true;
+            }
+        }
+
+        marker.showInfoWindow();
+        lastOpenedMarker = marker;
+        return false;
     }
 
     @Override
