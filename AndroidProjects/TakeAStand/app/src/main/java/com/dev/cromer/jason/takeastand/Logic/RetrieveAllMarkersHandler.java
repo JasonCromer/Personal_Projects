@@ -1,7 +1,6 @@
 package com.dev.cromer.jason.takeastand.Logic;
 
 
-
 import com.dev.cromer.jason.takeastand.networking.GenericHttpGetRequest;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -54,7 +53,7 @@ public class RetrieveAllMarkersHandler {
         if(input != null){
 
             //Remove jsonified componenets from retrieved list
-            input = input.replace("[","").replace("]","").replace("\"", "");
+            input = input.replace("[","").replace("]","").replace("\"", "").replace(" ","");
 
             //Convert the input to an Array
             markerInfoList = input.split(",");

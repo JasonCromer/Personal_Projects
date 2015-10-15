@@ -34,7 +34,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     protected Intent mapsIntent;
-    private int userReligionID;
     protected HashMap<MarkerOptions, Integer> markersHashMap;
     private boolean initialLocationShown = false;
 
@@ -60,11 +59,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        getExtras();
-
-        markersHashMap = retrieveAllMarkers();
-        MapMarkers(markersHashMap);
     }
 
 
@@ -115,11 +109,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             //Small focus zoom on user's location
             LatLng latlngLocation = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlngLocation, CAMERA_ZOOM));
+
+            //Map all markers on Map
+            retrieveAndMapMarkers();
         }
     }
 
 
-    private void getExtras(){
+    private int getUserReligionID(){
             /*
         This method retrieves the integer associated with the user's religion.
         The integers correspond to the position on the spinner that the user chooses from, i.e.:
@@ -130,8 +127,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         The default is set to Agnostic in the event that the extra did not go through,
         as Agnostic is a more neutral viewpoint.
      */
+        int userReligionID;
+
         mapsIntent = getIntent();
         userReligionID = mapsIntent.getIntExtra(USER_RELIGION_CHOICE_EXTRA, INT_AGNOSTIC);
+
+        return userReligionID;
     }
 
     private int postUserMarker(Location myLocation){
@@ -141,7 +142,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             //Populate the params object
             MarkerPostRequestParams markerParams = new MarkerPostRequestParams(POST_MARKER_URL,
-                    (float)myLocation.getLatitude(), (float)myLocation.getLongitude(), userReligionID);
+                    (float)myLocation.getLatitude(), (float)myLocation.getLongitude(), getUserReligionID());
 
             //Create a new instance of the http post request class
             HttpMarkerPostRequest markerPostRequest = new HttpMarkerPostRequest();
@@ -193,13 +194,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void MapMarkers(HashMap<MarkerOptions, Integer> hashMap){
 
         //Iterate through non-empty hashmap and add marker to the map
-        if(!hashMap.isEmpty()){
-            for(MarkerOptions markerOption : hashMap.keySet()){
-                mMap.addMarker(markerOption);
+        if(!hashMap.isEmpty() && mMap != null){
+            for(HashMap.Entry<MarkerOptions, Integer> entry : hashMap.entrySet()){
+                if(entry.getKey() != null){
+                    mMap.addMarker(entry.getKey());
+                }
             }
         }
     }
 
+
+    private void retrieveAndMapMarkers(){
+        //Get all the markers and map them
+        markersHashMap = retrieveAllMarkers();
+        MapMarkers(markersHashMap);
+    }
 
 
     @Override
