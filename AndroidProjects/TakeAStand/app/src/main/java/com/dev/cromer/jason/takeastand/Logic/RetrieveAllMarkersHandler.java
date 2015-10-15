@@ -13,12 +13,13 @@ public class RetrieveAllMarkersHandler {
 
     private String url;
     private GenericHttpGetRequest httpGetRequest;
-    private String result;
-    private String[] markerInfoList;
-    private float markerLatitude;
-    private float markerLongitude;
-    private int religionTypeMappedInteger;
-    private MarkerOptions currentMarker;
+    protected String result;
+    protected String[] markerInfoList;
+    protected float markerLatitude;
+    protected float markerLongitude;
+    protected int religionTypeMappedInteger;
+    protected MarkerOptions currentMarker;
+
 
     //Religion value constants
     private static final int INT_CHRISTIAN = 1;
@@ -51,6 +52,7 @@ public class RetrieveAllMarkersHandler {
 
     public String[] parseMarkerResult(String input){
         if(input != null){
+
             //Remove jsonified componenets from retrieved list
             input = input.replace("[","").replace("]","").replace("\"", "");
 
@@ -68,23 +70,25 @@ public class RetrieveAllMarkersHandler {
             The list passed in is composed of 3 items i.e. [latitude, longitude, integer,....]
             We will use the lat/lng to create a marker and map it to the integer
          */
+        HashMap<MarkerOptions, Integer> markersHashMap = new HashMap<>();
 
         if(stringInfoArray != null){
             for(int i = 0; i < stringInfoArray.length; i+=3) {
+
                 //Lat/lng values must be floats
                 markerLatitude = Float.valueOf(stringInfoArray[i]);
                 markerLongitude = Float.valueOf(stringInfoArray[i + 1]);
                 religionTypeMappedInteger = Integer.valueOf(stringInfoArray[i + 2]);
 
+                //Create a marker and map the religion type to retrieve an appropriate marker Hue
                 currentMarker = new MarkerOptions().position(new LatLng(markerLatitude, markerLongitude))
-                        .icon()
+                        .icon(BitmapDescriptorFactory.defaultMarker(getMarkerHue(religionTypeMappedInteger)));
 
+                //Add marker and religion-type integer to hashmap
+                markersHashMap.put(currentMarker, religionTypeMappedInteger);
             }
         }
-
-
-
-        return null;
+        return markersHashMap;
     }
 
     private float getMarkerHue(int religionType){
@@ -92,10 +96,20 @@ public class RetrieveAllMarkersHandler {
         switch(religionType){
             case INT_CHRISTIAN:
                 return BitmapDescriptorFactory.HUE_AZURE;
-            case
-
+            case INT_ISLAM:
+                return BitmapDescriptorFactory.HUE_MAGENTA;
+            case INT_CATHOLIC:
+                return BitmapDescriptorFactory.HUE_BLUE;
+            case INT_HINDU:
+                return BitmapDescriptorFactory.HUE_ROSE;
+            case INT_BUDDHIST:
+                return BitmapDescriptorFactory.HUE_RED;
+            case INT_AGNOSTIC:
+                return BitmapDescriptorFactory.HUE_GREEN;
+            case INT_ATHIEST:
+                return BitmapDescriptorFactory.HUE_YELLOW;
+            default:
+                return BitmapDescriptorFactory.HUE_CYAN;
         }
-
-        
     }
 }

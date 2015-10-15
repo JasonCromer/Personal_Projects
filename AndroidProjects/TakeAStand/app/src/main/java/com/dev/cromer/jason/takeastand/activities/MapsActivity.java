@@ -23,6 +23,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.HashMap;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
@@ -32,7 +35,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleApiClient mGoogleApiClient;
     protected Intent mapsIntent;
     private int userReligionID;
+    protected HashMap<MarkerOptions, Integer> markersHashMap;
     private boolean initialLocationShown = false;
+
 
     //Constants
     private static final String POST_MARKER_URL = "http://takeastandapi.elasticbeanstalk.com/add_marker";
@@ -43,17 +48,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final float CAMERA_ZOOM = 3;
     private static final int RETURN_FAILED = -1;
     private static final int RETURN_SUCCESS = 0;
-
-    //Religion integer constants
-    private static final int INT_CHRISTIAN = 1;
-    private static final int INT_ISLAM = 2;
-    private static final int INT_CATHOLIC = 3;
-    private static final int INT_HINDU = 4;
-    private static final int INT_BUDDHIST = 5;
     private static final int INT_AGNOSTIC = 6;
-    private static final int INT_ATHIEST = 7;
-
-
 
 
     @Override
@@ -68,7 +63,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         getExtras();
 
-        retrieveAllMarkers();
+        markersHashMap = retrieveAllMarkers();
+        MapMarkers(markersHashMap);
     }
 
 
@@ -171,8 +167,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void retrieveAllMarkers(){
-        final String result;
+    private HashMap<MarkerOptions, Integer> retrieveAllMarkers(){
+        final String stringResult;
+        final String[] parsedStringResult;
+        HashMap<MarkerOptions, Integer> hashMap;
+
 
         //Create new instance of a GET request
         GenericHttpGetRequest getRequest = new GenericHttpGetRequest();
@@ -180,11 +179,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Pass our request object and URL into the handler class
         RetrieveAllMarkersHandler markersHandler = new RetrieveAllMarkersHandler(GET_MARKERS_URL, getRequest);
 
-        //Retrieve the string result
-        result = markersHandler.fetchMarkers();
-        markersHandler.parseMarkerResult(result);
+        //Retrieve the string result and parse it
+        stringResult = markersHandler.fetchMarkers();
+        parsedStringResult = markersHandler.parseMarkerResult(stringResult);
 
+        //Use the parsed result to get a Hashmap of the markers and their religion type
+        hashMap = markersHandler.mapMarkerItems(parsedStringResult);
+
+        return hashMap;
     }
+
+
+    private void MapMarkers(HashMap<MarkerOptions, Integer> hashMap){
+
+        //Iterate through non-empty hashmap and add marker to the map
+        if(!hashMap.isEmpty()){
+            for(MarkerOptions markerOption : hashMap.keySet()){
+                mMap.addMarker(markerOption);
+            }
+        }
+    }
+
+
 
     @Override
     protected void onStart() {
