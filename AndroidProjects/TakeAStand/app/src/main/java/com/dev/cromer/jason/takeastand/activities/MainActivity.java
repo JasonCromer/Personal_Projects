@@ -2,8 +2,10 @@ package com.dev.cromer.jason.takeastand.activities;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -16,6 +18,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private static final String[] requestPerms = {Manifest.permission.ACCESS_FINE_LOCATION};
     private static final int LOCATION_REQUEST_CODE = 1440;
+    private static final String SHARED_PREFS_TITLE = "FIRST_TIME_USER";
+    private static final boolean SHARED_PREFS_DEFAULT = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
 
-            startScreenIntent();
+            startIntent();
         }
         else{
             //if API is 23 or greater, use default requestPermissions
@@ -54,7 +58,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             if(permissions.length == 1 &&
                     permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION) &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startScreenIntent();
+
+                startIntent();
             }
             else {
                 requestPermission();
@@ -66,8 +71,28 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
 
+    private void startIntent(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        final Boolean isFirstTimeUser = preferences.getBoolean(SHARED_PREFS_TITLE, SHARED_PREFS_DEFAULT);
+
+        if(isFirstTimeUser){
+            startScreenIntent();
+        }
+        else {
+            startMapIntent();
+        }
+    }
+
+
     private void startScreenIntent(){
         Intent intent = new Intent(getApplicationContext(), StartScreenActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
+
+    private void startMapIntent(){
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();

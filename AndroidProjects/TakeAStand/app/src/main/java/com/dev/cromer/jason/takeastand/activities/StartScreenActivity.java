@@ -2,6 +2,8 @@ package com.dev.cromer.jason.takeastand.activities;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -43,6 +45,8 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
     private static final String HTML_COLOR_WRAP_END = "</font>";
     private static final String TEXT_VIEW_START = "Pick your religion and join ";
     private static final String TEXT_VIEW_END = " other users around the world to take a stand";
+    private static final boolean SHARED_PREFS_BOOLEAN = false;
+    private static final String SHARED_PREFS_TITLE = "FIRST_TIME_USER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +162,13 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
     }
 
 
+    private void saveFirstTimeUserInfo(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        preferences.edit().putBoolean(SHARED_PREFS_TITLE, SHARED_PREFS_BOOLEAN).apply();
+    }
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -181,6 +192,7 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
 
         if (id == R.id.action_send) {
             updateNumberOfUsers();
+            saveFirstTimeUserInfo();
             startMapIntent();
             return true;
         }
