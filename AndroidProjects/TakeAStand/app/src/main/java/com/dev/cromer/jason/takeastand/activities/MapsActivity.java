@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.dev.cromer.jason.takeastand.Logic.BounceMarkerHandler;
 import com.dev.cromer.jason.takeastand.Logic.PostUserMarkerHandler;
 import com.dev.cromer.jason.takeastand.Logic.RetrieveAllMarkersHandler;
 import com.dev.cromer.jason.takeastand.R;
@@ -114,6 +115,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             LatLng latlngLocation = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlngLocation, CAMERA_ZOOM));
 
+            //Clear any previously mapped markers
+            mMap.clear();
+
             //Map all markers on Map
             retrieveAndMapMarkers();
         }
@@ -214,6 +218,32 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapMarkers(markersHashMap);
     }
 
+    private void bounceMarker(Marker mMarker){
+        final int offsetX = 0;
+        final int offsetY = -100;
+        BounceMarkerHandler bounceMarkerHandler = new BounceMarkerHandler(mMarker);
+
+        bounceMarkerHandler.setStartTime();
+
+        //Set projection of map
+        bounceMarkerHandler.setMapProjection(mMap);
+
+        //Set the initial latlng of our marker
+        bounceMarkerHandler.setMarkerInitialLatLng(mMarker);
+
+        //Set start point of our marker via the projection of our map
+        bounceMarkerHandler.setStartPoint(mMarker);
+
+        //Set our offset of the startPoint (distance change in x, distance change in y)
+        bounceMarkerHandler.setStartPointOffset(offsetX, offsetY);
+
+        //Set our start latlng of our bouncing animation
+        bounceMarkerHandler.setStartBounceLatLng();
+
+        //Bounce the marker!
+        bounceMarkerHandler.bounce();
+    }
+
 
     @Override
     protected void onStart() {
@@ -261,7 +291,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
-        showLocation(location);
+        if(!initialLocationShown){
+            showLocation(location);
+        }
     }
 
 
@@ -283,6 +315,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
             }
         }
+
+        bounceMarker(marker);
 
         marker.showInfoWindow();
         lastOpenedMarker = marker;
