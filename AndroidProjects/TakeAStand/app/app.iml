@@ -146,7 +146,6 @@
     <orderEntry type="library" exported="" name="play-services-panorama-8.1.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-fitness-8.1.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-wearable-8.1.0" level="project" />
-    <orderEntry type="library" exported="" name="twitter4j-core-4.0.4" level="project" />
     <orderEntry type="library" exported="" name="play-services-plus-8.1.0" level="project" />
   </component>
 </module>

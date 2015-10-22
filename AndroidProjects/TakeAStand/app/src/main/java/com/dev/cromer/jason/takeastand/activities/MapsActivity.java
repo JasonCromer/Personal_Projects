@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.dev.cromer.jason.takeastand.Logic.BounceMarkerHandler;
 import com.dev.cromer.jason.takeastand.Logic.PostUserMarkerHandler;
 import com.dev.cromer.jason.takeastand.Logic.RetrieveAllMarkersHandler;
+import com.dev.cromer.jason.takeastand.Logic.TwitterPostHandler;
 import com.dev.cromer.jason.takeastand.R;
 import com.dev.cromer.jason.takeastand.networking.GenericHttpGetRequest;
 import com.dev.cromer.jason.takeastand.networking.HttpMarkerPostRequest;
@@ -31,12 +32,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
 
-import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-
-
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener, LocationListener,
                                                                 GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMarkerClickListener {
@@ -53,6 +48,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final String POST_MARKER_URL = "http://takeastandapi.elasticbeanstalk.com/add_marker";
     private static final String GET_MARKERS_URL = "http://takeastandapi.elasticbeanstalk.com/get_markers";
     private static final String USER_RELIGION_CHOICE_EXTRA = "USER_CHOICE_EXTRA";
+    private static final String DEFAULT_TWEET_TEXT = "I just voiced my beliefs on the Take A Stand app! " +
+            "Download the app and stand with others across the globe.";
     private static final int LOCATION_REQUEST_INTERVAL_MILLISECONDS = 10000;
     private static final int FASTEST_LOCATION_REQUEST_INTERVAL_MILLISECONDS = 5000;
     private static final float CAMERA_ZOOM = 3;
@@ -347,6 +344,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return true;
         }
         else if(id == R.id.twitterShare){
+            TwitterPostHandler twitterPostHandler = new TwitterPostHandler(this);
+            twitterPostHandler.postTweet(DEFAULT_TWEET_TEXT);
             return true;
         }
 
