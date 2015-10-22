@@ -5,6 +5,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.dev.cromer.jason.takeastand.Logic.BounceMarkerHandler;
@@ -28,6 +30,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
+
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
@@ -321,6 +328,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         marker.showInfoWindow();
         lastOpenedMarker = marker;
         return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.settings_menu_items, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.globalStats) {
+            return true;
+        }
+        else if(id == R.id.twitterShare){
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

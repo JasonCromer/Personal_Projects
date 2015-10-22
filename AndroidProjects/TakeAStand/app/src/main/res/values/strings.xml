@@ -3,4 +3,7 @@
     <string name="powered_by_google_image">Required by google to inform of API usage</string>
     <string name="action_send">Send</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_blah">blah</string>
+    <string name="settings_menu_stats_item">Global Stats</string>
+    <string name="settings_menu_twitter_item">Tweet it</string>
 </resources>
