@@ -11,10 +11,10 @@ import java.util.concurrent.ExecutionException;
  * the passed in request and parameters. The method makeHttpMarkerPostRequest then returns
  * a result that indicates whether or not the post request has succeeded.
  *
- * @Param HttpMarkerPostRequest
- * @Param MarkerPostRequestParams
+ * param: HttpMarkerPostRequest
+ * param: MarkerPostRequestParams
  *
- * @Return integer
+ * return: integer
  *
  */
 public class PostUserMarkerHandler {
