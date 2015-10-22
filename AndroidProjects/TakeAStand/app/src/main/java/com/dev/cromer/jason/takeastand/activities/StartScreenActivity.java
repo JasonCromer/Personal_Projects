@@ -1,9 +1,6 @@
 package com.dev.cromer.jason.takeastand.activities;
 
-import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -18,8 +15,6 @@ import android.widget.TextView;
 import com.dev.cromer.jason.takeastand.Logic.UpdateNumUsersHandler;
 import com.dev.cromer.jason.takeastand.networking.GenericHttpGetRequest;
 import com.dev.cromer.jason.takeastand.R;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.util.concurrent.ExecutionException;
 
@@ -45,19 +40,11 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
     private static final String HTML_COLOR_WRAP_END = "</font>";
     private static final String TEXT_VIEW_START = "Pick your religion and join ";
     private static final String TEXT_VIEW_END = " other users around the world to take a stand";
-    private static final boolean SHARED_PREFS_BOOLEAN = false;
-    private static final String SHARED_PREFS_TITLE = "FIRST_TIME_USER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_screen);
-
-        int googleServiceStatus = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this,googleServiceStatus, 10);
-        if(dialog!=null){
-            dialog.show();
-        }
 
         //set itemSelected to false as no items have been selected in onCreate
         itemSelected = false;
@@ -162,11 +149,6 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
     }
 
 
-    private void saveFirstTimeUserInfo(){
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        preferences.edit().putBoolean(SHARED_PREFS_TITLE, SHARED_PREFS_BOOLEAN).apply();
-    }
-
 
 
     @Override
@@ -192,7 +174,6 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
 
         if (id == R.id.action_send) {
             updateNumberOfUsers();
-            saveFirstTimeUserInfo();
             startMapIntent();
             return true;
         }

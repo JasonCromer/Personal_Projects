@@ -1,8 +1,10 @@
 package com.dev.cromer.jason.takeastand.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -50,6 +52,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final String USER_RELIGION_CHOICE_EXTRA = "USER_CHOICE_EXTRA";
     private static final String DEFAULT_TWEET_TEXT = "I just voiced my beliefs on the Take A Stand app! " +
             "Download the app and stand with others across the globe.";
+    private static final String SHARED_PREFS_TITLE = "FIRST_TIME_USER";
+    private static final boolean SHARED_PREFS_DEFAULT = true;
+    private static final boolean SHARED_PREFS_FIRST_TIME_BOOLEAN = false;
     private static final int LOCATION_REQUEST_INTERVAL_MILLISECONDS = 10000;
     private static final int FASTEST_LOCATION_REQUEST_INTERVAL_MILLISECONDS = 5000;
     private static final float CAMERA_ZOOM = 3;
@@ -102,17 +107,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //This method shows our current location only once each time the user opens the app
     private void showLocation(Location myLocation){
-        final int result;
 
-        if(myLocation != null){
+        if(myLocation != null && mMap != null){
+
+            //Check if our user is a first time user
+            postMarkerIfFirstTimeUser(myLocation);
+
             if(!initialLocationShown){
                 initialLocationShown = true;
-
-                //post user's marker to database
-                result = postUserMarker(myLocation);
-
-                //Handle result in case marker could not be posted
-                processPostRequestResult(result);
             }
 
             //Small focus zoom on user's location
@@ -125,6 +127,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             //Map all markers on Map
             retrieveAndMapMarkers();
         }
+        else{
+            Toast.makeText(this, "Looks like we've ran into some network issues!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void postMarkerIfFirstTimeUser(Location myLocation){
+        final int result;
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        final Boolean isFirstTimeUser = preferences.getBoolean(SHARED_PREFS_TITLE, SHARED_PREFS_DEFAULT);
+
+        if(isFirstTimeUser){
+            //post user's marker to database
+            result = postUserMarker(myLocation);
+
+            //Handle result in case marker could not be posted
+            processPostRequestResult(result);
+
+            //Save in storage that the user is no longer a first time user
+            saveFirstTimeUserInfo();
+        }
+    }
+
+    private void saveFirstTimeUserInfo(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        preferences.edit().putBoolean(SHARED_PREFS_TITLE, SHARED_PREFS_FIRST_TIME_BOOLEAN).apply();
     }
 
 
@@ -151,7 +178,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         final int result;
 
         if(myLocation != null){
-
+            Log.d("TAG............", "POSTED MARKER");
             //Populate the params object
             MarkerPostRequestParams markerParams = new MarkerPostRequestParams(POST_MARKER_URL,
                     (float)myLocation.getLatitude(), (float)myLocation.getLongitude(), getUserReligionID());
@@ -341,6 +368,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         int id = item.getItemId();
 
         if (id == R.id.globalStats) {
+            Intent intent = new Intent(this, GlobalStatsActivity.class);
+            startActivity(intent);
             return true;
         }
         else if(id == R.id.twitterShare){
@@ -358,6 +387,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(myLocation != null){
             showLocation(myLocation);
         }
+
         return true;
     }
 

@@ -6,4 +6,5 @@
     <string name="title_activity_blah">blah</string>
     <string name="settings_menu_stats_item">Global Stats</string>
     <string name="settings_menu_twitter_item">Tweet it</string>
+    <string name="title_activity_global_stats">GlobalStatsActivity</string>
 </resources>

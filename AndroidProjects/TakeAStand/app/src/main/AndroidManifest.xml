@@ -47,6 +47,13 @@
             android:name=".activities.StartScreenActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name=".activities.GlobalStatsActivity"
+            android:label="@string/app_name">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MapsActivity" />
+        </activity>
     </application>
 
 </manifest>
