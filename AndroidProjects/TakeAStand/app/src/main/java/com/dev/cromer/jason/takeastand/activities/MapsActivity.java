@@ -176,7 +176,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         else if(result == RETURN_FAILED){
             //failed
-            Log.d("TAG", "SUCCESS");
+            Log.d("TAG", "FAILED");
         }
     }
 
