@@ -15,6 +15,7 @@ import com.dev.cromer.jason.takeastand.Logic.BounceMarkerHandler;
 import com.dev.cromer.jason.takeastand.Logic.PostUserMarkerHandler;
 import com.dev.cromer.jason.takeastand.Logic.RetrieveAllMarkersHandler;
 import com.dev.cromer.jason.takeastand.Logic.TwitterPostHandler;
+import com.dev.cromer.jason.takeastand.Logic.UpdateNumUsersHandler;
 import com.dev.cromer.jason.takeastand.R;
 import com.dev.cromer.jason.takeastand.networking.GenericHttpGetRequest;
 import com.dev.cromer.jason.takeastand.networking.HttpMarkerPostRequest;
@@ -47,6 +48,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     //Constants
+    private static final String UPDATE_NUM_USERS_URL = "http://takeastandapi.elasticbeanstalk.com/update_num_users";
     private static final String POST_MARKER_URL = "http://takeastandapi.elasticbeanstalk.com/add_marker";
     private static final String GET_MARKERS_URL = "http://takeastandapi.elasticbeanstalk.com/get_markers";
     private static final String USER_RELIGION_CHOICE_EXTRA = "USER_CHOICE_EXTRA";
@@ -146,12 +148,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             //Save in storage that the user is no longer a first time user
             saveFirstTimeUserInfo();
+
+            //Update global user count in database
+            updateNumberOfUsers();
         }
     }
 
     private void saveFirstTimeUserInfo(){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         preferences.edit().putBoolean(SHARED_PREFS_TITLE, SHARED_PREFS_FIRST_TIME_BOOLEAN).apply();
+    }
+
+    private void updateNumberOfUsers(){
+        //Create request and handler objects
+        final GenericHttpGetRequest httpGetRequest = new GenericHttpGetRequest();
+        final UpdateNumUsersHandler numUsersHandler = new UpdateNumUsersHandler(UPDATE_NUM_USERS_URL, httpGetRequest);
+
+        //Update the number of users in the database
+        numUsersHandler.updateNumberOfUsers();
     }
 
 

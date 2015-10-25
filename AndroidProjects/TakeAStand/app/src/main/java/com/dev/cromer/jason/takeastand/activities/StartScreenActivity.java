@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.dev.cromer.jason.takeastand.Logic.UpdateNumUsersHandler;
 import com.dev.cromer.jason.takeastand.networking.GenericHttpGetRequest;
 import com.dev.cromer.jason.takeastand.R;
 
@@ -32,7 +31,6 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
 
     //constants
     private static final String GET_NUM_USERS_URL = "http://takeastandapi.elasticbeanstalk.com/get_users";
-    private static final String UPDATE_NUM_USERS_URL = "http://takeastandapi.elasticbeanstalk.com/update_num_users";
     private static final String USER_RELIGION_CHOICE_EXTRA = "USER_CHOICE_EXTRA";
     private static final int DEFAULT_SPINNER_ITEM_POSITION = 0;
     private static final String DEFAULT_TEXT_VIEW_NUM_VALUE = "many";
@@ -139,14 +137,6 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
     }
 
 
-    private void updateNumberOfUsers(){
-        //Create request and handler objects
-        final GenericHttpGetRequest httpGetRequest = new GenericHttpGetRequest();
-        final UpdateNumUsersHandler numUsersHandler = new UpdateNumUsersHandler(UPDATE_NUM_USERS_URL, httpGetRequest);
-
-        //Update the number of users in the database
-        numUsersHandler.updateNumberOfUsers();
-    }
 
 
 
@@ -173,7 +163,6 @@ public class StartScreenActivity extends AppCompatActivity implements AdapterVie
         int id = item.getItemId();
 
         if (id == R.id.action_send) {
-            updateNumberOfUsers();
             startMapIntent();
             return true;
         }
