@@ -4,13 +4,13 @@ package com.dev.cromer.jason.takeastand.Logic;
 import android.content.Context;
 import android.content.Intent;
 
-public class TwitterPostHandler {
+public class SharePostHandler {
 
     Context appContext;
-    private static final String ACTION_INTENT_TEXT = "Tweet it!";
+    private static final String ACTION_INTENT_TEXT = "Share it!";
     private static final String TWEET_TEXT_TYPE = "text/plain";
 
-    public TwitterPostHandler(Context applicationContext){
+    public SharePostHandler(Context applicationContext){
         this.appContext = applicationContext;
     }
 

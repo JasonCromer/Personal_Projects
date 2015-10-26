@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'client'
+            keyPassword 'Doorsshut1'
+            storeFile file('/home/jason/Desktop/Personal/AndroidKeys/my-release-key.keystore')
+            storePassword 'Doorsshut1'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
-
     defaultConfig {
         applicationId "com.dev.cromer.jason.takeastand"
         minSdkVersion 16

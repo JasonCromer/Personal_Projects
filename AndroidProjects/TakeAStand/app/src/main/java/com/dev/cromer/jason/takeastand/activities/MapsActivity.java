@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.dev.cromer.jason.takeastand.Logic.BounceMarkerHandler;
 import com.dev.cromer.jason.takeastand.Logic.PostUserMarkerHandler;
 import com.dev.cromer.jason.takeastand.Logic.RetrieveAllMarkersHandler;
-import com.dev.cromer.jason.takeastand.Logic.TwitterPostHandler;
+import com.dev.cromer.jason.takeastand.Logic.SharePostHandler;
 import com.dev.cromer.jason.takeastand.Logic.UpdateNumUsersHandler;
 import com.dev.cromer.jason.takeastand.R;
 import com.dev.cromer.jason.takeastand.networking.GenericHttpGetRequest;
@@ -387,8 +387,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return true;
         }
         else if(id == R.id.twitterShare){
-            TwitterPostHandler twitterPostHandler = new TwitterPostHandler(this);
-            twitterPostHandler.postTweet(DEFAULT_TWEET_TEXT);
+            SharePostHandler sharePostHandler = new SharePostHandler(this);
+            sharePostHandler.postTweet(DEFAULT_TWEET_TEXT);
             return true;
         }
 
