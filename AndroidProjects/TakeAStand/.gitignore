@@ -9,4 +9,4 @@
 /app/src/release
 /build.gradle
 /app/build.gradle
-/
+/app/src/main/res/values/google_maps_release_key.xml
