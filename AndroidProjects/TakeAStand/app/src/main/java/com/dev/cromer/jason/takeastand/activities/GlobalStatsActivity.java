@@ -36,7 +36,7 @@ public class GlobalStatsActivity extends AppCompatActivity {
         BarChartHandler barChartHandler = new BarChartHandler(barChart);
 
         //Customize settings
-        barChartHandler.configureBarChartSettings(false, true, false, false, false, true, false);
+        barChartHandler.configureBarChartSettings(false, true, false, true, false, true, false);
 
         //Set the dataSet (yAxis) and xAxis
         barChartHandler.setDataSet(religionTypeNumsData, BAR_CHART_DATA_NAME);

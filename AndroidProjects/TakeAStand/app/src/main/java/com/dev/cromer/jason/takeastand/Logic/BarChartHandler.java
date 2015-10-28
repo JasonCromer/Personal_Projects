@@ -19,6 +19,9 @@ public class BarChartHandler {
     private ArrayList<String> xAxis;
     protected BarDataSet barDataSet;
 
+    //constants
+    private static final int LABELS_TO_SKIP = 0;
+
     public BarChartHandler(BarChart chart){
         this.barChart = chart;
     }
@@ -29,8 +32,9 @@ public class BarChartHandler {
 
         //Set to bottom position and prevent label skipping
         barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        barChart.getXAxis().setLabelsToSkip(0);
+        barChart.getXAxis().setLabelsToSkip(LABELS_TO_SKIP);
 
+        //Set bar chart background and zoom capabilities
         barChart.setDrawBarShadow(drawBarShadow);
         barChart.setDrawValueAboveBar(valueAboveBar);
         barChart.setPinchZoom(pinchZoom);
@@ -48,7 +52,14 @@ public class BarChartHandler {
         barChart.getAxisRight().setEnabled(yValuesOn);
         barChart.getAxisLeft().setEnabled(yValuesOn);
 
+        //Set legend on or off
         barChart.getLegend().setEnabled(legendOn);
+
+        //Set text color
+        barChart.getXAxis().setTextColor(Color.WHITE);
+        barChart.setGridBackgroundColor(Color.rgb(33, 33, 33));
+        barChart.setDescriptionColor(Color.WHITE);
+
 
     }
 
