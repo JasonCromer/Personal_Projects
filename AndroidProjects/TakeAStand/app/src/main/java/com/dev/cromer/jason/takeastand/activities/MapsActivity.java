@@ -53,7 +53,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final String GET_MARKERS_URL = "http://takeastandapi.elasticbeanstalk.com/get_markers";
     private static final String USER_RELIGION_CHOICE_EXTRA = "USER_CHOICE_EXTRA";
     private static final String DEFAULT_TWEET_TEXT = "I just voiced my beliefs on the Take A Stand app! " +
-            "Download the app and stand with others across the globe.";
+            "Download the app and stand strong with others across the globe.";
     private static final String SHARED_PREFS_TITLE = "FIRST_TIME_USER";
     private static final boolean SHARED_PREFS_DEFAULT = true;
     private static final boolean SHARED_PREFS_FIRST_TIME_BOOLEAN = false;

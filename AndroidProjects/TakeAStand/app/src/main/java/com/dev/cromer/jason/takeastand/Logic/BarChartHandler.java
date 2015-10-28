@@ -49,6 +49,7 @@ public class BarChartHandler {
         //yAxis
         barChart.getAxisLeft().setDrawGridLines(gridBackground);
         barChart.getAxisRight().setDrawGridLines(gridBackground);
+
         barChart.getAxisRight().setEnabled(yValuesOn);
         barChart.getAxisLeft().setEnabled(yValuesOn);
 
@@ -57,9 +58,7 @@ public class BarChartHandler {
 
         //Set text color
         barChart.getXAxis().setTextColor(Color.WHITE);
-        barChart.setGridBackgroundColor(Color.rgb(33, 33, 33));
         barChart.setDescriptionColor(Color.WHITE);
-
 
     }
 
