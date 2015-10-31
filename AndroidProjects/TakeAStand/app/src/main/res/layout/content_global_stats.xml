@@ -6,7 +6,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_global_stats"
     tools:context="com.dev.cromer.jason.takeastand.activities.GlobalStatsActivity"
-    android:background="#424242">
+    android:background="#212121">
     
     <com.github.mikephil.charting.charts.BarChart
         android:layout_width="match_parent"

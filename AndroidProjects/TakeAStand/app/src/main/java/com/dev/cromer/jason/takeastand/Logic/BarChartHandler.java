@@ -48,6 +48,8 @@ public class BarChartHandler {
 
         //yAxis
         barChart.getAxisLeft().setDrawGridLines(gridBackground);
+        barChart.getAxisLeft().setDrawLabels(!gridBackground);
+        barChart.getAxisRight().setDrawLabels(!gridBackground);
         barChart.getAxisRight().setDrawGridLines(gridBackground);
 
         barChart.getAxisRight().setEnabled(yValuesOn);
@@ -59,6 +61,8 @@ public class BarChartHandler {
         //Set text color
         barChart.getXAxis().setTextColor(Color.WHITE);
         barChart.setDescriptionColor(Color.WHITE);
+        barChart.setBackgroundColor(Color.rgb(33,33,33));
+        barChart.setGridBackgroundColor(Color.rgb(33,33,33));
 
     }
 
@@ -74,6 +78,7 @@ public class BarChartHandler {
         //Add our completed valueSet to a BarDataSet
         barDataSet = new BarDataSet(valueSet, dataName);
         barDataSet.setColors(getReligionColors());
+        barDataSet.setDrawValues(false);
     }
 
     public BarDataSet getBarDataSet(){

@@ -23,7 +23,7 @@ public class GlobalStatsActivity extends AppCompatActivity {
     private static final boolean drawBarShadow = false;
     private static final boolean valueAboveBar = false;
     private static final boolean pinchZoom = false;
-    private static final boolean gridBackground = false;
+    private static final boolean gridBackground = true;
     private static final boolean legendOn = false;
     private static final boolean xValuesOn = true;
     private static final boolean yValuesOn = false;
