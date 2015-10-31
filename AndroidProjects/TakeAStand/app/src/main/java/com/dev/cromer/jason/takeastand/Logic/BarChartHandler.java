@@ -21,12 +21,15 @@ public class BarChartHandler {
 
     //constants
     private static final int LABELS_TO_SKIP = 0;
+    private static final int LIST_START_INDEX = 0;
+    private static final boolean SET_DRAW_VALUES = false;
+    private static final int DARK_GREY_COLOR = Color.rgb(33,33,33);
 
     public BarChartHandler(BarChart chart){
         this.barChart = chart;
     }
 
-    public void configureBarChartSettings(boolean drawBarShadow, boolean valueAboveBar, boolean pinchZoom,
+    public void configureBarChartSettings(boolean drawBarShadow, boolean pinchZoom,
                                           boolean gridBackground, boolean legendOn, boolean xValuesOn,
                                           boolean yValuesOn){
 
@@ -36,33 +39,33 @@ public class BarChartHandler {
 
         //Set bar chart background and zoom capabilities
         barChart.setDrawBarShadow(drawBarShadow);
-        barChart.setDrawValueAboveBar(valueAboveBar);
         barChart.setPinchZoom(pinchZoom);
         barChart.setDoubleTapToZoomEnabled(pinchZoom);
 
+        //Grid Background enabled?
         barChart.setDrawGridBackground(gridBackground);
 
         //xAxis
-        barChart.getXAxis().setDrawGridLines(gridBackground);
         barChart.getXAxis().setEnabled(xValuesOn);
+        barChart.getXAxis().setDrawGridLines(gridBackground);
 
         //yAxis
-        barChart.getAxisLeft().setDrawGridLines(gridBackground);
-        barChart.getAxisLeft().setDrawLabels(!gridBackground);
         barChart.getAxisRight().setDrawLabels(!gridBackground);
         barChart.getAxisRight().setDrawGridLines(gridBackground);
-
         barChart.getAxisRight().setEnabled(yValuesOn);
+
+        barChart.getAxisLeft().setDrawLabels(!gridBackground);
+        barChart.getAxisLeft().setDrawGridLines(gridBackground);
         barChart.getAxisLeft().setEnabled(yValuesOn);
 
         //Set legend on or off
         barChart.getLegend().setEnabled(legendOn);
 
-        //Set text color
+        //Set text and background color
         barChart.getXAxis().setTextColor(Color.WHITE);
         barChart.setDescriptionColor(Color.WHITE);
-        barChart.setBackgroundColor(Color.rgb(33,33,33));
-        barChart.setGridBackgroundColor(Color.rgb(33,33,33));
+        barChart.setBackgroundColor(DARK_GREY_COLOR);
+        barChart.setGridBackgroundColor(DARK_GREY_COLOR);
 
     }
 
@@ -78,7 +81,7 @@ public class BarChartHandler {
         //Add our completed valueSet to a BarDataSet
         barDataSet = new BarDataSet(valueSet, dataName);
         barDataSet.setColors(getReligionColors());
-        barDataSet.setDrawValues(false);
+        barDataSet.setDrawValues(SET_DRAW_VALUES);
     }
 
     public BarDataSet getBarDataSet(){
@@ -90,7 +93,7 @@ public class BarChartHandler {
         xAxis = new ArrayList<>();
 
         //Add all contents of our religionTypes to the xAxis
-        xAxis.addAll(Arrays.asList(religionTypes).subList(0, religionTypes.length));
+        xAxis.addAll(Arrays.asList(religionTypes).subList(LIST_START_INDEX, religionTypes.length));
     }
 
     public ArrayList<String> getXAxis(){

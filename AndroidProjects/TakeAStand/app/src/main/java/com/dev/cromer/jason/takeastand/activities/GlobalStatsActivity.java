@@ -21,7 +21,6 @@ public class GlobalStatsActivity extends AppCompatActivity {
     private static final int xValueAnimation = 2000;
     private static final int yValueAnimation = 2000;
     private static final boolean drawBarShadow = false;
-    private static final boolean valueAboveBar = false;
     private static final boolean pinchZoom = false;
     private static final boolean gridBackground = true;
     private static final boolean legendOn = false;
@@ -43,7 +42,7 @@ public class GlobalStatsActivity extends AppCompatActivity {
         BarChartHandler barChartHandler = new BarChartHandler(barChart);
 
         //Customize settings
-        barChartHandler.configureBarChartSettings(drawBarShadow, valueAboveBar, pinchZoom,
+        barChartHandler.configureBarChartSettings(drawBarShadow, pinchZoom,
                 gridBackground, legendOn, xValuesOn, yValuesOn);
 
         //Set the dataSet (yAxis) and xAxis
