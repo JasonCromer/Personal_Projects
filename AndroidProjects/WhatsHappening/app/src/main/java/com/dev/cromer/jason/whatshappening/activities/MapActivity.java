@@ -3,9 +3,11 @@ package com.dev.cromer.jason.whatshappening.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 
 import com.dev.cromer.jason.whatshappening.logic.LocalMarkers;
 import com.dev.cromer.jason.whatshappening.logic.NewMarkerPostRequestParams;
+import com.dev.cromer.jason.whatshappening.logic.NotificationsHandler;
 import com.dev.cromer.jason.whatshappening.networking.NewMarkerHttpPostRequest;
 import com.dev.cromer.jason.whatshappening.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -48,6 +51,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
 
+    private SharedPreferences preferenceManager;
+
     //Map objects. Nullify objects that must not exist at activity creation
     private Marker temporaryPlacedMarker = null;
     private Marker temporarySearchedMarker = null;
@@ -58,6 +63,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     private LatLng searchedAddress;
 
     //constants
+    private static final String ALERT_DIALOG_PREFERENCES = "FIRST_USER_DIALOG_PREFS";
     private static final int CAMERA_ZOOM = 18;
     private static final int GOOGLE_API_CLIENT_ID = 0;
     private static final double LAT_LNG_OFFSET = 1.5;
@@ -89,13 +95,17 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         searchBarEditText = (EditText) findViewById(R.id.searchBarEditText);
         searchBarEditText.setOnClickListener(this);
 
-
         //Setup the autocomplete feature and googleApiClient
         setUpGoogleApiClient();
 
         //Instantiate the map
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        //Instantiate sharedPreferenceManager and display alerts
+        preferenceManager = PreferenceManager.getDefaultSharedPreferences(this);
+        displayFirstTimeInfoMessages();
+        setFirstTimeUser();
 
     }
 
@@ -277,6 +287,32 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
             }
         }, WAIT_IN_MILLISECONDS);
     }
+
+
+
+    private void displayFirstTimeInfoMessages(){
+        if(isFirstTimeUser()){
+            NotificationsHandler notificationsHandler = new NotificationsHandler(this);
+            notificationsHandler.displayChainingDialogs();
+        }
+    }
+
+    private boolean isFirstTimeUser(){
+        final boolean defaultValue = true;
+        return preferenceManager.getBoolean(ALERT_DIALOG_PREFERENCES, defaultValue);
+    }
+
+    private void setFirstTimeUser(){
+        final boolean isFirstTimeUser = false;
+        SharedPreferences.Editor editor = preferenceManager.edit();
+        editor.putBoolean(ALERT_DIALOG_PREFERENCES, isFirstTimeUser);
+        editor.apply();
+    }
+
+
+
+
+
 
 
     /*
