@@ -22,6 +22,7 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
 
     private TextView markerDescriptionTextView;
     private TextView markerLikesTextView;
+    private TextView commentsButtonTextView;
     private ImageButton upvoteButton;
     private ImageButton downvoteButton;
     private String markerDescription = "";
@@ -47,9 +48,11 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
 
         markerLikesTextView = (TextView) findViewById(R.id.markerLikesTextView);
         markerDescriptionTextView = (TextView) findViewById(R.id.markerDescriptionTextView);
+        commentsButtonTextView = (TextView) findViewById(R.id.commentsButtonTextView);
         upvoteButton = (ImageButton) findViewById(R.id.upvoteButton);
         downvoteButton = (ImageButton) findViewById(R.id.downvoteButton);
 
+        commentsButtonTextView.setOnClickListener(this);
         upvoteButton.setOnClickListener(this);
         downvoteButton.setOnClickListener(this);
 
@@ -112,10 +115,12 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
 
     private void displayMarkerLikes(){
         if(markerLikes != null){
-            markerLikesTextView.setText(markerLikes + " likes");
+            final CharSequence numLikesText = markerLikes + " likes";
+            markerLikesTextView.setText(numLikesText);
         }
         else{
-            markerLikesTextView.setText("0 likes");
+            final CharSequence noLikesText = "0 likes";
+            markerLikesTextView.setText(noLikesText);
         }
     }
 
@@ -154,6 +159,12 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
         //Get number of votes. Default likes is set to zero for first time vote case
         final int NUM_VOTES = preferences.getInt(NUM_VOTES_PREFERENCE, DEFAULT_LIKES);
 
+        //Open comments activity
+        if(v == commentsButtonTextView){
+            Intent commentsIntent = new Intent(this, CommentsActivity.class);
+            startActivity(commentsIntent);
+        }
+
         if(v == upvoteButton && NUM_VOTES < 5){
             incrementNumberOfVotes(NUM_VOTES);
             updateMarkerLikes(UPVOTE_STRING);
@@ -164,7 +175,7 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
         }
 
         //Create date stamp to compare for future date checks
-        if(NUM_VOTES >= 5){
+        else if(NUM_VOTES >= 5 && v != commentsButtonTextView){
             Toast.makeText(this.getApplicationContext(), "Sorry, you've already voted 5 times today", Toast.LENGTH_SHORT).show();
             dailyVoteHandler.storeOldDateInPreferences();
         }
@@ -180,7 +191,7 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
 
 
     @Override
-    public boolean onSupportNavigateUp(){
+    public boolean onNavigateUp(){
         finish();
         return true;
     }

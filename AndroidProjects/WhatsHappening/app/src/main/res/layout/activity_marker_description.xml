@@ -20,31 +20,26 @@
 
 
     <ImageButton
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:id="@+id/upvoteButton"
         android:contentDescription="@string/marker_voting_description"
         android:background="@drawable/ic_thumb_up_black_24dp"
         android:layout_gravity="center_vertical"
-        android:layout_below="@+id/markerDescriptionTextView"
-        android:layout_alignLeft="@+id/markerDescriptionTextView"
-        android:layout_alignStart="@+id/markerDescriptionTextView"
-        android:layout_marginLeft="110dp"
-        android:layout_marginStart="110dp"
-        android:layout_marginTop="60dp" />
+        android:layout_below="@+id/markerLikesTextView"
+        android:layout_toLeftOf="@+id/markerLikesTextView"
+        android:layout_toStartOf="@+id/markerLikesTextView" />
 
     <ImageButton
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:id="@+id/downvoteButton"
         android:contentDescription="@string/marker_voting_description"
         android:background="@drawable/ic_thumb_down_black_24dp"
         android:layout_gravity="center_vertical"
-        android:layout_alignTop="@+id/upvoteButton"
-        android:layout_alignRight="@+id/markerDescriptionTextView"
-        android:layout_alignEnd="@+id/markerDescriptionTextView"
-        android:layout_marginRight="110dp"
-        android:layout_marginEnd="110dp" />
+        android:layout_below="@+id/markerLikesTextView"
+        android:layout_toRightOf="@+id/markerLikesTextView"
+        android:layout_toEndOf="@+id/markerLikesTextView" />
 
     <TextView
         android:layout_width="150dp"
@@ -55,5 +50,15 @@
         android:background="@drawable/textview_border"
         android:id="@+id/markerLikesTextView"
         android:layout_below="@+id/markerDescriptionTextView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/comment_button"
+        android:textColor="#00BCD4"
+        android:id="@+id/commentsButtonTextView"
+        android:layout_alignBottom="@+id/upvoteButton"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>
