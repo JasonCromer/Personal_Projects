@@ -3,7 +3,7 @@ package com.dev.cromer.jason.whatshappening.networking;
 
 import android.os.AsyncTask;
 
-import com.dev.cromer.jason.whatshappening.logic.MarkerLikesPostRequestParams;
+import com.dev.cromer.jason.whatshappening.objects.MarkerLikesPostRequestParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -14,8 +14,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.dev.cromer.jason.whatshappening.logic.LocalMarkers;
-import com.dev.cromer.jason.whatshappening.logic.NewMarkerPostRequestParams;
+import com.dev.cromer.jason.whatshappening.logic.LocalMarkersHandler;
+import com.dev.cromer.jason.whatshappening.objects.NewMarkerPostRequestParams;
 import com.dev.cromer.jason.whatshappening.logic.NotificationsHandler;
 import com.dev.cromer.jason.whatshappening.networking.NewMarkerHttpPostRequest;
 import com.dev.cromer.jason.whatshappening.R;
@@ -230,12 +230,12 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         HashMap<MarkerOptions, Integer> currentLocalMarkersHashMap;
 
         //Set up nearby markers
-        LocalMarkers localMarkers = new LocalMarkers(mCurrentLocation, mMap);
+        LocalMarkersHandler localMarkersHandler = new LocalMarkersHandler(mCurrentLocation, mMap);
         //Retrieve local markers from database
-        localMarkers.retrieveLocalMarkers();
+        localMarkersHandler.retrieveLocalMarkers();
 
         // display local markers from other users
-        currentLocalMarkersHashMap = localMarkers.getLocalMarkersList();
+        currentLocalMarkersHashMap = localMarkersHandler.getLocalMarkersList();
         compareAndMapLocalMarkers(currentLocalMarkersHashMap);
     }
 

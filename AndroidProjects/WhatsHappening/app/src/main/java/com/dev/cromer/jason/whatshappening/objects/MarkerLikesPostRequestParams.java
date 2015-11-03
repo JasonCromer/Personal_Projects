@@ -1,4 +1,4 @@
-package com.dev.cromer.jason.whatshappening.logic;
+package com.dev.cromer.jason.whatshappening.objects;
 
 
 public class MarkerLikesPostRequestParams {

@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class LocalMarkers {
+public class LocalMarkersHandler {
 
     Location markerLatLngLocation;
     GoogleMap mMap;
@@ -24,7 +24,7 @@ public class LocalMarkers {
     private static final String snippetText = "Click for info";
     private static final String GET_MARKERS_ENDPOINT = "http://whatsappeningapi.elasticbeanstalk.com/api/get_markers/";
 
-    public LocalMarkers(Location markerLatLngLocation, GoogleMap mMap) {
+    public LocalMarkersHandler(Location markerLatLngLocation, GoogleMap mMap) {
         this.markerLatLngLocation = markerLatLngLocation;
         this.mMap = mMap;
     }

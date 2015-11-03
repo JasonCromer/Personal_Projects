@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.dev.cromer.jason.whatshappening.R;
 import com.dev.cromer.jason.whatshappening.logic.DailyVoteHandler;
-import com.dev.cromer.jason.whatshappening.logic.MarkerLikesPostRequestParams;
+import com.dev.cromer.jason.whatshappening.objects.MarkerLikesPostRequestParams;
 import com.dev.cromer.jason.whatshappening.networking.HttpGetRequest;
 import com.dev.cromer.jason.whatshappening.networking.UpdateMarkerLikesHttpPostRequest;
 

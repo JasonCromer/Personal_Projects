@@ -13,7 +13,7 @@ public class NotificationInstructionFactory {
 
     public NotificationInstructionFactory(Context context){
         //Pass in our activity context and set our theme dialog for the alert dialog
-        themeWrapper = new ContextThemeWrapper(context, android.R.style.Theme_Dialog);
+        themeWrapper = new ContextThemeWrapper(context, android.R.style.Theme_Translucent);
 
         //Use our theme wrapper to instantiate a new Alert Dialog builder
         alertDialogBuilder = new AlertDialog.Builder(themeWrapper);
