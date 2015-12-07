@@ -17,17 +17,26 @@
         android:layout_centerHorizontal="true"
         android:descendantFocusability="blocksDescendants"/>
 
-    <Button
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="GO Now"
         android:textColor="#FFFFFF"
-        android:id="@+id/button"
+        android:id="@+id/doneButton"
+        android:padding="5dp"
+        android:src="@drawable/ic_done_white_16dp_2x"
         android:background="@color/colorAccent"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="31dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Enter Lifted Weight"
+        android:id="@+id/enterNumTextView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

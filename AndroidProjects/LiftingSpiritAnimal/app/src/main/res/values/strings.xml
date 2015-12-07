@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Lifting Spirit Animal</string>
     <string name="enter_weight">Enter Lifted Weight</string>
+    <string name="main_go_button">GO</string>
 </resources>

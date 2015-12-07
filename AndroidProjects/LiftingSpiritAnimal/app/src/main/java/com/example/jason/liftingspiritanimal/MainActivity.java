@@ -1,12 +1,18 @@
 package com.example.jason.liftingspiritanimal;
 
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener {
+public class MainActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener, View.OnClickListener {
 
     private NumberPicker numberPicker;
+    private TextView numTextView;
+    private ImageButton doneButton;
 
     //Constants
     private static final int NUM_PICK_MIN_VALUE = 0;
@@ -17,10 +23,23 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Set reference to the numberPicker
+        //Set references to our view items
         numberPicker = (NumberPicker) findViewById(R.id.numberPicker);
+        numTextView = (TextView) findViewById(R.id.enterNumTextView);
+        doneButton = (ImageButton) findViewById(R.id.doneButton);
+
+        //Set on-click listeners for our view items
         numberPicker.setOnValueChangedListener(this);
+        doneButton.setOnClickListener(this);
+
+        //Additional settings
         setNumberPickerSettings();
+        setTextViewFont();
+    }
+
+
+    private void setTextViewFont(){
+        numTextView.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Lato-Light.ttf"));
     }
 
 
@@ -32,6 +51,11 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
 
     @Override
     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+
+    }
+
+    @Override
+    public void onClick(View v) {
 
     }
 }
