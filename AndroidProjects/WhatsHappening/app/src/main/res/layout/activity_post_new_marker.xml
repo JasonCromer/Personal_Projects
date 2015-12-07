@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E0E0E0"
+    android:background="#FFFFFF"
     tools:context="com.dev.cromer.jason.whatshappening.activities.SetMarkerTitleActivity">
 
     <EditText
@@ -13,7 +13,6 @@
         android:hint="@string/marker_title_hint"
         android:padding="10dp"
         android:layout_margin="10dp"
-        android:background="@drawable/top_bottom_border"
         android:singleLine="true"
         android:textColor="#000000"
         android:maxLength="18" />
@@ -33,8 +32,8 @@
         android:layout_height="wrap_content"
         android:text=""
         android:gravity="center"
-        android:padding="10dp"
-        android:background="@drawable/textview_border"
+        android:textStyle="italic"
+
         android:id="@+id/lastTitleTextView"
         android:layout_below="@+id/cyanTitleTextView"
         android:layout_centerHorizontal="true" />

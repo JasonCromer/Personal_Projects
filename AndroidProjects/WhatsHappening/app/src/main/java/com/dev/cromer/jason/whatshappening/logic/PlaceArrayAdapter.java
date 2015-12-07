@@ -2,11 +2,9 @@ package com.dev.cromer.jason.whatshappening.logic;
 
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -23,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 
 public class PlaceArrayAdapter extends ArrayAdapter<PlaceArrayAdapter.PlaceAutocomplete> implements Filterable {
 
-    private static final String TAG = "PlaceArrayAdapter";
     private GoogleApiClient mGoogleApiClient;
     private AutocompleteFilter mPlaceFilter;
     private LatLngBounds mBounds;
@@ -37,8 +34,7 @@ public class PlaceArrayAdapter extends ArrayAdapter<PlaceArrayAdapter.PlaceAutoc
      * @param bounds   Used to specify the search bounds
      * @param filter   Used to specify place types
      */
-    public PlaceArrayAdapter(Context context, int resource, LatLngBounds bounds,
-                             AutocompleteFilter filter) {
+    public PlaceArrayAdapter(Context context, int resource, LatLngBounds bounds, AutocompleteFilter filter) {
         super(context, resource);
         mBounds = bounds;
         mPlaceFilter = filter;
@@ -47,7 +43,8 @@ public class PlaceArrayAdapter extends ArrayAdapter<PlaceArrayAdapter.PlaceAutoc
     public void setGoogleApiClient(GoogleApiClient googleApiClient) {
         if (googleApiClient == null || !googleApiClient.isConnected()) {
             mGoogleApiClient = null;
-        } else {
+        }
+        else {
             mGoogleApiClient = googleApiClient;
         }
     }
@@ -64,38 +61,43 @@ public class PlaceArrayAdapter extends ArrayAdapter<PlaceArrayAdapter.PlaceAutoc
 
 
     private ArrayList<PlaceAutocomplete> getPredictions(CharSequence constraint) {
+
         if (mGoogleApiClient != null) {
-            Log.i(TAG, "Executing autocomplete query for: " + constraint);
+
+            //Query predictions with our constraint input
             PendingResult<AutocompletePredictionBuffer> results =
                     Places.GeoDataApi.getAutocompletePredictions(mGoogleApiClient, constraint.toString(),
                                     mBounds, mPlaceFilter);
+
             // Wait for predictions, set the timeout.
             AutocompletePredictionBuffer autocompletePredictions = results
                     .await(60, TimeUnit.SECONDS);
+
             final Status status = autocompletePredictions.getStatus();
+
+            //Return null if our results failed
             if (!status.isSuccess()) {
-                Toast.makeText(getContext(), "Error: " + status.toString(),
-                        Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "Error getting place predictions: " + status
-                        .toString());
                 autocompletePredictions.release();
                 return null;
             }
 
-            Log.i(TAG, "Query completed. Received " + autocompletePredictions.getCount()
-                    + " predictions.");
             Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
             ArrayList<PlaceAutocomplete> resultList = new ArrayList<>(autocompletePredictions.getCount());
+
+            //Add our results to an ArrayList
             while (iterator.hasNext()) {
                 AutocompletePrediction prediction = iterator.next();
                 resultList.add(new PlaceAutocomplete(prediction.getPlaceId(),
                         prediction.getDescription()));
             }
+
             // Buffer release
             autocompletePredictions.release();
+
             return resultList;
         }
-        Log.e(TAG, "Google API client is not connected.");
+
+        //Return null if our Google API client isn't connected
         return null;
     }
 
@@ -105,24 +107,33 @@ public class PlaceArrayAdapter extends ArrayAdapter<PlaceArrayAdapter.PlaceAutoc
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults results = new Filter.FilterResults();
+
                 if (constraint != null) {
+
                     // Query the autocomplete API for the entered constraint
                     mResultList = getPredictions(constraint);
+
                     if (mResultList != null) {
+
                         // Results
                         results.values = mResultList;
                         results.count = mResultList.size();
                     }
                 }
+
                 return results;
             }
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
+
                 if (results != null && results.count > 0) {
+
                     // The API returned at least one result, update the data.
                     notifyDataSetChanged();
-                } else {
+                }
+                else {
+
                     // The API did not return any results, invalidate the data set.
                     notifyDataSetInvalidated();
                 }

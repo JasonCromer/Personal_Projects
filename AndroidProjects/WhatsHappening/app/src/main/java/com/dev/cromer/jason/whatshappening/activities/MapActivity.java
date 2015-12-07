@@ -64,7 +64,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     //constants
     private static final String ALERT_DIALOG_PREFERENCES = "FIRST_USER_DIALOG_PREFS";
-    private static final int CAMERA_ZOOM = 18;
+    private static final int CAMERA_ZOOM = 12;
     private static final int GOOGLE_API_CLIENT_ID = 0;
     private static final double LAT_LNG_OFFSET = 1.5;
     private static final int POST_NEW_MARKER_REQ_CODE = 1;
@@ -105,8 +105,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         //Instantiate sharedPreferenceManager and display alerts
         preferenceManager = PreferenceManager.getDefaultSharedPreferences(this);
         displayFirstTimeInfoMessages();
-        setFirstTimeUser();
-
     }
 
 
@@ -168,7 +166,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         if(v == searchBarEditText){
             //Start intent for user to search a place
             Intent searchIntent = new Intent(this, SearchPlaceActivity.class);
-            searchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivityForResult(searchIntent, SEARCH_PLACE_REQ_CODE);
         }
     }
@@ -302,17 +299,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         return preferenceManager.getBoolean(ALERT_DIALOG_PREFERENCES, defaultValue);
     }
 
-    private void setFirstTimeUser(){
-        final boolean isFirstTimeUser = false;
-        SharedPreferences.Editor editor = preferenceManager.edit();
-        editor.putBoolean(ALERT_DIALOG_PREFERENCES, isFirstTimeUser);
-        editor.apply();
-    }
-
-
-
-
-
 
 
     /*
@@ -398,10 +384,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
             //is the marker already open
             if (lastOpenedMarker.equals(marker)) {
-                Intent descriptionIntent = new Intent(getApplicationContext(), MarkerDescriptionActivity.class);
-                descriptionIntent.putExtra("MARKER_ID", String.valueOf(markerIDHashMap.get(marker.getId())));
-                descriptionIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(descriptionIntent);
 
                 //if so, nullify it
                 lastOpenedMarker = null;
@@ -426,7 +408,11 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         //Open marker description
         Intent descriptionIntent = new Intent(getApplicationContext(), MarkerDescriptionActivity.class);
         descriptionIntent.putExtra("MARKER_ID", String.valueOf(markerIDHashMap.get(marker.getId())));
-        descriptionIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        //Make our LatLng a parcelable object to pass to intent
+        Bundle args = new Bundle();
+        args.putParcelable("LATLNG", marker.getPosition());
+        descriptionIntent.putExtra("MARKER_LOCATION", args);
         startActivity(descriptionIntent);
     }
 
@@ -481,7 +467,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         switch (requestCode){
             case(POST_NEW_MARKER_REQ_CODE):
                 //remove temporary marker because a new one will be placed with the title
-                temporaryPlacedMarker.remove();
+                if(temporaryPlacedMarker != null){
+                    temporaryPlacedMarker.remove();
+                }
 
                 if(resultCode == Activity.RESULT_OK){
                     //Get title inputted by user in previous activity

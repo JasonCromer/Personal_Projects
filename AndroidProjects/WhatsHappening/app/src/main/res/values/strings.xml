@@ -10,6 +10,6 @@
     <string name="action_send">Send</string>
     <string name="title_activity_marker_description">MarkerDescriptionActivity</string>
     <string name="marker_voting_description">Upvote or downvote the marker</string>
-    <string name="comment_button">Comments</string>
-    <string name="title_activity_comments">CommentsActivity</string>
+    <string name="comment_text">Write a comment</string>
+    <string name="social_media_share">Share!</string>
 </resources>

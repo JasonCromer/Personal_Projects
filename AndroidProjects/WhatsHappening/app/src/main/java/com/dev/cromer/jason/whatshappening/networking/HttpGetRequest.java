@@ -14,8 +14,6 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
     private static final String REQUEST_METHOD = "GET";
     private static final int READ_TIMEOUT = 15000;
 
-
-
     @Override
     protected String doInBackground(String... url) {
         String stringURL = url[0];

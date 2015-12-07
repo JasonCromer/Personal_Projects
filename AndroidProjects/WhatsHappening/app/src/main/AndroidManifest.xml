@@ -40,7 +40,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_debug_key" />
+            android:value="@string/google_maps_api_key" />
 
         <activity
             android:name=".activities.MapActivity"
@@ -78,14 +78,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.dev.cromer.jason.whatshappening.activities.MapActivity" />
-        </activity>
-        <activity
-            android:name=".activities.CommentsActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MarkerDescriptionActivity" />
         </activity>
     </application>
 
