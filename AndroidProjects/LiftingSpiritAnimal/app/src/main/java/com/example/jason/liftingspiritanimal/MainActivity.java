@@ -1,5 +1,6 @@
 package com.example.jason.liftingspiritanimal;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -56,6 +57,9 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
 
     @Override
     public void onClick(View v) {
-
+        if(v == doneButton){
+            Intent resultsIntent = new Intent(this, DisplayResultsActivity.class);
+            startActivity(resultsIntent);
+        }
     }
 }
