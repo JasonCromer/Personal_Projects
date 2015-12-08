@@ -52,7 +52,7 @@ public class DisplayResultsActivity extends AppCompatActivity{
     protected void onStart() {
         super.onStart();
 
-        getRandomImage("Koala");
+        getRandomImage("Koala,animal,mammal");
     }
 
     private void enableUpNavigation(){
