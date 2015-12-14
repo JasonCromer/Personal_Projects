@@ -2,4 +2,6 @@
     <string name="app_name">Lifting Spirit Animal</string>
     <string name="enter_weight">Enter Lifted Weight</string>
     <string name="results_textview">You can lift a: </string>
+    <string name="nein_string">NEIN!</string>
+    <string name="nothing_string">Nothing.</string>
 </resources>

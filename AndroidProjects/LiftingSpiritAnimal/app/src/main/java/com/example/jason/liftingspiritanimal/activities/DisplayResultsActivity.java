@@ -1,4 +1,4 @@
-package com.example.jason.liftingspiritanimal;
+package com.example.jason.liftingspiritanimal.activities;
 
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.jason.liftingspiritanimal.R;
 import com.example.jason.liftingspiritanimal.networking.VolleySingleton;
 
 import org.json.JSONArray;
@@ -33,6 +34,7 @@ public class DisplayResultsActivity extends AppCompatActivity{
             "format=json&nojsoncallback=1&sort=random&method=flickr.photos.search&tags=";
     private static final String IMG_ENDPOINT_END = "&tag_mode=all&api_key=";
     private static final String GET_REQUEST_TAG = "get_request";
+    private static final String ANIMAL_STRING = "animal_string";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +48,17 @@ public class DisplayResultsActivity extends AppCompatActivity{
 
         resultImage = (ImageView) findViewById(R.id.imageView);
         resultTextView = (TextView) findViewById(R.id.animalNameTextView);
+
+        //Retrieve our passed in animal string
+        String animal = getAnimalStringFromIntent();
+
+        //Get and show our image
+        showImage(animal);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        getRandomImage("Koala,animal,mammal");
     }
 
     private void enableUpNavigation(){
@@ -62,11 +68,41 @@ public class DisplayResultsActivity extends AppCompatActivity{
     }
 
 
+    private String getAnimalStringFromIntent(){
+        return this.getIntent().getStringExtra(ANIMAL_STRING);
+    }
+
     private void instantiateVolleyRequestQueue(){
         //Start our queue and persist it through app lifetime
         queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
     }
 
+
+    private void showImage(String animal){
+
+        //Create a string of tags to search Flickr with
+        String searchTags;
+
+        switch (animal) {
+            case "Nothing":
+                searchTags = "Nothing,lame";
+                getRandomImage(searchTags);
+                resultTextView.setText(R.string.nothing_string);
+                break;
+            case "999":
+                resultImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                resultImage.setImageResource(R.drawable.nein_nein_nein);
+                resultTextView.setText(R.string.nein_string);
+                break;
+            default:
+                searchTags = animal + ",animal,mammal";
+                getRandomImage(searchTags);
+
+                //Set the textview with the corresponding animal
+                resultTextView.setText(animal);
+                break;
+        }
+    }
 
     private void getRandomImage(String tag){
 
