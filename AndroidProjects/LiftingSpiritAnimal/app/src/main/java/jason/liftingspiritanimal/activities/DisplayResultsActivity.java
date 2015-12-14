@@ -1,4 +1,4 @@
-package com.example.jason.liftingspiritanimal.activities;
+package jason.liftingspiritanimal.activities;
 
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
@@ -16,8 +16,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.jason.liftingspiritanimal.R;
-import com.example.jason.liftingspiritanimal.networking.VolleySingleton;
+import jason.liftingspiritanimal.R;
+import jason.liftingspiritanimal.networking.VolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,14 +27,14 @@ import java.util.Random;
 
 public class DisplayResultsActivity extends AppCompatActivity {
 
-    //UI components and other persistant variables
+    //UI components and other persistent variables
     private RequestQueue queue;
     private ImageView resultImage;
     private TextView resultTextView;
     private String animal;
+    private String API_KEY;
 
     //constants
-    private final String API_KEY = getString(R.string.api_key);
     private static final String IMG_ENDPOINT_START = "https://api.flickr.com/services/rest/?" +
             "format=json&nojsoncallback=1&sort=random&method=flickr.photos.search&tags=";
     private static final String IMG_ENDPOINT_END = "&tag_mode=all&api_key=";
@@ -46,6 +46,9 @@ public class DisplayResultsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_results);
+
+        //Get our API key from Values folder
+        API_KEY = getString(R.string.api_key);
 
         //Add up navigation
         enableUpNavigation();

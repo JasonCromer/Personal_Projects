@@ -1,4 +1,4 @@
-package com.example.jason.liftingspiritanimal.activities;
+package jason.liftingspiritanimal.activities;
 
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -9,7 +9,7 @@ import android.widget.ImageButton;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
-import com.example.jason.liftingspiritanimal.R;
+import jason.liftingspiritanimal.R;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {

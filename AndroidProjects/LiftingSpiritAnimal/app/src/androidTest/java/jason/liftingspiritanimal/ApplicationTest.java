@@ -1,4 +1,4 @@
-package com.example.jason.liftingspiritanimal;
+package jason.liftingspiritanimal;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

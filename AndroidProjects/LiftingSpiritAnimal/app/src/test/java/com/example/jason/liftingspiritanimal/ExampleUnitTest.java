@@ -1,4 +1,4 @@
-package com.example.jason.liftingspiritanimal;
+package jason.liftingspiritanimal;
 
 import org.junit.Test;
 
