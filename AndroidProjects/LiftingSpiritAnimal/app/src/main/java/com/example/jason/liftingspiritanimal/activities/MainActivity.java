@@ -84,16 +84,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return "Meerkat";
         }
         else if(value <= 10){
-            return "Jungle Cat";
+            return "Sloth";
         }
         else if(value <= 20){
             return "Oribi";
         }
         else if(value <= 30){
-            return "Sea otter";
+            return "Sea Otter";
         }
         else if(value <= 40){
-            return "Bonono";
+            return "Hyena";
         }
         else if(value <= 50){
             return "Cheetah";
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return "Aardvark";
         }
         else if(value <= 100){
-            return "Mountain Goat";
+            return "Goat";
         }
         else if(value <= 125){
             return "Tiger";
@@ -120,13 +120,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return "Okapi";
         }
         else if(value <= 250){
-            return "Malayan Tapir";
+            return "Tapir";
         }
         else if(value <= 275){
-            return "Gray Seal";
+            return "Seal";
         }
         else if(value <= 300){
-            return "Humpbacked Dolphin";
+            return "Dolphin";
         }
         else if(value <= 325){
             return "Manatee";
@@ -135,22 +135,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return "Dugong";
         }
         else if(value <= 375){
-            return "Leopard Seal";
+            return "Zebra";
         }
         else if(value <= 400){
             return "Moose";
         }
-        else if(value <= 425){
-            return "Weddell Seal";
-        }
         else if(value <= 450){
-            return "Risso's dolphin";
+            return "Camel";
         }
         else if(value <= 475){
             return "Polar Bear";
         }
         else if(value <= 500){
-            return "Amazonian Manatee";
+            return "Bovine";
         }
         else if(value <= 650){
             return "Bison";
@@ -159,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return "Yak";
         }
         else if(value <= 750){
-            return "Water Buffalo";
+            return "Buffalo";
         }
         else if(value <= 800){
             return "Giraffe";

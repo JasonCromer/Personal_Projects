@@ -95,7 +95,7 @@ public class DisplayResultsActivity extends AppCompatActivity{
                 resultTextView.setText(R.string.nein_string);
                 break;
             default:
-                searchTags = animal + ",animal,mammal";
+                searchTags = animal.replace(" ","") + ",animal,mammal";
                 getRandomImage(searchTags);
 
                 //Set the textview with the corresponding animal
