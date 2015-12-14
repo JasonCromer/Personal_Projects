@@ -34,7 +34,7 @@ public class DisplayResultsActivity extends AppCompatActivity {
     private String animal;
 
     //constants
-    private static final String API_KEY = "0eb90221661628f6b49c4b38e26009eb";
+    private final String API_KEY = getString(R.string.api_key);
     private static final String IMG_ENDPOINT_START = "https://api.flickr.com/services/rest/?" +
             "format=json&nojsoncallback=1&sort=random&method=flickr.photos.search&tags=";
     private static final String IMG_ENDPOINT_END = "&tag_mode=all&api_key=";

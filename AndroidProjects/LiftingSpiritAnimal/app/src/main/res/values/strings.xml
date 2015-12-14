@@ -4,5 +4,6 @@
     <string name="results_textview">You can lift a: </string>
     <string name="nein_string">NEIN!</string>
     <string name="nothing_string">Nothing.</string>
-    <string name="new_image_icon">New Image</string>
+    <string name="new_image_icon">New Image</string>\
+    <string name="api_key">0eb90221661628f6b49c4b38e26009eb</string>
 </resources>
