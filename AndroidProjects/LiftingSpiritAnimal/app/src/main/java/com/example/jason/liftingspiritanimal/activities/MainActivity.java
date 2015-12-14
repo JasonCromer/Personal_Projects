@@ -14,6 +14,7 @@ import com.example.jason.liftingspiritanimal.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    //UI components
     private NumberPicker numberPicker;
     private TextView numTextView;
     private ImageButton doneButton;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int NUM_PICK_MIN_VALUE = 0;
     private static final int NUM_PICK_MAX_VALUE = 1000;
     private static final String ANIMAL_STRING = "animal_string";
+    private static final String FONT_PATH = "fonts/Lato-Light.ttf";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void setTextViewFont(){
-        numTextView.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Lato-Light.ttf"));
+        numTextView.setTypeface(Typeface.createFromAsset(getAssets(), FONT_PATH));
     }
 
 
@@ -71,8 +73,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
-
+    /*
+        This method compares the value from the number picker in order to
+        determine what animal is associated with the number picker value.
+        Once a number is found, it is returned.
+     */
     private String getAnimal(int value){
         if(value == 0){
             return "Nothing";
