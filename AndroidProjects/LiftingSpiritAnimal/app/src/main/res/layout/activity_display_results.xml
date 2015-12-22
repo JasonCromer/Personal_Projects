@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:text="New Text"
             android:textColor="#FFFFFF"
-            android:textSize="60sp"
+            android:textSize="55sp"
             android:id="@+id/animalNameTextView"
             android:layout_below="@+id/youCanLiftTextView"
             android:layout_centerHorizontal="true" />
