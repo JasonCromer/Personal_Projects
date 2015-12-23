@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ public class DisplayResultsActivity extends AppCompatActivity {
     private RequestQueue queue;
     private ImageView resultImage;
     private TextView resultTextView;
+    private TextView youCanLiftTextView;
     private String animal;
     private String API_KEY;
 
@@ -59,6 +61,7 @@ public class DisplayResultsActivity extends AppCompatActivity {
         //Reference UI components
         resultImage = (ImageView) findViewById(R.id.imageView);
         resultTextView = (TextView) findViewById(R.id.animalNameTextView);
+        youCanLiftTextView = (TextView) findViewById(R.id.youCanLiftTextView);
 
         //Retrieve our passed in animal string
         animal = getAnimalStringFromIntent();
@@ -72,7 +75,7 @@ public class DisplayResultsActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        //Cancel Request to prevent crash
+        //Cancel Requests to prevent crash
         if(queue != null){
             queue.cancelAll(GET_REQUEST_TAG);
         }
@@ -132,10 +135,12 @@ public class DisplayResultsActivity extends AppCompatActivity {
                 searchTags = "Nothing,lame";
                 getRandomImage(searchTags);
                 resultTextView.setText(R.string.nothing_string);
+                youCanLiftTextView.setText(R.string.results_2_string);
                 break;
             case "999":
                 resultImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 resultImage.setImageResource(R.drawable.nein_nein_nein);
+                youCanLiftTextView.setText(R.string.results_textview);
                 resultTextView.setText(R.string.nein_string);
                 break;
             default:
@@ -143,6 +148,7 @@ public class DisplayResultsActivity extends AppCompatActivity {
                 getRandomImage(searchTags);
 
                 //Set the textview with the corresponding animal
+                youCanLiftTextView.setText(R.string.results_textview);
                 resultTextView.setText(animal);
                 break;
         }
@@ -151,7 +157,7 @@ public class DisplayResultsActivity extends AppCompatActivity {
 
     /*
         This method retrieves a random image from Flickr's API associated with a String Tag(s).
-        The tag(s) are then used to retrive an array of image data associated with it. We then
+        The tag(s) are then used to retrieve an array of image data associated with it. We then
         use a randomly generated number to access an index of the array, choosing a random
         image data. We then use the image data to make a URL that points the the actual picture
         associated with that data. Afterwards, loadImage() is called, with the said URL passed
@@ -207,7 +213,7 @@ public class DisplayResultsActivity extends AppCompatActivity {
         The request is made using volley, and the image is set to the UI upon
         successful http response. Otherwise, an error message is displayed.
      */
-    private void loadImage(String imageURL){
+    private void loadImage(final String imageURL){
         final int maxWidth = 0;
         final int maxHeight = 0;
         final ImageView.ScaleType scaleType = ImageView.ScaleType.CENTER_CROP;
@@ -219,8 +225,10 @@ public class DisplayResultsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Bitmap response) {
 
+                //Scale our image
+                Bitmap scaledBitmap = scaleBitmap(response);
                 //Set our image
-                resultImage.setImageBitmap(response);
+                resultImage.setImageBitmap(scaledBitmap);
             }
         }, maxWidth, maxHeight, scaleType, config,
 
@@ -241,5 +249,14 @@ public class DisplayResultsActivity extends AppCompatActivity {
         final String errorMessage = "Sorry, something went wrong";
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
     }
+
+
+    //Scale bitmap according to size of the ImageView's Relative Layout
+    private Bitmap scaleBitmap(Bitmap image){
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.imageViewRelativeLayout);
+
+        return Bitmap.createScaledBitmap(image, layout.getWidth(), layout.getHeight(), true);
+    }
+
 
 }
