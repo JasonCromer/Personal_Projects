@@ -52,7 +52,7 @@ public class RetrieveAllMarkersHandler {
     public String[] parseMarkerResult(String input){
         if(input != null){
 
-            //Remove jsonified componenets from retrieved list
+            //Remove jsonified components from retrieved list
             input = input.replace("[","").replace("]","").replace("\"", "").replace(" ","");
 
             //Convert the input to an Array

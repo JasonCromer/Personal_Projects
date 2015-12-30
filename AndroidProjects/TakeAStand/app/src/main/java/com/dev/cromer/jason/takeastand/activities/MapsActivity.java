@@ -6,7 +6,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -61,7 +60,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int FASTEST_LOCATION_REQUEST_INTERVAL_MILLISECONDS = 5000;
     private static final float CAMERA_ZOOM = 3;
     private static final int RETURN_FAILED = -1;
-    private static final int RETURN_SUCCESS = 0;
+    //private static final int RETURN_SUCCESS = 0;
     private static final int INT_AGNOSTIC = 6;
 
 
@@ -77,7 +76,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-
     private void setUpGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -87,6 +85,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+
     private void setUpMap() {
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(false); //disable UI features
@@ -94,7 +93,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMarkerClickListener(this);
     }
-
 
 
     private void startLocationUpdates() {
@@ -106,6 +104,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
     }
+
 
     //This method shows our current location only once each time the user opens the app
     private void showLocation(Location myLocation){
@@ -134,6 +133,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+
     private void postMarkerIfFirstTimeUser(Location myLocation){
         final int result;
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -158,6 +158,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         preferences.edit().putBoolean(SHARED_PREFS_TITLE, SHARED_PREFS_FIRST_TIME_BOOLEAN).apply();
     }
+
 
     private void updateNumberOfUsers(){
         //Create request and handler objects
@@ -188,11 +189,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return userReligionID;
     }
 
+
     private int postUserMarker(Location myLocation){
         final int result;
 
         if(myLocation != null){
-            Log.d("TAG............", "POSTED MARKER");
+
             //Populate the params object
             MarkerPostRequestParams markerParams = new MarkerPostRequestParams(POST_MARKER_URL,
                     (float)myLocation.getLatitude(), (float)myLocation.getLongitude(), getUserReligionID());
@@ -209,17 +211,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return RETURN_FAILED;
     }
 
+
     private void processPostRequestResult(int result){
         //Perform any post processing if needed
-        if(result == RETURN_SUCCESS){
-            //Success
-            Log.d("TAG", "SUCCESS");
-        }
-        else if(result == RETURN_FAILED){
+        if(result == RETURN_FAILED){
             //failed
-            Log.d("TAG", "FAILED");
+            final String errorString = "Sorry, something went wrong.";
+            Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
         }
     }
+
 
     private HashMap<MarkerOptions, Integer> retrieveAllMarkers(){
         final String stringResult;
@@ -263,6 +264,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapMarkers(markersHashMap);
     }
 
+
     private void bounceMarker(Marker mMarker){
         final int offsetX = 0;
         final int offsetY = -100;
@@ -296,6 +298,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mGoogleApiClient.connect();
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -304,6 +307,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             startLocationUpdates();
         }
     }
+
 
     @Override
     protected void onPause() {
@@ -314,25 +318,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         setUpMap();
     }
 
+
     @Override
     public void onConnected(Bundle bundle) {
         startLocationUpdates();
     }
 
+
     @Override
     public void onConnectionSuspended(int i) {
     }
+
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Toast.makeText(getApplicationContext(), "Oh no! Looks like we've got some network issues.", Toast.LENGTH_SHORT).show();
     }
+
 
     @Override
     public void onLocationChanged(Location location) {
@@ -347,6 +356,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         finish();
         return true;
     }
+
 
     @Override
     public boolean onMarkerClick(Marker marker) {
@@ -368,6 +378,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return false;
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -375,6 +386,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -395,6 +407,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     public boolean onMyLocationButtonClick() {
         final Location myLocation = mMap.getMyLocation();
@@ -404,5 +417,4 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         return true;
     }
-
 }

@@ -118,7 +118,6 @@ public class BarChartHandler {
 
     public void animateChart(int xValue, int yValue){
         barChart.animateXY(xValue, yValue);
-        barChart.invalidate();
     }
 
 

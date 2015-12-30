@@ -18,7 +18,7 @@ public class GlobalStatsActivity extends AppCompatActivity {
     private static final String GET_NUM_RELIGION_TYPE = "http://takeastandapi.elasticbeanstalk.com/get_num_religion_type";
     private static final String BAR_CHART_DATA_NAME = "";
     private static final String BAR_CHART_TITLE = "";
-    private static final int xValueAnimation = 2000;
+    private static final int xValueAnimation = 1000;
     private static final int yValueAnimation = 2000;
     private static final boolean drawBarShadow = false;
     private static final boolean pinchZoom = false;

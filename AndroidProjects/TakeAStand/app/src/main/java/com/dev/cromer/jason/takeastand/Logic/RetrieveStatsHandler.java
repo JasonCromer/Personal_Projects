@@ -1,7 +1,5 @@
 package com.dev.cromer.jason.takeastand.Logic;
 
-import android.util.Log;
-
 import com.dev.cromer.jason.takeastand.networking.GenericHttpGetRequest;
 
 import java.util.concurrent.ExecutionException;
