@@ -64,7 +64,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
 
     //constants
     private static final String ALERT_DIALOG_PREFERENCES = "FIRST_USER_DIALOG_PREFS";
-    private static final int CAMERA_ZOOM = 12;
+    private static final int CAMERA_ZOOM = 15;
     private static final int GOOGLE_API_CLIENT_ID = 0;
     private static final double LAT_LNG_OFFSET = 1.5;
     private static final int POST_NEW_MARKER_REQ_CODE = 1;

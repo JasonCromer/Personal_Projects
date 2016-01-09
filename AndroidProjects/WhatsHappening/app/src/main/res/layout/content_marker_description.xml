@@ -6,7 +6,9 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_marker_description"
     tools:context="com.dev.cromer.jason.whatshappening.activities.MarkerDescriptionActivity"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
 
     <View
         android:layout_width="match_parent"
@@ -62,6 +64,23 @@
         android:layout_height="wrap_content"
         android:id="@+id/commentsListView"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/likeButton" />
+        android:layout_below="@+id/likeButton"
+        android:layout_above="@+id/userCommentEditText" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text=""
+        android:textColor="#000000"
+        android:hint="@string/comment_text"
+        android:maxLength="90"
+        android:imeOptions="actionDone"
+        android:inputType="textAutoCorrect|textCapSentences"
+        android:maxLines="3"
+        android:id="@+id/userCommentEditText"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

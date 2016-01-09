@@ -1,28 +1,19 @@
 package com.dev.cromer.jason.whatshappening.activities;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Point;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MarkerDescriptionActivity extends AppCompatActivity implements View.OnClickListener,
-                                EditText.OnEditorActionListener, AbsListView.OnScrollListener, View.OnFocusChangeListener, RequestQueue.RequestFinishedListener<Object> {
+                                EditText.OnEditorActionListener, RequestQueue.RequestFinishedListener<Object> {
 
     private TextView markerDescriptionTextView;
     private TextView markerLikesTextView;
@@ -56,12 +47,9 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
     private String markerID;
     private LatLng markerPosition;
     private SharedPreferences preferences;
-    private FloatingActionButton floatingActionButton;
-    private LayoutInflater layoutInflater;
     private EditText userComment;
     private VolleyPostRequest volleyPostRequest;
     private RequestQueue queue;
-    private PopupWindow popupWindow;
     private boolean hasLiked = false;
     private boolean hasCommented = false;
 
@@ -112,12 +100,11 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
         markerDescriptionTextView = (TextView) findViewById(R.id.markerDescriptionTextView);
         likeButton = (ImageButton) findViewById(R.id.likeButton);
         commentsListView = (ListView) findViewById(R.id.commentsListView);
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
-        layoutInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        userComment = (EditText) findViewById(R.id.userCommentEditText);
 
+        //comment edit text at bottom of screen
+        userComment.setOnEditorActionListener(this);
         likeButton.setOnClickListener(this);
-        floatingActionButton.setOnClickListener(this);
-        commentsListView.setOnScrollListener(this);
     }
 
 
@@ -233,10 +220,6 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
 
     @Override
     public void onClick(View v) {
-        if(v == floatingActionButton){
-            //Inflate our custom layout
-            inflatePopUpWindow(v);
-        }
         if(v == likeButton && !hasLiked) {
             likeButton.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_heart_red));
             updateMarkerLikes(LIKED_STRING);
@@ -251,44 +234,6 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
         }
     }
 
-    private void inflatePopUpWindow(View v){
-
-        final int popupMarginX = 0;
-        final int popupMarginY = 0;
-        final ViewGroup viewGroup = (ViewGroup) findViewById(R.id.popUpLayout);
-        final View inflatedView = layoutInflater.inflate(R.layout.pop_up_comment, viewGroup, false);
-
-        //Hide the floating action button
-        floatingActionButton.hide();
-
-        //Add listener to our EditText to allow window to close after the "done" button is pressed
-        userComment = (EditText) inflatedView.findViewById(R.id.commentEditText);
-        userComment.setOnEditorActionListener(this);
-        userComment.setOnFocusChangeListener(this);
-
-        //Get device screen size and make a new point that corresponds to it
-        Display display = getWindowManager().getDefaultDisplay();
-        final Point screenSize = new Point();
-
-        //Assign screensize to our point
-        display.getSize(screenSize);
-
-        //Set height depending on screen size
-        popupWindow = new PopupWindow(inflatedView, screenSize.x, v.getMeasuredHeight(), true);
-
-        //Set background (Round edges), and make focusable (keyboard on window press)
-        popupWindow.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.pop_up_background));
-        popupWindow.setFocusable(true);
-        popupWindow.setOutsideTouchable(true);
-
-
-        //Set custom animation (found in values/styles.xml folder
-        popupWindow.setAnimationStyle(R.style.Animation);
-
-        //Show the popup at bottom of screen with margin.
-        //Params are (View parent, gravity, int x, int y);
-        popupWindow.showAtLocation(v, Gravity.BOTTOM, popupMarginX, popupMarginY);
-    }
 
     private void saveUserLike(){
         SharedPreferences.Editor editor = preferences.edit();
@@ -332,6 +277,9 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
 
         //Add our request object to the Singleton Volley queue
         queue.add(request);
+
+        //Remove text from Edit Text
+        userComment.setText("");
     }
 
 
@@ -406,7 +354,7 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
         //Default zoom level for map
         final int zoomLevel = 18;
 
-        //Instatiate new object for creating the Share service
+        //Instantiate new object for creating the Share service
         ShareMarkerHandler shareMarkerHandler = new ShareMarkerHandler(this);
 
         //Pass in our parameters to share the marker of interest
@@ -433,36 +381,20 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if(actionId == EditorInfo.IME_ACTION_DONE && !userComment.getText().toString().isEmpty()){
+
+        //Booleans to determine whether the done button is pressed on keyboard, and comment is not empty
+        final int isDonePressed = EditorInfo.IME_ACTION_DONE;
+        final boolean isTextEmpty = userComment.getText().toString().isEmpty();
+
+        if(actionId == isDonePressed && !isTextEmpty){
 
             //Post a new comment if our input isn't empty
             postNewComment();
 
-            //Assert that we have commented
+            //Assert that we have commented, in which case, onResponse will scroll to bottom
             hasCommented = true;
-
-            //Close our popupWindow
-            popupWindow.dismiss();
-
-            return true;
         }
         return false;
-    }
-
-
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-        if(scrollState == SCROLL_STATE_FLING || scrollState == SCROLL_STATE_TOUCH_SCROLL){
-            //Hide our floating action bar when scrolling
-            floatingActionButton.setVisibility(View.GONE);
-        }
-        else{
-            floatingActionButton.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
     }
 
 
@@ -486,13 +418,6 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        if(!hasFocus){
-            //Show our floating action button (even though it won't be seen until keyboard hides)
-            floatingActionButton.show();
-        }
-    }
 
     @Override
     public void onRequestFinished(Request<Object> request) {
