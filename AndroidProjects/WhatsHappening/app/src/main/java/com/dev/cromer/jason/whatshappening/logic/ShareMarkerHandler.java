@@ -8,8 +8,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class ShareMarkerHandler {
 
-    Context appContext;
+    private Context appContext;
     private static final String ACTION_INTENT_TEXT = "Share it!";
+    private static final String SHARE_SUBJECT_TEXT = "Here's Whats Happening:";
     private static final String SHARE_TEXT_TYPE = "text/plain";
 
     public ShareMarkerHandler(Context applicationContext){
@@ -31,6 +32,8 @@ public class ShareMarkerHandler {
 
         //Add our text and url
         shareIntent.putExtra(Intent.EXTRA_TEXT, text + locationURL);
+
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, SHARE_SUBJECT_TEXT);
 
         //Share our activity
         appContext.startActivity(Intent.createChooser(shareIntent, ACTION_INTENT_TEXT));
