@@ -342,7 +342,14 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
             //We replaced comma's with tilde's in the POST request, and now we reverse it
             for(int i = 0; i < commentsList.size(); i++){
                 if(commentsList.get(i).contains("~")){
-                    commentsList.set(i, commentsList.get(i).replace("~", ","));
+                    String replacedString = commentsList.get(i).replace("~", ",");
+                    commentsList.set(i, replacedString);
+                }
+
+                //Replace "\n" string literal with two NewLine characters
+                if(commentsList.get(i).contains("\\n")){
+                    String replacedString = commentsList.get(i).replace("\\n","\n\n");
+                    commentsList.set(i, replacedString);
                 }
             }
         }
