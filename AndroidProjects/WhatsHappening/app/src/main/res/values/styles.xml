@@ -1,11 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
+
     <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
     </style>
+
 
     <!-- ActionBar Styles -->
 
@@ -26,6 +28,26 @@
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <!-- Alert Dialog Styles -->
+
+    <style name="CustomTransparentDialogTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:alertDialogTheme">@style/CustomAlertDialogTheme</item>
+    </style>
+
+    <style name="CustomAlertDialogTheme">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:colorAccent">@color/wallet_holo_blue_light</item>
+        <item name="android:textColor">@color/wallet_holo_blue_light</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+        <item name="android:textAppearanceMedium">@style/TextAppearance.AppCompat.Title</item>
+        <item name="android:borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless.Colored</item>
+        <item name="android:buttonBarButtonStyle">@style/Widget.AppCompat.ButtonBar</item>
+    </style>
 
 
     <!-- Animations -->

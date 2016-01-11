@@ -36,6 +36,7 @@ public class NotificationsHandler implements DialogInterface.OnClickListener, Di
         instructionFactory.setAlertTitle(searchTitle);
         instructionFactory.setAlertMessage(searchDescription);
         instructionFactory.setButtonText(nextButtonText, this);
+        instructionFactory.setSearchAlertIcon();
 
         instructionFactory.showAlertDialog();
     }
@@ -44,6 +45,7 @@ public class NotificationsHandler implements DialogInterface.OnClickListener, Di
         instructionFactory.setAlertTitle(newMarkerTitle);
         instructionFactory.setAlertMessage(newMarkerDescription);
         instructionFactory.setButtonText(nextButtonText, this);
+        instructionFactory.setAddAlertIcon();
 
         instructionFactory.showAlertDialog();
     }
@@ -52,6 +54,7 @@ public class NotificationsHandler implements DialogInterface.OnClickListener, Di
         instructionFactory.setAlertTitle(voteTitle);
         instructionFactory.setAlertMessage(voteDescription);
         instructionFactory.setButtonText(doneButtonText, this);
+        instructionFactory.setVoteAlertIcon();
 
         instructionFactory.showAlertDialog();
     }
