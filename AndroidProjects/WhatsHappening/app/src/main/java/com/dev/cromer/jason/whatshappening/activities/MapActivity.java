@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -42,10 +43,10 @@ import java.util.concurrent.ExecutionException;
 
 
 public class MapActivity extends AppCompatActivity implements LocationListener,
-                                                                GoogleApiClient.ConnectionCallbacks,
-                                                                GoogleApiClient.OnConnectionFailedListener,
-                                                                View.OnClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraChangeListener,
-                                                                OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnInfoWindowClickListener {
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        View.OnClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraChangeListener,
+        OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnInfoWindowClickListener {
 
     // mMap might be null if Google Play services APK is not available.
     private GoogleMap mMap;
@@ -81,14 +82,13 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     private static EditText searchBarEditText;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
+        if (actionBar != null) {
             actionBar.show();
         }
 
@@ -108,10 +108,17 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     }
 
 
-
     //This should only be called once and when we are sure that mMap is not null.
     private void setUpMap() {
-        mMap.setMyLocationEnabled(true);
+
+        //Attempt to connect to map
+        try{
+            mMap.setMyLocationEnabled(true);
+        }
+        catch (SecurityException e){
+            displayErrorMessage();
+        }
+
         mMap.getUiSettings().setMapToolbarEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
@@ -149,15 +156,20 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
         }
     }
 
-    
+
     protected void startLocationUpdates() {
         LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(LOCATION_REQUEST_INTERVAL_MILLISECONDS);
         mLocationRequest.setFastestInterval(FASTEST_LOCATION_REQUEST_INTERBAL_MILLISECONDS);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, mLocationRequest, this);
+        try {
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                    mGoogleApiClient, mLocationRequest, this);
+        }
+        catch (SecurityException e){
+            displayErrorMessage();
+        }
     }
 
 
@@ -300,6 +312,11 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     }
 
 
+    private void displayErrorMessage(){
+        final String errorMessage = "Sorry, something went wrong";
+        Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+    }
+
 
     /*
         Override Methods
@@ -353,7 +370,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener,
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Toast.makeText(getApplicationContext(), "Oh no! Looks like we've got some network issues.", Toast.LENGTH_SHORT).show();
     }
 

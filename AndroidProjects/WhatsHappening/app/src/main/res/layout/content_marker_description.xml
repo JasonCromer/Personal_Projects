@@ -50,7 +50,8 @@
         android:layout_gravity="center_vertical"
         android:layout_alignTop="@+id/markerLikesTextView"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true" />
 
 
     <TextView
@@ -61,9 +62,9 @@
         android:padding="10dp"
         android:gravity="end"
         android:id="@+id/markerLikesTextView"
-        android:layout_above="@+id/lineView"
+        android:layout_alignBottom="@+id/markerDescriptionTextView"
         android:layout_toLeftOf="@+id/likeButton"
-        android:layout_toStartOf="@+id/likeButton"/>
+        android:layout_toStartOf="@+id/likeButton" />
 
     </RelativeLayout>
 
