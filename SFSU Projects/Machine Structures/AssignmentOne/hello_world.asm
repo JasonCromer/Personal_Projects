@@ -1,5 +1,5 @@
 .data
-str:	.asciiz	"Hello World!"
+str:	.asciiz	"Hallo Welt!"
 endl:	.asciiz "\n"
 .text
 main:	li	$v0, 4
