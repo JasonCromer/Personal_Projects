@@ -5,6 +5,8 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -297,7 +299,7 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
             public void onResponse(String response) {
 
                 //Format our comment string into a list
-                List<String> commentsList = formatCommentList(response);
+                List<Spanned> commentsList = formatCommentList(response);
 
                 //Create an adapter for our listView
                 ArrayAdapter adapter = new ArrayAdapter<>(MarkerDescriptionActivity.this,
@@ -328,10 +330,22 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
     }
 
 
-    private List<String> formatCommentList(String input){
-        List<String> commentsList = new ArrayList<>();
+    /*
+        This method reverses manual encodings done to retain proper formatting
+        when receiving information from the API. Tilde's are reversed back to
+        comma's, and the "\n" newline from the Python API is replaced with
+        two \n\n in Java Unicode.
+     */
+    private List<Spanned> formatCommentList(String input){
+        List<String> commentsList;
+        final String TILDE = "~";
+        final String COMMA = ",";
+        final String ITALICS_START = "<br><br/><i>";
+        final String ITALICS_END = "</i>";
+        final int SUBSTRING_START = 0;
+        final int SUBSTRING_ITALICS_LENGTH = 28;
 
-        if(input != null){
+        if(input != null) {
             //We remove the brackets and quotations
             input = input.replace("[", "").replace("]", "").replace("\"", "");
 
@@ -340,21 +354,55 @@ public class MarkerDescriptionActivity extends AppCompatActivity implements View
 
 
             //We replaced comma's with tilde's in the POST request, and now we reverse it
-            for(int i = 0; i < commentsList.size(); i++){
-                if(commentsList.get(i).contains("~")){
-                    String replacedString = commentsList.get(i).replace("~", ",");
+            for (int i = 0; i < commentsList.size(); i++) {
+                if (commentsList.get(i).contains(TILDE)) {
+                    String replacedString = commentsList.get(i).replace(TILDE, COMMA);
                     commentsList.set(i, replacedString);
                 }
 
-                //Replace "\n" string literal with two NewLine characters
-                if(commentsList.get(i).contains("\\n")){
-                    String replacedString = commentsList.get(i).replace("\\n","\n\n");
+                //Replace "\n" string literal with two NewLine characters and italics
+                if (commentsList.get(i).contains("\\n")) {
+                    String replacedString = commentsList.get(i).replace("\\n", "");                 // replace("\\n", "\n\n");
+                    replacedString = replacedString.substring(SUBSTRING_START, replacedString.length() - SUBSTRING_ITALICS_LENGTH)
+                            + ITALICS_START
+                            + replacedString.substring(replacedString.length() - SUBSTRING_ITALICS_LENGTH,
+                            replacedString.length())
+                            + ITALICS_END;
                     commentsList.set(i, replacedString);
                 }
             }
+
+            //Convert our list to a Spanned list and return
+            return convertToSpannedList(commentsList);
         }
 
-        return commentsList;
+        else {
+            //return empty list
+            return new ArrayList<>();
+        }
+    }
+
+
+    /*
+        This method takes in a List of type String and converts it to a
+        list of type Spanned
+     */
+    private List<Spanned> convertToSpannedList(List<String> stringList){
+
+        //capacity of our list
+        int listCapacity = stringList.size();
+
+        //Spanned list with capacity
+        List<Spanned> spannedList = Arrays.asList(new Spanned[listCapacity]);
+
+        //Loop through and convert each String to a Spanned and add to new list
+        for(int i = 0;i < listCapacity; i++){
+            Spanned spannedString = Html.fromHtml(stringList.get(i));
+            spannedList.set(i, spannedString);
+        }
+
+        return spannedList;
+
     }
 
 

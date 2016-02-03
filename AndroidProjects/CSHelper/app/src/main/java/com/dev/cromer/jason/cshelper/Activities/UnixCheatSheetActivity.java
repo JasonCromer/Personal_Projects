@@ -3,7 +3,6 @@ package com.dev.cromer.jason.cshelper.Activities;
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
