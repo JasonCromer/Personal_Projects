@@ -1,0 +1,3 @@
+'Brand'	'Size'	'Mean'	'SD'
+'Duracell'	15	138.52	7.76
+'Energizer'	20	149.07	1.52
