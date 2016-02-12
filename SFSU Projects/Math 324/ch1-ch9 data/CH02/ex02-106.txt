@@ -1,0 +1,7 @@
+'percent'	'spectrum'	'type'
+0.6	'R2'	'Granite'
+0.1	'R2'	'Basalt'
+0.25	'R3'	'Granite'
+0.2	'R3'	'Basalt'
+0.15	'R1'	'Granite'
+0.7	'R1'	'Basalt'

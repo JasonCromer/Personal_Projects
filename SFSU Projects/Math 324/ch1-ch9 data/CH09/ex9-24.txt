@@ -1,0 +1,5 @@
+'Species'	'Location'	'n'	'x'	'SE_mean'
+'Blackbirds'	'Exptl'	65	13.4	2.05
+'Blackbirds'	'Natural'	50	9.7	1.76
+'Silvereyes'	'Exptl'	34	49.4	4.78
+'Silvereyes'	'Natural'	46	38.4	5.06

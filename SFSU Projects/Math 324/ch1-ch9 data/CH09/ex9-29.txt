@@ -1,0 +1,3 @@
+'Beverage'	'Size'	'Mean'	'SD'
+'Strawberry drink'	15	540	21
+'Cola'	15	554	15

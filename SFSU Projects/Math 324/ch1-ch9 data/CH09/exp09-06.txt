@@ -1,0 +1,3 @@
+'Fabric'	'size'	'mean'	'sd'
+'Cotton'	10	51.71	0.79
+'Triacetate'	10	136.14	3.59
