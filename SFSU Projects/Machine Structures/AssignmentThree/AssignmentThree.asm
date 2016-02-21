@@ -12,7 +12,6 @@ main:		li			$s0,1			#i = 1
 			bgt			$s0,$s1,exit	#for(i = 1; i <= max; i++)
 loop:		rem			$t0,$s0,3		#temp = i % 3
 			rem			$t1,$s0,5		#temp = i % 5
-			or			$t2,$t0,$t1		#(i % 3 == 0) || (i % 3 == 5)
 
 			bnez		$t0,if2			#if(i % 3 == 0)
 			li			$v0,4			#cout << fizz
