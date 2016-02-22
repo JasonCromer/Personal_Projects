@@ -36,10 +36,10 @@ else:		li			$v0,1			#cout << i << endl
 			syscall						#
 			li			$v0,4			#
 			la			$a0,endl		#
-			syscall
+			syscall						#
 
 incre:		addi		$s0,$s0,1		#i++
 			ble			$s0,$s1,loop	#restart loop
 
 exit:		li			$v0, 10			#exit cleanly
-			syscall
+			syscall						#
