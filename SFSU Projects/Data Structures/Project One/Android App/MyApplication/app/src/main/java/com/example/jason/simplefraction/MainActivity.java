@@ -2,6 +2,7 @@ package com.example.jason.simplefraction;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -16,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
-        TextView.OnEditorActionListener{
+        TextView.OnEditorActionListener, View.OnClickListener {
 
     private EditText inputOne;
     private EditText inputTwo;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinner.setOnItemSelectedListener(this);
         inputOne.setOnEditorActionListener(this);
         inputTwo.setOnEditorActionListener(this);
+        doneButton.setOnClickListener(this);
 
         //Set String items in spinner
         setSpinnerOptions();
@@ -59,12 +61,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             unvealButton();
         }
         else if(position > 0 && position < 7){
-            secondFraction = true;
-            inputOne.setText("");
-            inputTwo.setText("");
-            inputOne.requestFocus();
-            spinner.setVisibility(View.INVISIBLE);
-
+            resetDisplayForSecondFraction();
         }
     }
 
@@ -82,9 +79,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             else if(v == inputTwo && isDenominatorValid(inputTwo.getText().toString())){
                 if(secondFraction){
                     unvealButton();
+                    setSecondFraction();
                 }
                 else{
                     unvealSpinner();
+                    setFirstFraction();
                 }
             }
             else{
@@ -96,12 +95,47 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
-    private void setFirstFraction(String num, String den){
-        int intNum = Integer.parseInt(num);
-        int intDen = Integer.parseInt(den);
+    @Override
+    public void onClick(View v) {
+        int pos = spinner.getSelectedItemPosition();
+        switch (pos){
+            case 1:
+                SimpleFractionInterface result = null;
+                result = operandOne.add(operandTwo);
+                fractionTextView.setText(result.toString());
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+    private void setFirstFraction(){
+        int intNum = Integer.parseInt(inputOne.getText().toString());
+        int intDen = Integer.parseInt(inputTwo.getText().toString());
         operandOne = new SimpleFraction(intNum, intDen);
     }
 
+    private void setSecondFraction(){
+        int intNum = Integer.parseInt(inputOne.getText().toString());
+        int intDen = Integer.parseInt(inputTwo.getText().toString());
+        operandTwo = new SimpleFraction(intNum, intDen);
+    }
+
+
+    private void resetDisplayForSecondFraction(){
+        secondFraction = true;
+        inputOne.setText("");
+        inputTwo.setText("");
+        inputOne.requestFocus();
+        inputTwo.setVisibility(View.INVISIBLE);
+        spinner.setVisibility(View.INVISIBLE);
+    }
 
     private void setSpinnerOptions(){
         //Create list of our tests
