@@ -408,7 +408,7 @@ public class SimpleFraction implements SimpleFractionInterface, Comparable<Simpl
 			result = GCD(integerTwo, integerOne % integerTwo);
 
 		 return result;
-	}	// end GCD
+	}
 
 
 	//-----------------------------------------------------------------
