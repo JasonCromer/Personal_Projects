@@ -117,8 +117,9 @@ public class SimpleFraction implements SimpleFractionInterface, Comparable<Simpl
 		int[] formattedFraction = formatProperFraction(newNum, newDen);
 
 		//Create new Simple fraction object with our formatted num and den
-		SimpleFraction resultFraction = new SimpleFraction(formattedFraction[numIndex], 
-			formattedFraction[denIndex]);
+		int formattedNumerator = formattedFraction[numIndex];
+		int formattedDenominator = formattedFraction[denIndex];
+		SimpleFraction resultFraction = new SimpleFraction(formattedNumerator, formattedDenominator);
 
 		//Reduce fraction
 		resultFraction.reduceSimpleFractionToLowestTerms();
