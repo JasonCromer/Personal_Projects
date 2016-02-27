@@ -90,7 +90,7 @@ public class SimpleFraction implements SimpleFractionInterface, Comparable<Simpl
         int c = getIntNumerator(fractionTwoString);
         int d = getIntDenominator(fractionTwoString);
 
-        //Add using formnula: a/b + c/d is (ad + cb)/(bd)
+        //Add using formula: a/b + c/d is (ad + cb)/(bd)
         int newNum = (a * d) + (c * b);
         int newDen = b * d;
 

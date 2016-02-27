@@ -1,7 +1,9 @@
 package com.example.jason.simplefraction;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -56,15 +58,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setSpinnerOptions();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+        @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(position > 7){
-            unvealButton();
-        }
-        else if(position > 0 && position < 7){
-            resetDisplayForSecondFraction();
-        }
+        //Execute a series of items on our spinner list depending on position
+        executeSpinnerSelection(position);
     }
 
     @Override
@@ -75,14 +82,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if(actionId == EditorInfo.IME_ACTION_DONE){
+
+            //If first input is valid, reveal second edit text
             if(v == inputOne && isNumeratorValid(inputOne.getText().toString())){
                 unvealInputTwo();
             }
             else if(v == inputTwo && isDenominatorValid(inputTwo.getText().toString())){
+                //If we are inputting a second fraction, unveal the "GO" button once done
                 if(secondFraction){
                     unvealButton();
                     setSecondFraction();
                 }
+                //Otherwise unveil spinner and save our first fraction
                 else{
                     unvealSpinner();
                     setFirstFraction();
@@ -99,12 +110,43 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onClick(View v) {
-        int pos = spinner.getSelectedItemPosition();
-        switch (pos){
+        //Create new null Interface
+        SimpleFractionInterface result;
+
+        //Get current spinner position
+        int position = spinner.getSelectedItemPosition();
+
+        switch (position){
+
+            //Add
             case 1:
-                SimpleFractionInterface result;
+                //Add our first fraction to the second and set equal to interface
                 result = operandOne.add(operandTwo);
+
+                //Display results
                 fractionTextView.setText(result.toString());
+                return;
+
+            //Subtract
+            case 2:
+                result = operandOne.subtract(operandTwo);
+                fractionTextView.setText(result.toString());
+                return;
+
+            //Multiply
+            case 3:
+                result = operandOne.multiply(operandTwo);
+                fractionTextView.setText(result.toString());
+                return;
+
+            //Divide
+            case 4:
+                result = operandOne.multiply(operandTwo);
+                fractionTextView.setText(result.toString());
+                return;
+
+
+
         }
 
 
@@ -119,15 +161,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
 
             case R.id.action_refresh:
+                //Delete all data, hide everything but first input, set boolean to false
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+
+    private void executeSpinnerSelection(int position){
+        if(position > 7){
+            unvealButton();
+        }
+        else if(position > 0 && position < 7){
+            resetDisplayForSecondFraction();
         }
     }
 
