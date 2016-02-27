@@ -8,11 +8,12 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
+        android:inputType="numberSigned"
         android:ems="10"
         android:id="@+id/inputOne"
         android:visibility="visible"
         android:imeOptions="actionDone"
+        android:maxLength="10"
         android:hint="@string/hint_numerator"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -21,11 +22,12 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
+        android:inputType="numberSigned"
         android:ems="10"
         android:id="@+id/inputTwo"
         android:visibility="invisible"
         android:imeOptions="actionDone"
+        android:maxLength="10"
         android:hint="@string/hint_denominator"
         android:layout_below="@+id/inputOne"
         android:layout_centerHorizontal="true" />

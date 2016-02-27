@@ -10,11 +10,10 @@ public class SimpleFraction implements SimpleFractionInterface, Comparable<Simpl
     private int num;
     private int den;
 
-
     //Constructor that sets fraction to 0/1
     public SimpleFraction(){
-        num = 0;
-        den = 1;
+        this.num = 0;
+        this.den = 1;
     }
 
 
@@ -364,6 +363,12 @@ public class SimpleFraction implements SimpleFractionInterface, Comparable<Simpl
 
 
     private void throwException(){
-        throw new SimpleFractionException("Denominator cannot be zero!");
+        final String errMsg = "Denominator cannot be zero!";
+        try {
+            throw new SimpleFractionException(errMsg);
+        }
+        catch (SimpleFractionException e){
+            e.printStackTrace();
+        }
     }
 }

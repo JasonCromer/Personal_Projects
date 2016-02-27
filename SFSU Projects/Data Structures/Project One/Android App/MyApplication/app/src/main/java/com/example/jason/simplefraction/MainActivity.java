@@ -56,16 +56,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setSpinnerOptions();
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
         @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         //Execute a series of items on our spinner list depending on position
@@ -81,24 +71,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if(actionId == EditorInfo.IME_ACTION_DONE){
 
+            //Create String objects for both inputs
+            final String inputOneString = inputOne.getText().toString();
+            final String inputTwoString = inputTwo.getText().toString();
+
+
             //If first input is valid, reveal second edit text
-            if(v == inputOne && isNumeratorValid(inputOne.getText().toString())){
+            if(v == inputOne && isNumeratorValid(inputOneString)){
                 unveilInputTwo();
             }
-            else if(v == inputTwo && isDenominatorValid(inputTwo.getText().toString())){
-                //If we are inputting a second fraction, unveal the "GO" button once done
-                if(secondFraction){
-                    unveilButton();
-                    setSecondFraction();
-                }
+            else if(v == inputTwo && isDenominatorValid(inputTwoString) && secondFraction) {
+                //If we are inputting a second fraction, unveil the "GO" button once done
+                unveilButton();
+                setSecondFraction();
+            }
+            else if(v == inputTwo && isDenominatorValid(inputTwoString) && !secondFraction){
                 //Otherwise unveil spinner and save our first fraction
-                else{
-                    unveilSpinner();
-                    setFirstFraction();
-                }
+                unveilSpinner();
+                setFirstFraction();
             }
             else{
-                Toast.makeText(this, "Please enter valid number", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Invalid input. Try again", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -108,6 +101,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onClick(View v) {
+        //Reset textview
+        fractionTextView.setText("");
+
         //Create new null Interface
         SimpleFractionInterface result;
 
@@ -115,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         int position = spinner.getSelectedItemPosition();
 
         switch (position){
-
             //Add
             case 1:
                 //Add our first fraction to the second and set equal to interface
@@ -182,8 +177,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 final String errorMsg = "Something went wrong. Try again.";
                 fractionTextView.setText(errorMsg);
         }
-
-
     }
 
 
@@ -211,6 +204,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
+    /*
+        This method is called when the refresh button is pressed on the Action Menu.
+        When pressed, all UI components are reset to how they were set at the creation
+        of the Activity.
+     */
     private void resetUI(){
         //Second Fraction boolean to false
         secondFraction = false;
@@ -220,10 +218,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         inputTwo.setText("");
         fractionTextView.setText("");
 
-        //set spinner position to 0
+        //set spinner position to default, which is 0
         spinner.setSelection(0);
 
         //hide all UI components except inputOne
+        doneButton.setVisibility(View.INVISIBLE);
         inputTwo.setVisibility(View.INVISIBLE);
         spinner.setVisibility(View.INVISIBLE);
 
@@ -232,23 +231,42 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
+    /*
+        This method determines the next UI action after a spinner
+        option is selected. If greater or equal to 7, the
+        items don't require a second fraction, and thus the "GO"
+        button is unveiled via the unveilButton() method.
+     */
     private void executeSpinnerSelection(int position){
-        if(position > 7){
+        //Add,Sub,Mult,Divide,Compare,Equals
+        if(position > 0 && position < 7){
+            setSecondFractionUIComponents();
+        }
+        //Reciprocal, toDouble, setFraction
+        else if(position >= 7){
             spinner.setVisibility(View.INVISIBLE);
             unveilButton();
-        }
-        else if(position > 0 && position < 7){
-            resetDisplayForSecondFraction();
         }
     }
 
 
+    /*
+        This method creates an instance of SimpleFraction, called
+        operandOne, and assigns it the values given by the user
+        via inputOne and InputTwo.
+     */
     private void setFirstFraction(){
         int intNum = Integer.parseInt(inputOne.getText().toString());
         int intDen = Integer.parseInt(inputTwo.getText().toString());
         operandOne = new SimpleFraction(intNum, intDen);
     }
 
+
+    /*
+        This method creates an instance of SimpleFraction, called
+        operandTwo, and assigns it the values given by the user
+        via inputOne and inputTwo.
+     */
     private void setSecondFraction(){
         int intNum = Integer.parseInt(inputOne.getText().toString());
         int intDen = Integer.parseInt(inputTwo.getText().toString());
@@ -256,7 +274,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
-    private void resetDisplayForSecondFraction(){
+    /*
+        This method clears inputOne and inputTwo, and hides inputTwo and the spinner
+        so that the user can input a second fraction.
+     */
+    private void setSecondFractionUIComponents(){
+        //onEditor checks this to indicate whether or not button should be unveiled
         secondFraction = true;
 
         //Clear edit texts
@@ -271,6 +294,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         inputOne.requestFocus();
     }
 
+
+    /*
+        This method creates a list of items for the spinner, and sets it via an ArrayAdapter.
+     */
     private void setSpinnerOptions(){
         //Create list of our tests
         final String[] items = {"Select Item","Add","Subtract","Multiply","Divide","Compare To",
@@ -285,15 +312,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
+    //This method checks if the user input is a valid numerator
     private boolean isNumeratorValid(String num){
         return (num.length() > 0);
     }
 
+
+    //This method checks if the user input is a valid denominator
     private boolean isDenominatorValid(String den){
         final String zero = "0";
         return (den.length() > 0 && !den.equals(zero));
     }
 
+
+    /*
+        This method unveils the "GO" button by making it visible. It also creates and applies
+        the animation for the button.
+     */
     private void unveilButton(){
         //Create slide-in animation for button
         Animation buttonAnimation = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
@@ -307,6 +342,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         doneButton.animate();
     }
 
+
+    /*
+        This method unveils the second input for the user to enter a fraction. This method
+        also creates and applies an animation to the Edit Text, called inputTwo. It then
+        requests focus so that the user can immediately start typing a fraction.
+     */
     private void unveilInputTwo(){
         //Create fade-in animation for edit text
         Animation editTextAnimation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
@@ -321,6 +362,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         inputTwo.requestFocus();
     }
 
+
+    /*
+        This method unveils the spinner by making it visible. It also creates and applies
+        the animation for it when called. Focus for the spinner is also requested.
+     */
     private void unveilSpinner(){
         //Create fade-in animation for edit text
         Animation spinnerAnimation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
@@ -334,5 +380,4 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinner.animate();
         spinner.requestFocus();
     }
-
 }
