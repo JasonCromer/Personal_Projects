@@ -204,11 +204,6 @@ public class SimpleFraction implements SimpleFractionInterface, Comparable<Simpl
         int c = getIntNumerator(fractionTwoString);
         int d = getIntDenominator(fractionTwoString);
 
-        //Check to see if denominator is 0. If so, throw exception
-        if(b == 0|| d == 0){
-            throwException();
-        }
-
         //Divide using formula: a/b / c/d is (ad)/(bc)
         int newNum = a * d;
         int newDen = b * c;

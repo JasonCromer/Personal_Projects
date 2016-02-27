@@ -3,4 +3,5 @@
     <string name="button_text">GO</string>
     <string name="hint_numerator">Enter Numerator</string>
     <string name="hint_denominator">Enter Denominator</string>
+    <string name="action_new">New Fraction</string>
 </resources>
