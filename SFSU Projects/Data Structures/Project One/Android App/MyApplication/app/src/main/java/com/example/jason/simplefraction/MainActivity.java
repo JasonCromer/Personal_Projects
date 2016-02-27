@@ -1,9 +1,7 @@
 package com.example.jason.simplefraction;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -85,17 +83,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             //If first input is valid, reveal second edit text
             if(v == inputOne && isNumeratorValid(inputOne.getText().toString())){
-                unvealInputTwo();
+                unveilInputTwo();
             }
             else if(v == inputTwo && isDenominatorValid(inputTwo.getText().toString())){
                 //If we are inputting a second fraction, unveal the "GO" button once done
                 if(secondFraction){
-                    unvealButton();
+                    unveilButton();
                     setSecondFraction();
                 }
                 //Otherwise unveil spinner and save our first fraction
                 else{
-                    unvealSpinner();
+                    unveilSpinner();
                     setFirstFraction();
                 }
             }
@@ -145,8 +143,44 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 fractionTextView.setText(result.toString());
                 return;
 
+            //CompareTo
+            case 5:
+                final int intResult;
+                intResult = operandOne.compareTo(operandTwo);
+                fractionTextView.setText(String.valueOf(intResult));
+                return;
 
+            //Equals
+            case 6:
+                final boolean isEqual;
+                isEqual = operandOne.equals(operandTwo);
+                fractionTextView.setText(String.valueOf(isEqual));
+                return;
 
+            //Reciprocal
+            case 7:
+                result = operandOne.getReciprocal();
+                fractionTextView.setText(result.toString());
+                return;
+
+            //ToDouble
+            case 8:
+                final double doubleResult;
+                doubleResult = operandOne.toDouble();
+                fractionTextView.setText(String.valueOf(doubleResult));
+                return;
+
+            //Set Fraction
+            case 9:
+                final int num = Integer.parseInt(inputOne.getText().toString());
+                final int den = Integer.parseInt(inputTwo.getText().toString());
+                operandOne.setSimpleFraction(num,den);
+                fractionTextView.setText(operandOne.toString());
+                return;
+
+            default:
+                final String errorMsg = "Something went wrong. Try again.";
+                fractionTextView.setText(errorMsg);
         }
 
 
@@ -168,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             case R.id.action_refresh:
                 //Delete all data, hide everything but first input, set boolean to false
+                resetUI();
                 return true;
 
             default:
@@ -176,10 +211,31 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
+    private void resetUI(){
+        //Second Fraction boolean to false
+        secondFraction = false;
+
+        //Clear edit texts and textview
+        inputOne.setText("");
+        inputTwo.setText("");
+        fractionTextView.setText("");
+
+        //set spinner position to 0
+        spinner.setSelection(0);
+
+        //hide all UI components except inputOne
+        inputTwo.setVisibility(View.INVISIBLE);
+        spinner.setVisibility(View.INVISIBLE);
+
+        //Set focus to inputOne
+        inputOne.requestFocus();
+    }
+
 
     private void executeSpinnerSelection(int position){
         if(position > 7){
-            unvealButton();
+            spinner.setVisibility(View.INVISIBLE);
+            unveilButton();
         }
         else if(position > 0 && position < 7){
             resetDisplayForSecondFraction();
@@ -202,11 +258,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private void resetDisplayForSecondFraction(){
         secondFraction = true;
+
+        //Clear edit texts
         inputOne.setText("");
         inputTwo.setText("");
-        inputOne.requestFocus();
+
+        //Hide UI components, not inputOne
         inputTwo.setVisibility(View.INVISIBLE);
         spinner.setVisibility(View.INVISIBLE);
+
+        //Request focus from inputOne
+        inputOne.requestFocus();
     }
 
     private void setSpinnerOptions(){
@@ -232,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return (den.length() > 0 && !den.equals(zero));
     }
 
-    private void unvealButton(){
+    private void unveilButton(){
         //Create slide-in animation for button
         Animation buttonAnimation = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
         buttonAnimation.setDuration(ANIM_DURATION_MILLI);
@@ -245,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         doneButton.animate();
     }
 
-    private void unvealInputTwo(){
+    private void unveilInputTwo(){
         //Create fade-in animation for edit text
         Animation editTextAnimation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
         editTextAnimation.setDuration(ANIM_DURATION_MILLI);
@@ -259,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         inputTwo.requestFocus();
     }
 
-    private void unvealSpinner(){
+    private void unveilSpinner(){
         //Create fade-in animation for edit text
         Animation spinnerAnimation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
         spinnerAnimation.setDuration(ANIM_DURATION_MILLI);
