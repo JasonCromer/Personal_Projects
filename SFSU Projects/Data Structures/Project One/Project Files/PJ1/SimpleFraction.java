@@ -241,12 +241,23 @@ public class SimpleFraction implements SimpleFractionInterface, Comparable<Simpl
 
 	public SimpleFractionInterface getReciprocal() 
 	{
+		//Used when accessing num and den of array from FormatProperFraction call
+		final int numIndex = 0;
+		final int denIndex = 1;
+
 		//Create ints with switched numerator and denominator
 		int recipNum = this.den;
 		int recipDen = this.num;
 
-		//Create new SimpleFraction object using reciprocated values
-		SimpleFraction reciprocal = new SimpleFraction(recipNum, recipDen);
+		//Get formatted fraction from reciprocal
+		int[] formattedFractionArray = formatProperFraction(recipNum, recipDen);
+
+		//Assign new variables to the formatted num and den
+		int formattedNum = formattedFractionArray[numIndex];
+		int formattedDen = formattedFractionArray[denIndex];
+
+		//Create new SimpleFraction object using reciprocated,formatted values
+		SimpleFraction reciprocal = new SimpleFraction(formattedNum, formattedDen);
 
 		return reciprocal;
 	}
