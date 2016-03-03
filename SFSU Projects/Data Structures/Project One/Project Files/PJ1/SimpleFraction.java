@@ -119,6 +119,8 @@ public class SimpleFraction implements SimpleFractionInterface, Comparable<Simpl
 		//Create new Simple fraction object with our formatted num and den
 		int formattedNumerator = formattedFraction[numIndex];
 		int formattedDenominator = formattedFraction[denIndex];
+
+		//Create new SimpleFraction object with our formatted num and den
 		SimpleFraction resultFraction = new SimpleFraction(formattedNumerator, formattedDenominator);
 
 		//Reduce fraction
@@ -154,9 +156,12 @@ public class SimpleFraction implements SimpleFractionInterface, Comparable<Simpl
 		//Get formatted fraction
 		int[] formattedFraction = formatProperFraction(newNum, newDen);
 
+		//Create new Simple fraction object with our formatted num and den
+		int formattedNumerator = formattedFraction[numIndex];
+		int formattedDenominator = formattedFraction[denIndex];
+
 		//Create new simple fraction object with formatted num and den
-		SimpleFraction resultFraction = new SimpleFraction(formattedFraction[numIndex],
-			formattedFraction[denIndex]);
+		SimpleFraction resultFraction = new SimpleFraction(formattedNumerator, formattedDenominator);
 
 		//Reduce fraction
 		resultFraction.reduceSimpleFractionToLowestTerms();
@@ -191,9 +196,12 @@ public class SimpleFraction implements SimpleFractionInterface, Comparable<Simpl
 		//Get formatted fraction
 		int[] formattedFraction = formatProperFraction(newNum, newDen);
 
+		//Create new Simple fraction object with our formatted num and den
+		int formattedNumerator = formattedFraction[numIndex];
+		int formattedDenominator = formattedFraction[denIndex];
+
 		//Create new SimpleFraction object with formatted num and den
-		SimpleFraction resultFraction = new SimpleFraction(formattedFraction[numIndex],
-			formattedFraction[denIndex]);
+		SimpleFraction resultFraction = new SimpleFraction(formattedNumerator, formattedDenominator);
 
 		//Reduce fraction
 		resultFraction.reduceSimpleFractionToLowestTerms();
@@ -228,9 +236,12 @@ public class SimpleFraction implements SimpleFractionInterface, Comparable<Simpl
 		//Get formatted fraction
 		int[] formattedFraction = formatProperFraction(newNum, newDen);
 
+		//Create new Simple fraction object with our formatted num and den
+		int formattedNumerator = formattedFraction[numIndex];
+		int formattedDenominator = formattedFraction[denIndex];
+
 		//Create new SimpleFraction object with formatted num and den
-		SimpleFraction resultFraction = new SimpleFraction(formattedFraction[numIndex],
-			formattedFraction[denIndex]);
+		SimpleFraction resultFraction = new SimpleFraction(formattedNumerator, formattedDenominator);
 
 		//Reduce fraction
 		resultFraction.reduceSimpleFractionToLowestTerms();
