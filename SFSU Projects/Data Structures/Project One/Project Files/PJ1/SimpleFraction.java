@@ -279,12 +279,8 @@ public class SimpleFraction implements SimpleFractionInterface, Comparable<Simpl
 		//Cast other to SimpleFraction
 		SimpleFraction otherFraction = (SimpleFraction) other;
 
-		//Reduce fractions
-		this.reduceSimpleFractionToLowestTerms();
-		otherFraction.reduceSimpleFractionToLowestTerms();
-
-		//Return the string values of each fraction
-        return this.toString().equals(otherFraction.toString());
+		//Return value comparison of double values of each fraction
+        return this.toDouble() == otherFraction.toDouble();
 	}
 
 
@@ -374,15 +370,13 @@ public class SimpleFraction implements SimpleFractionInterface, Comparable<Simpl
 			//Make num negative instead of den
 			fractionArray[0] = -1 * num;
 			fractionArray[1] = den;
-
-			return fractionArray;
 		}
 		else{
 			fractionArray[0] = num;
 			fractionArray[1] = den;
-
-			return fractionArray;
 		}
+
+		return fractionArray;
 
 	}
 
