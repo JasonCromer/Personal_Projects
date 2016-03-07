@@ -3,6 +3,7 @@
 #int main(){
 #	int a = 2;
 #	int max = 10;
+#	int x[max];
 #
 #	for(int i = 0; i < max; i++){
 #		x[i] = modifyIt(a);
@@ -35,6 +36,18 @@
 #
 #	return product;
 #}
+#
+#	Expected output:
+#30
+#30
+#30
+#30
+#30
+#30
+#30
+#30
+#30
+#30
 
 
 
@@ -104,6 +117,7 @@ modit:				addi		$sp,$sp,-24		#allocate space on stack
 					lw			$s2,8($sp)
 					lw			$t0,4($sp)
 					lw			$t1,($sp)
+					addi		$sp,$sp,24		#de-allocate stack space
 
 					jr			$ra				#return result
 

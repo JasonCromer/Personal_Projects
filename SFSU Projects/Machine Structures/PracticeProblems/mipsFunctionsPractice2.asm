@@ -5,7 +5,7 @@ endl:			.asciiz			"\n"
 				.text
 main:			li				$s0,2				#i = 2
 				li				$s1,4				#max = 4
-													#for(i=2;i<4;i++)
+													#for(i=2;i<=4;i++)
 loop:			move			$a0,$s0				#result = poly(i)
 				jal 			poly				#
 				move			$a0,$v0				#
