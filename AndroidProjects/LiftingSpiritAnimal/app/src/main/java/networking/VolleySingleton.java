@@ -1,4 +1,4 @@
-package jason.liftingspiritanimal.networking;
+package networking;
 
 
 import android.content.Context;

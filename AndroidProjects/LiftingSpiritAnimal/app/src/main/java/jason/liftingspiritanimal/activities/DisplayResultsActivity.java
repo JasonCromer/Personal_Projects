@@ -18,7 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import jason.liftingspiritanimal.R;
-import jason.liftingspiritanimal.networking.VolleySingleton;
+import networking.VolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
