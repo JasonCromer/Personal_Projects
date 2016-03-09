@@ -54,22 +54,22 @@
 					#a 			$s0
 					#max		$s1
 					#i 			$s2
-					#base		$t0
-					#b+offst	$t1
+					#base		$s3
+					#b+offst	$s4
 					.data
 endl:				.asciiz		"\n"
 x:					.word		0:5
 					.text
-main:				la			$t0,x
+main:				la			$s3,x
 					li			$s0,2			#a = 2
 					li			$s1,10			#max = 10
 
 					li			$s2,0			#(for i =0; i < max; i++)
-loop:				sll			$t1,$s2,2		#shift memory to x[i]
-					add			$t1,$t1,$t0		#add base to offset
+loop:				sll			$s4,$s2,2		#shift memory to x[i]
+					add			$s4,$s4,$s3		#add base to offset
 					move		$a0,$s0			#x[i] = modifyit(a)
 					jal			modit 			#
-					sw			$v0,($t1)		#
+					sw			$v0,($s4)		#
 
 					move		$t3,$v0			#store x[i]
 
@@ -86,13 +86,11 @@ loop:				sll			$t1,$s2,2		#shift memory to x[i]
 					li			$v0,10			#exit
 					syscall
 
-modit:				addi		$sp,$sp,-24		#allocate space on stack
+modit:				addi		$sp,$sp,-16		#allocate space on stack
 					sw			$ra,20($sp)		
 					sw			$s0,16($sp)
 					sw			$s1,12($sp)
 					sw			$s2,8($sp)
-					sw			$t0,4($sp)
-					sw			$t1,($sp)
 					move		$s0,$a0 		#persist argument
 
 					li			$a1,2			#temp1 = pow(arg,2);
@@ -115,9 +113,7 @@ modit:				addi		$sp,$sp,-24		#allocate space on stack
 					lw			$s0,16($sp)
 					lw			$s1,12($sp)
 					lw			$s2,8($sp)
-					lw			$t0,4($sp)
-					lw			$t1,($sp)
-					addi		$sp,$sp,24		#de-allocate stack space
+					addi		$sp,$sp,16		#de-allocate stack space
 
 					jr			$ra				#return result
 

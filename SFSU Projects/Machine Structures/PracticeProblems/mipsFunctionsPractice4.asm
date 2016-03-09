@@ -83,12 +83,10 @@ loop:				move		$a0,$s2				#*ptr = modifyIt(i)
 					li			$v0,10				#exit
 					syscall							#
 
-modit:				addi		$sp,$sp,-20			#allocate room on stack
+modit:				addi		$sp,$sp,-12			#allocate room on stack
 					sw			$ra,16($sp)			
 					sw			$s0,12($sp)
 					sw			$s1,8($sp)
-					sw			$s2,4($sp)
-					sw			$s3,($sp)
 					move		$s0,$a0 			#persist argument a
 
 					li			$a1,2				#temp1 = pow(arg,2)
@@ -104,9 +102,7 @@ modit:				addi		$sp,$sp,-20			#allocate room on stack
 					lw			$ra,16($sp)			#restore variables
 					lw			$s0,12($sp)
 					lw			$s1,8($sp)
-					lw			$s2,4($sp)
-					lw			$s3,($sp)
-					addi		$sp,$sp,20			#deallocate space on stack
+					addi		$sp,$sp,12			#deallocate space on stack
 
 					jr			$ra					#return result
 
