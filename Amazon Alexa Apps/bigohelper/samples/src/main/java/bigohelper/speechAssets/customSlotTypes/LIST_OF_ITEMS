@@ -5,11 +5,11 @@ doubly linked list
 skip list
 hash table
 binary search tree
-cartesian tree
-b tree
+Cartesian tree
+B-tree
 red black tree
 splay tree
-a v l tree
+AVL tree
 quicksort
 mergesort
 timsort

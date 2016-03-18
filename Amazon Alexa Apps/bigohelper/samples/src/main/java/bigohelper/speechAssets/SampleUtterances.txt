@@ -51,6 +51,7 @@ BigOIntent what's is the time complexity of a {DataStructure}
 BigOIntent what's time complexity of a {DataStructure}
 BigOIntent what's the run time complexity of a {DataStructure}
 BigOIntent what's run time complexity of a {DataStructure}
+BigOIntent what is the run time of an {DataStructure}
 BigOIntent I want to know the run time of an {DataStructure}
 BigOIntent do you know the run time of an {DataStructure}
 BigOIntent can you give me the run time of an {DataStructure}
@@ -75,3 +76,11 @@ BigOIntent what's is the time complexity of an {DataStructure}
 BigOIntent what's time complexity of an {DataStructure}
 BigOIntent what's the run time complexity of an {DataStructure}
 BigOIntent what's run time complexity of an {DataStructure}
+BigOIntent what's the time complexity of a {DataStructure}
+BigOIntent what's the run time {DataStructure}
+BigOIntent what the run time of of a {DataStructure} is
+BigOIntent what the run time of an {DataStructure} is
+BigOIntent what the time complexity of a {DataStructure} is
+BigOIntent what the time complexity of an {DataStructure} is
+BigOIntent what the run time complexity of a {DataStructure} is
+BigOIntent what the run time complexity of an {DataStructure} is

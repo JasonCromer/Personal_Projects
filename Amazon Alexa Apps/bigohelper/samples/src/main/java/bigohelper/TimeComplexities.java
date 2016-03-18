@@ -34,10 +34,10 @@ public final class TimeComplexities {
         timeComplexities.put("binary search tree", "Time complexity for a binary search tree " 
             + ", on average, is o of log n for access, search, insertion and deletion.");
 
-        timeComplexities.put("cartesian tree", "Time complexity for cartesian tree " 
+        timeComplexities.put("Cartesian tree", "Time complexity for cartesian tree " 
             + ", on average, is o of log n for search, insertion and deletion.");
 
-        timeComplexities.put("b tree", "Time complexity for a b tree, on average, is "
+        timeComplexities.put("B-tree", "Time complexity for a b. tree, on average, is "
             + " o of log n for access, search, insertion, and deletion.");
 
         timeComplexities.put("red black tree", "Time complexity for a red black tree "
@@ -46,7 +46,7 @@ public final class TimeComplexities {
         timeComplexities.put("splay tree", "Time complexity for a splay tree "
             + ", on average, is o of log n for search, insertion, and deletion.");
 
-        timeComplexities.put("a v l tree", "Time complexity for an a v l tree "
+        timeComplexities.put("AVL tree", "Time complexity for an a. v. l. tree "
             + ", on average, is o of log n for access, search, insertion, and deletion.");
 
         timeComplexities.put("quicksort", "Time complexity for quicksort, on average, "
