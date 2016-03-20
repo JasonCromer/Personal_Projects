@@ -9,6 +9,7 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.dev.cromer.jason.cshelper.R;
 
@@ -47,6 +48,7 @@ public class UnixCheatSheetActivity extends AppCompatActivity {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
+                Toast.makeText(UnixCheatSheetActivity.this, "Sorry, something went wrong", Toast.LENGTH_SHORT).show();
             }
         });
 

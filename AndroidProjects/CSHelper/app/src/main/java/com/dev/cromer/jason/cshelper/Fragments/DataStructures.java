@@ -70,7 +70,7 @@ public class DataStructures extends Fragment {
 
 
     private String[] getDataStructureDescriptions() {
-        String[] dataStructureDescriptions = {
+        return new String[] {
                 "An Array is a data structure consisting of a collection of elements (values or variables), each identified by at least one array index " +
                         "or key. An array is stored so that the position of each element can be computed from its index tuple by a " +
                         "mathematical formula. The simplest type of data structure is a linear array, also called one-dimensional array.",
@@ -114,8 +114,6 @@ public class DataStructures extends Fragment {
                         "A hash table uses a hash function to compute an index into an array of buckets or slots, from which the desired " +
                         "value can be found."
         };
-
-        return dataStructureDescriptions;
     }
 
 }

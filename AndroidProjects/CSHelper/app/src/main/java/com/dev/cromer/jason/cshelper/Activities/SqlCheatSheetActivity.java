@@ -3,11 +3,14 @@ package com.dev.cromer.jason.cshelper.Activities;
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
+
 import com.dev.cromer.jason.cshelper.R;
 
 
@@ -41,9 +44,11 @@ public class SqlCheatSheetActivity extends AppCompatActivity {
         });
 
         //Handle errors loading webview
-        thisWebView.setWebViewClient(new WebViewClient() {
-            public void onReceivedError(WebView view, int errorCode, String description, String failingURL) {
-                Log.d("Oh no!", description);
+        thisWebView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+                Toast.makeText(SqlCheatSheetActivity.this, "Sorry, something went wrong", Toast.LENGTH_SHORT).show();
             }
         });
 

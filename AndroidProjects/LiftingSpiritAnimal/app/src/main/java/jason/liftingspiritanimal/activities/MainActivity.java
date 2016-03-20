@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         doneButton = (ImageButton) findViewById(R.id.doneButton);
 
         //Set on-click listener for our view items
+        assert doneButton != null;
         doneButton.setOnClickListener(this);
 
         //Additional settings
