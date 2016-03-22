@@ -33,7 +33,6 @@ public class BigOSpeechlet implements Speechlet {
             throws SpeechletException {
         log.info("onSessionStarted requestId={}, sessionId={}", request.getRequestId(),
                 session.getSessionId());
-        System.out.println("ONSSESSIONSTARTED!!!");
 
         // any initialization logic goes here
     }
@@ -43,7 +42,6 @@ public class BigOSpeechlet implements Speechlet {
             throws SpeechletException {
         log.info("onLaunch requestId={}, sessionId={}", request.getRequestId(),
                 session.getSessionId());
-        System.out.println("ONLAUNCH!!!!");
 
         String speechOutput =
                 "Welcome to the Big O Helper. You can ask me about the time"
