@@ -33,6 +33,7 @@ public class BigOSpeechlet implements Speechlet {
             throws SpeechletException {
         log.info("onSessionStarted requestId={}, sessionId={}", request.getRequestId(),
                 session.getSessionId());
+        System.out.println("ONSSESSIONSTARTED!!!");
 
         // any initialization logic goes here
     }
@@ -42,6 +43,7 @@ public class BigOSpeechlet implements Speechlet {
             throws SpeechletException {
         log.info("onLaunch requestId={}, sessionId={}", request.getRequestId(),
                 session.getSessionId());
+        System.out.println("ONLAUNCH!!!!");
 
         String speechOutput =
                 "Welcome to the Big O Helper. You can ask me about the time"
@@ -68,19 +70,23 @@ public class BigOSpeechlet implements Speechlet {
 
         if ("BigOIntent".equals(intentName)) {
             return getBigOComplexity(intent);
-        } else if ("AMAZON.HelpIntent".equals(intentName)) {
+        } 
+        else if ("AMAZON.HelpIntent".equals(intentName)) {
             return getHelp();
-        } else if ("AMAZON.StopIntent".equals(intentName)) {
+        } 
+        else if ("AMAZON.StopIntent".equals(intentName)) {
             PlainTextOutputSpeech outputSpeech = new PlainTextOutputSpeech();
             outputSpeech.setText("Goodbye");
 
             return SpeechletResponse.newTellResponse(outputSpeech);
-        } else if ("AMAZON.CancelIntent".equals(intentName)) {
+        } 
+        else if ("AMAZON.CancelIntent".equals(intentName)) {
             PlainTextOutputSpeech outputSpeech = new PlainTextOutputSpeech();
             outputSpeech.setText("Goodbye");
 
             return SpeechletResponse.newTellResponse(outputSpeech);
-        } else {
+        } 
+        else {
             throw new SpeechletException("Invalid Intent");
         }
     }
@@ -119,7 +125,8 @@ public class BigOSpeechlet implements Speechlet {
                 card.setContent(timeComplexity);
 
                 return SpeechletResponse.newTellResponse(outputSpeech, card);
-            } else {
+            } 
+            else {
                 // We don't have a time complexity, so keep the session open and ask the user for another
                 // item.
                 String speechOutput =
@@ -128,7 +135,8 @@ public class BigOSpeechlet implements Speechlet {
                 String repromptSpeech = "What else can I help with?";
                 return newAskResponse(speechOutput, repromptSpeech);
             }
-        } else {
+        } 
+        else {
             // There was no item in the intent so return the help prompt.
             return getHelp();
         }
