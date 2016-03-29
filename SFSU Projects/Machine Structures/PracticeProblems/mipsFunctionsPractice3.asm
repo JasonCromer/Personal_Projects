@@ -58,7 +58,7 @@
 					#b+offst	$s4
 					.data
 endl:				.asciiz		"\n"
-x:					.word		0:5
+x:					.word		0:10
 					.text
 main:				la			$s3,x
 					li			$s0,2			#a = 2
@@ -87,10 +87,10 @@ loop:				sll			$s4,$s2,2		#shift memory to x[i]
 					syscall
 
 modit:				addi		$sp,$sp,-16		#allocate space on stack
-					sw			$ra,20($sp)		
-					sw			$s0,16($sp)
-					sw			$s1,12($sp)
-					sw			$s2,8($sp)
+					sw			$ra,12($sp)		
+					sw			$s0,8($sp)
+					sw			$s1,4($sp)
+					sw			$s2,($sp)
 					move		$s0,$a0 		#persist argument
 
 					li			$a1,2			#temp1 = pow(arg,2);
@@ -109,10 +109,10 @@ modit:				addi		$sp,$sp,-16		#allocate space on stack
 					add 		$v0,$v0,$s2		#
 					addi		$v0,$v0,2		#
 
-					lw			$ra,20($sp)		#get stored variables/sp/ra
-					lw			$s0,16($sp)
-					lw			$s1,12($sp)
-					lw			$s2,8($sp)
+					lw			$ra,12($sp)		#get stored variables/sp/ra
+					lw			$s0,8($sp)
+					lw			$s1,4($sp)
+					lw			$s2,($sp)
 					addi		$sp,$sp,16		#de-allocate stack space
 
 					jr			$ra				#return result
