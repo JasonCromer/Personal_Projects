@@ -44,7 +44,7 @@ public class BigOSpeechlet implements Speechlet {
                 session.getSessionId());
 
         String speechOutput =
-                "Welcome to the Big O Helper. You can ask me about the time "
+                "Welcome to the Runtime Helper. You can ask me about the time "
                     + "complexity of a data structure or search algorithm like, "
                     + "what is the time complexity an array? ...Now, what "
                     + "can I help you with?";
