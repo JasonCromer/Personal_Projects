@@ -1,4 +1,4 @@
-#Instructions on building and developing the Big O Helper app
+#Instructions on building and developing the Runtime Helper app
 
 
 ##Building
