@@ -1,6 +1,6 @@
 apply plugin: 'java'
 
-group = "big-o-helper"
+group = "runtime-helper"
 version = '1.0'
 
 compileJava {
