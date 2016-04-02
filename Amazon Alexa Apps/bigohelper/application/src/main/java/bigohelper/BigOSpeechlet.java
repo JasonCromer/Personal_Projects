@@ -112,6 +112,7 @@ public class BigOSpeechlet implements Speechlet {
 
             // Get the time complexity for the item
             String timeComplexity = TimeComplexities.get(itemName);
+            String timeComplexityCard = timeComplexityCard.get(itemName);
 
             if (timeComplexity != null) {
                 // If we have the time complexity, return it to the user.
@@ -120,7 +121,7 @@ public class BigOSpeechlet implements Speechlet {
 
                 SimpleCard card = new SimpleCard();
                 card.setTitle("Time Complexity for " + itemName);
-                card.setContent(timeComplexity);
+                card.setContent(timeComplexityCard);
 
                 return SpeechletResponse.newTellResponse(outputSpeech, card);
             } 
