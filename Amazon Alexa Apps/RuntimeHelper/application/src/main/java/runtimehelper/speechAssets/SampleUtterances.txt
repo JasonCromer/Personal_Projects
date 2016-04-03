@@ -1,0 +1,86 @@
+BigOIntent what is the run time of {DataStructure}
+BigOIntent what is run time of {DataStructure}
+BigOIntent run time of {DataStructure}
+BigOIntent {DataStructure} has what run time
+BigOIntent I want to know the run time of {DataStructure}
+BigOIntent do you know the run time of {DataStructure}
+BigOIntent can you give me the run time of {DataStructure}
+BigOIntent I need to know the run time of {DataStructure}
+BigOIntent what is the time complexity of {DataStructure}
+BigOIntent what is time complexity of {DataStructure}
+BigOIntent time complexity of {DataStructure}
+BigOIntent {DataStructure} has what time complexity
+BigOIntent I want to know the time complexity of {DataStructure}
+BigOIntent do you know the time complexity of {DataStructure}
+BigOIntent can you give me the time complexity of {DataStructure}
+BigOIntent I need to know the time complexity of {DataStructure}
+BigOIntent what is the run time complexity of {DataStructure}
+BigOIntent what is run time complexity of {DataStructure}
+BigOIntent run time complexity of {DataStructure}
+BigOIntent {DataStructure} has what run time complexity
+BigOIntent I want to know the run time complexity of {DataStructure}
+BigOIntent do you know the run time complexity of {DataStructure}
+BigOIntent can you give me the run time complexity of {DataStructure}
+BigOIntent I need to know the run time complexity of {DataStructure}
+BigOIntent what is the run time of a {DataStructure}
+BigOIntent what is run time of a  {DataStructure}
+BigOIntent run time of {DataStructure}
+BigOIntent I want to know the run time of a {DataStructure}
+BigOIntent do you know the run time of a {DataStructure}
+BigOIntent can you give me the run time of a {DataStructure}
+BigOIntent I need to know the run time of a {DataStructure}
+BigOIntent what is the time complexity of a {DataStructure}
+BigOIntent what is time complexity of a {DataStructure}
+BigOIntent time complexity of a {DataStructure}
+BigOIntent {DataStructure} has which time complexities
+BigOIntent {DataStructure} has what run times
+BigOIntent I want to know the time complexity of a {DataStructure}
+BigOIntent do you know the time complexity of a {DataStructure}
+BigOIntent can you give me the time complexity of a {DataStructure}
+BigOIntent I need to know the time complexity of a {DataStructure}
+BigOIntent what is the run time complexity of a {DataStructure}
+BigOIntent what is run time complexity of a {DataStructure}
+BigOIntent run time complexity of a {DataStructure}
+BigOIntent I want to know the run time complexity of a {DataStructure}
+BigOIntent do you know the run time complexity of a {DataStructure}
+BigOIntent can you give me the run time complexity of a {DataStructure}
+BigOIntent I need to know the run time complexity of a {DataStructure}
+BigOIntent what's the run time of a {DataStructure}
+BigOIntent what's run time of a  {DataStructure}
+BigOIntent what's is the time complexity of a {DataStructure}
+BigOIntent what's time complexity of a {DataStructure}
+BigOIntent what's the run time complexity of a {DataStructure}
+BigOIntent what's run time complexity of a {DataStructure}
+BigOIntent what is the run time of an {DataStructure}
+BigOIntent I want to know the run time of an {DataStructure}
+BigOIntent do you know the run time of an {DataStructure}
+BigOIntent can you give me the run time of an {DataStructure}
+BigOIntent I need to know the run time of an {DataStructure}
+BigOIntent what is the time complexity of an {DataStructure}
+BigOIntent what is time complexity of an {DataStructure}
+BigOIntent time complexity of a {DataStructure}
+BigOIntent I want to know the time complexity of an {DataStructure}
+BigOIntent do you know the time complexity of an {DataStructure}
+BigOIntent can you give me the time complexity of an {DataStructure}
+BigOIntent I need to know the time complexity of an {DataStructure}
+BigOIntent what is the run time complexity of an {DataStructure}
+BigOIntent what is run time complexity of an {DataStructure}
+BigOIntent run time complexity of an {DataStructure}
+BigOIntent I want to know the run time complexity of an {DataStructure}
+BigOIntent do you know the run time complexity of an {DataStructure}
+BigOIntent can you give me the run time complexity of an {DataStructure}
+BigOIntent I need to know the run time complexity of an {DataStructure}
+BigOIntent what's the run time of an {DataStructure}
+BigOIntent what's run time of an {DataStructure}
+BigOIntent what's is the time complexity of an {DataStructure}
+BigOIntent what's time complexity of an {DataStructure}
+BigOIntent what's the run time complexity of an {DataStructure}
+BigOIntent what's run time complexity of an {DataStructure}
+BigOIntent what's the time complexity of a {DataStructure}
+BigOIntent what's the run time {DataStructure}
+BigOIntent what the run time of of a {DataStructure} is
+BigOIntent what the run time of an {DataStructure} is
+BigOIntent what the time complexity of a {DataStructure} is
+BigOIntent what the time complexity of an {DataStructure} is
+BigOIntent what the run time complexity of a {DataStructure} is
+BigOIntent what the run time complexity of an {DataStructure} is

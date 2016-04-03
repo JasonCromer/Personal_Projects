@@ -3,7 +3,4 @@ build/
 target/
 .idea/
 *.iml
-src/main/java/runtimehelper/speechAssets
 src/main/java/runtimehelper/BigOHelperSpeechletRequestStreamHandler.java
-src/main/java/runtimehelper/TimeComplexties.java
-src/main/java/runtimehelper/TimeComplexityCards.java
