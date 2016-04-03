@@ -7,6 +7,7 @@ An Amazon Echo application that gives users the time complexity of various data 
 Simply enable Runtime Helper on your phone, or computer via the Alexa app or Amazon Login, and bam! You've got the answer to a plethora of time complexities at the power of your tongue.
 
 
+***
 
 #Instructions on building and developing the Runtime Helper app
 
