@@ -1,8 +1,8 @@
 # Runtime Helper
 
-| An Amazon Echo application that gives users the time complexity of various data structures and algorithms. 
-Simply enable Runtime Helper on your phone, or computer via the Alexa app or Amazon Login, and bam! You've got the answer to a plethora of time complexities at the power of your tongue. |
-![alt text](https://lh3.googleusercontent.com/zNer4K7Iln830vrZ_Z1wGXPVE8agFXUYJCX_ZlRu8aD-THCDpYaaiwZz_slTLPa142k=w300) |
+An Amazon Echo application that gives users the time complexity of various data structures and algorithms. 
+Simply enable Runtime Helper on your phone, or computer via the Alexa app or Amazon Login, and bam! You've got the answer to a plethora of time complexities at the power of your tongue.
+<img align="right" src="https://lh3.googleusercontent.com/zNer4K7Iln830vrZ_Z1wGXPVE8agFXUYJCX_ZlRu8aD-THCDpYaaiwZz_slTLPa142k=w300">
 
 
 #Instructions on building and developing the Runtime Helper app
