@@ -81,8 +81,6 @@ public class LispExpressionEvaluator
 
 
     // default constructor
-    // set currentExpr to "" 
-    // create LinkedStack objects
     public LispExpressionEvaluator()
     {
         currentExpr = "";
@@ -91,8 +89,6 @@ public class LispExpressionEvaluator
     }
 
     // constructor with an input expression 
-    // set currentExpr to inputExpression 
-    // create LinkedStack objects
     public LispExpressionEvaluator(String inputExpression) 
     {
         currentExpr = inputExpression;
@@ -100,8 +96,6 @@ public class LispExpressionEvaluator
         currentOpStack = new LinkedStack<>();
     }
 
-    // set currentExpr to inputExpression 
-    // clear stack objects
     public void reset(String inputExpression) 
     {
         currentExpr = inputExpression;
@@ -120,18 +114,20 @@ public class LispExpressionEvaluator
     //
     private void evaluateCurrentOperation()
     {
-
+    	//Get first item in tokensStack
         String nextOpInStack = (String) tokensStack.pop();
 
+        //Push only digits to currentOpStack while stack isn't empty
         while(!isOperator(nextOpInStack) && !tokensStack.empty()){
 
-            //Otherwise, they are digits and we convert to double and push to currentOpStack
+            //Convert to double and push to currentOpStack
             currentOpStack.push(Double.parseDouble(nextOpInStack));
 
             //Get next item in tokensStack
             nextOpInStack = (String) tokensStack.pop();
         }
 
+        //If the currentOpStack is empty, we have no operands to operate on
         if(!currentOpStack.empty()){
             finalResult = calculateCurrentOpStack(nextOpInStack);
             //Push result back onto tokenStack
@@ -163,7 +159,9 @@ public class LispExpressionEvaluator
      */
     public double evaluate()
     {
+    	//Counter to keep track of parentheses
         int parensCounter = 0;
+
         // use scanner to tokenize currentExpr
         Scanner currentExprScanner = new Scanner(currentExpr);
         
@@ -181,9 +179,8 @@ public class LispExpressionEvaluator
                 // Otherwise, it will just get one char
                 String dataString = currentExprScanner.findInLine("\\d+");
 
+                //Push digit to tokensStack
                 tokensStack.push(dataString);
-
-   		// more ...
             }
             else
             {
@@ -210,15 +207,16 @@ public class LispExpressionEvaluator
                                 break;
                     default:  // error
                                 throw new LispExpressionException(item + " is not a legal expression operator");
-                } // end switch
-            } // end else
-        } // end while
-        
-        if(parensCounter != 0){
-            throw new LispExpressionException("Too many or too few parenthesis");
+                }
+            }
         }
-        // Step 9: If you run out of tokens, the value on the top of tokensStack is the result 
-        return finalResult; // return result
+        
+        //If parensCounter isn't zero, we have too many, or not enough parentheses
+        if(parensCounter != 0){
+            throw new LispExpressionException("Too many or too few parentheses");
+        }
+
+        return finalResult;
     }
 
 
@@ -226,7 +224,6 @@ public class LispExpressionEvaluator
         int i = 0;
         int stackSize = currentOpStack.size();
         double result = 0.0;
-
 
         if(operator.equals("+")){
             result = 0.0;
@@ -247,7 +244,6 @@ public class LispExpressionEvaluator
                     result -= operand;
                 }
             }
-            System.out.println("SUB RESULT: " + result);
         }
         else if(operator.equals("*")){
             result = 1.0;
@@ -274,6 +270,7 @@ public class LispExpressionEvaluator
     }
 
 
+    //This method returns true if the input is an operator and false otherwise
     private boolean isOperator(String input){
         return input.equals("+") || input.equals("-") ||
                 input.equals("*") || input.equals("/");
