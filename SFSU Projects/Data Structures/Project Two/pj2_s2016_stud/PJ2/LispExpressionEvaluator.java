@@ -181,10 +181,7 @@ public class LispExpressionEvaluator
                 // Otherwise, it will just get one char
                 String dataString = currentExprScanner.findInLine("\\d+");
 
-                for(int i = 0; i < dataString.length(); i++){
-                    char currOp = dataString.charAt(i);
-                    tokensStack.push(String.valueOf(currOp));
-                }
+                tokensStack.push(dataString);
 
    		// more ...
             }
@@ -250,6 +247,7 @@ public class LispExpressionEvaluator
                     result -= operand;
                 }
             }
+            System.out.println("SUB RESULT: " + result);
         }
         else if(operator.equals("*")){
             result = 1.0;
