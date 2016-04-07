@@ -225,7 +225,11 @@ public class LispExpressionEvaluator
         int stackSize = currentOpStack.size();
         double result = 0.0;
 
-        if(operator.equals("+")){
+        if(stackSize == 1){
+        	result = evaluateSingleDigit(operator);
+        	return result;
+        }
+        else if(operator.equals("+")){
             result = 0.0;
             for(i = 0; i < stackSize; i++){
                 double operand = currentOpStack.pop();
@@ -233,16 +237,10 @@ public class LispExpressionEvaluator
             }
         }
         else if(operator.equals("-")){
-            result = 0.0;
-            if(stackSize == 1){
-                result -= currentOpStack.pop();
-            }
-            else{
-                result = currentOpStack.pop();
-                for(i = 0; i < stackSize-1; i++){
-                    double operand = currentOpStack.pop();
-                    result -= operand;
-                }
+            result = currentOpStack.pop();
+            for(i = 0; i < stackSize-1; i++){
+                double operand = currentOpStack.pop();
+                result -= operand;
             }
         }
         else if(operator.equals("*")){
@@ -253,20 +251,35 @@ public class LispExpressionEvaluator
             }
         }
         else if(operator.equals("/")){
-            result = 1.0;
-            if(stackSize == 1){
-                result /= currentOpStack.pop();
-            }
-            else{
-                result = currentOpStack.pop();
-                for(i = 0; i < stackSize-1; i++){
-                    double operand = currentOpStack.pop();
-                    result /= operand;
-                }
+            result = currentOpStack.pop();
+            for(i = 0; i < stackSize-1; i++){
+                double operand = currentOpStack.pop();
+                result /= operand;
             }
         }
 
         return result;
+    }
+
+
+    private double evaluateSingleDigit(String operator){
+    	double result = 0.0;
+    	double operand = currentOpStack.pop();
+    	switch(operator){
+    		case "+":	result += operand;
+    					break;
+    		case "-":	result -= operand;
+    					break;
+    		case "*":	result = 1.0;
+    					result *= operand;
+    					break;
+    		case "/":	result = 1.0;
+    					result /= operand;
+    					break;
+    		default:	throw new LispExpressionException("ERROR EVALUATING SINGLE DIGIT");
+    	}
+
+    	return result;
     }
 
 
