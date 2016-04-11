@@ -114,8 +114,15 @@ public class LispExpressionEvaluator
     //
     private void evaluateCurrentOperation()
     {
+    	String nextOpInStack = null;
+
     	//Get first item in tokensStack
-        String nextOpInStack = (String) tokensStack.pop();
+    	if(!tokensStack.empty()){
+			nextOpInStack = (String) tokensStack.pop();
+    	}
+    	else{
+    		throwException("No operator in expression");
+    	}
 
         //Push only digits to currentOpStack while stack isn't empty
         while(!isOperator(nextOpInStack) && !tokensStack.empty()){
@@ -134,7 +141,7 @@ public class LispExpressionEvaluator
             tokensStack.push(String.valueOf(finalResult));
         }
         else{
-            throw new LispExpressionException("Operator is missing operands to evaluate!");
+            throwException("Operator is missing operands to evaluate!");
         }
     }
 
@@ -206,14 +213,14 @@ public class LispExpressionEvaluator
                                 parensCounter--;
                                 break;
                     default:  // error
-                                throw new LispExpressionException(item + " is not a legal expression operator");
+                                throwException(item + " is not a legal expression operator");
                 }
             }
         }
         
         //If parensCounter isn't zero, we have too many, or not enough parentheses
         if(parensCounter != 0){
-            throw new LispExpressionException("Too many or too few parentheses");
+            throwException("Too many or too few parentheses");
         }
 
         return finalResult;
@@ -221,50 +228,78 @@ public class LispExpressionEvaluator
 
 
     private double calculateCurrentOpStack(String operator){
-        int i = 0;
         int stackSize = currentOpStack.size();
         double result = 0.0;
 
         if(stackSize == 1){
-        	result = evaluateSingleDigit(operator);
-        	return result;
+        	result = evaluateSingleDigit(operator);	
         }
         else if(operator.equals("+")){
-            result = 0.0;
-            for(i = 0; i < stackSize; i++){
-                double operand = currentOpStack.pop();
-                result += operand;
-            }
+            result = add(stackSize);
         }
         else if(operator.equals("-")){
-            result = currentOpStack.pop();
-            for(i = 0; i < stackSize-1; i++){
-                double operand = currentOpStack.pop();
-                result -= operand;
-            }
+            result = subtract(stackSize);
         }
         else if(operator.equals("*")){
-            result = 1.0;
-            for(i = 0; i < stackSize; i++){
-                double operand = currentOpStack.pop();
-                result *= operand;
-            }
+        	result = multiply(stackSize);
         }
         else if(operator.equals("/")){
-            result = currentOpStack.pop();
-            for(i = 0; i < stackSize-1; i++){
-                double operand = currentOpStack.pop();
-                result /= operand;
-            }
+            result = divide(stackSize);
         }
 
         return result;
     }
 
 
+    private double add(int stackSize){
+	    double result = 0.0;
+        for(int i = 0; i < stackSize; i++){
+            double operand = currentOpStack.pop();
+            result += operand;
+        }
+
+        return result;
+    }
+
+
+    private double subtract(int stackSize){
+	    double result = currentOpStack.pop();
+        for(int i = 0; i < stackSize-1; i++){
+            double operand = currentOpStack.pop();
+            result -= operand;
+        }
+
+        return result;
+    }
+
+
+    private double multiply(int stackSize){
+    	double result = 1.0;
+        for(int i = 0; i < stackSize; i++){
+            double operand = currentOpStack.pop();
+            result *= operand;
+        }
+
+        return result;
+    }
+
+
+    private double divide(int stackSize){
+        double result = currentOpStack.pop();
+        for(int i = 0; i < stackSize-1; i++){
+            double operand = currentOpStack.pop();
+            result /= operand;
+        }
+
+        return result;
+    }
+
+
+    //This method evaluates single digit operations
     private double evaluateSingleDigit(String operator){
     	double result = 0.0;
     	double operand = currentOpStack.pop();
+
     	switch(operator){
     		case "+":	result += operand;
     					break;
@@ -276,7 +311,7 @@ public class LispExpressionEvaluator
     		case "/":	result = 1.0;
     					result /= operand;
     					break;
-    		default:	throw new LispExpressionException("ERROR EVALUATING SINGLE DIGIT");
+    		default:	throwException("Error evaluating single digit");
     	}
 
     	return result;
@@ -288,6 +323,12 @@ public class LispExpressionEvaluator
         return input.equals("+") || input.equals("-") ||
                 input.equals("*") || input.equals("/");
     } 
+
+
+    //This method takes a String as a parameter and throws a ListExpression Exception using that String
+    private void throwException(String info){
+    	throw new LispExpressionException(info);
+    }
     
 
     //=====================================================================
