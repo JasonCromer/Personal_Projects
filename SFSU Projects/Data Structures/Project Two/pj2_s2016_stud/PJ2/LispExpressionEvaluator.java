@@ -73,12 +73,12 @@ public class LispExpressionEvaluator
     // Current input Lisp expression
     private String currentExpr;
 
-    private double finalResult;
-
     // Main expression stack, see algorithm in evaluate()
     private LinkedStack<Object> tokensStack;
     private LinkedStack<Double> currentOpStack;
 
+    //Constant to determine if stack contains only one digit
+    private static final int INT_IS_SINGLE_DIGIT = 1;
 
     // default constructor
     public LispExpressionEvaluator()
@@ -115,6 +115,7 @@ public class LispExpressionEvaluator
     private void evaluateCurrentOperation()
     {
     	String nextOpInStack = null;
+    	double currentOpStackResult = 0.0;
 
     	//Get first item in tokensStack
     	if(!tokensStack.empty()){
@@ -136,9 +137,9 @@ public class LispExpressionEvaluator
 
         //If the currentOpStack is empty, we have no operands to operate on
         if(!currentOpStack.empty()){
-            finalResult = calculateCurrentOpStack(nextOpInStack);
+            currentOpStackResult = calculateCurrentOpStack(nextOpInStack);
             //Push result back onto tokenStack
-            tokensStack.push(String.valueOf(finalResult));
+            tokensStack.push(String.valueOf(currentOpStackResult));
         }
         else{
             throwException("Operator is missing operands to evaluate!");
@@ -182,8 +183,7 @@ public class LispExpressionEvaluator
      	    // Step 2: If you see an operand, push operand object onto the tokensStack
             if (currentExprScanner.hasNextInt())
             {
-                // This force scanner to grab all of the digits
-                // Otherwise, it will just get one char
+                // This force scanner to grab all of the digits, otherwise, it'll get one char
                 String dataString = currentExprScanner.findInLine("\\d+");
 
                 //Push digit to tokensStack
@@ -194,12 +194,11 @@ public class LispExpressionEvaluator
                 // Get next token, only one char in string token
                 String aToken = currentExprScanner.next();
 
-                //System.out.println("Other: " + aToken);
                 char item = aToken.charAt(0);
                 
                 // Step 3: If you see "(", next token should be an operator
                 // Step 4: If you see an operator, push operator object onto the tokensStack
-                // Step 5: If you see ")"  // steps in evaluateCurrentOperation() :
+                // Step 5: If you see ")"  // steps in evaluateCurrentOperation()
                 switch (item)
                 {
                     case '(':   parensCounter++;
@@ -212,8 +211,7 @@ public class LispExpressionEvaluator
                     case ')':   evaluateCurrentOperation();
                                 parensCounter--;
                                 break;
-                    default:  // error
-                                throwException(item + " is not a legal expression operator");
+                    default:	throwException(item + " is not a legal expression operator");
                 }
             }
         }
@@ -223,15 +221,20 @@ public class LispExpressionEvaluator
             throwException("Too many or too few parentheses");
         }
 
+        //Pop final result from the tokensStack, convert to String, then to double
+        double finalResult = Double.parseDouble(String.valueOf(tokensStack.pop()));
+
         return finalResult;
     }
 
 
+    //This method uses the current operator to determine how the currentOpStack will be
+    //utilized to push a resulting answer back to the tokensStack
     private double calculateCurrentOpStack(String operator){
         int stackSize = currentOpStack.size();
         double result = 0.0;
 
-        if(stackSize == 1){
+        if(stackSize == INT_IS_SINGLE_DIGIT){
         	result = evaluateSingleDigit(operator);	
         }
         else if(operator.equals("+")){
@@ -251,6 +254,7 @@ public class LispExpressionEvaluator
     }
 
 
+    //Adds all items on currentOpStack and returns a double result
     private double add(int stackSize){
 	    double result = 0.0;
         for(int i = 0; i < stackSize; i++){
@@ -262,6 +266,7 @@ public class LispExpressionEvaluator
     }
 
 
+	//Subtracts all items on currentOpStack and returns a double result
     private double subtract(int stackSize){
 	    double result = currentOpStack.pop();
         for(int i = 0; i < stackSize-1; i++){
@@ -273,6 +278,7 @@ public class LispExpressionEvaluator
     }
 
 
+    //Multiplies all items on currentOpStack and returns a double result
     private double multiply(int stackSize){
     	double result = 1.0;
         for(int i = 0; i < stackSize; i++){
@@ -284,6 +290,7 @@ public class LispExpressionEvaluator
     }
 
 
+    //Divides all items on currentOpStack and returns a double result
     private double divide(int stackSize){
         double result = currentOpStack.pop();
         for(int i = 0; i < stackSize-1; i++){
