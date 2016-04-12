@@ -78,7 +78,7 @@ public class LispExpressionEvaluator
     private LinkedStack<Double> currentOpStack;
 
     //Constant to determine if stack contains only one digit
-    private static final int INT_IS_SINGLE_DIGIT = 1;
+    private static final int INT_STACK_SIZE_ONE = 1;
 
     // default constructor
     public LispExpressionEvaluator()
@@ -114,31 +114,27 @@ public class LispExpressionEvaluator
     //
     private void evaluateCurrentOperation()
     {
-    	String nextOpInStack = null;
-    	double currentOpStackResult = 0.0;
+    	if(tokensStack.empty()){
+    		throwException("Empty Expression!");
+    	}
 
     	//Get first item in tokensStack
-    	if(!tokensStack.empty()){
-			nextOpInStack = (String) tokensStack.pop();
-    	}
-    	else{
-    		throwException("No operator in expression");
-    	}
+    	String nextOperatorInTokensStack = (String) tokensStack.pop();
 
-        //Push only digits to currentOpStack while stack isn't empty
-        while(!isOperator(nextOpInStack) && !tokensStack.empty()){
+        //Push digits to currentOpStack while stack isn't empty
+        while(!isOperator(nextOperatorInTokensStack) && !tokensStack.empty()){
 
             //Convert to double and push to currentOpStack
-            currentOpStack.push(Double.parseDouble(nextOpInStack));
+            currentOpStack.push(Double.parseDouble(nextOperatorInTokensStack));
 
             //Get next item in tokensStack
-            nextOpInStack = (String) tokensStack.pop();
+            nextOperatorInTokensStack = (String) tokensStack.pop();
         }
 
-        //If the currentOpStack is empty, we have no operands to operate on
+        //Calculate the result of all items on currentOpStack, then push back to tokensStack
         if(!currentOpStack.empty()){
-            currentOpStackResult = calculateCurrentOpStack(nextOpInStack);
-            //Push result back onto tokenStack
+            double currentOpStackResult = calculateCurrentOpStack(nextOperatorInTokensStack);
+
             tokensStack.push(String.valueOf(currentOpStackResult));
         }
         else{
@@ -234,7 +230,7 @@ public class LispExpressionEvaluator
         int stackSize = currentOpStack.size();
         double result = 0.0;
 
-        if(stackSize == INT_IS_SINGLE_DIGIT){
+        if(stackSize == INT_STACK_SIZE_ONE){
         	result = evaluateSingleDigit(operator);	
         }
         else if(operator.equals("+")){
