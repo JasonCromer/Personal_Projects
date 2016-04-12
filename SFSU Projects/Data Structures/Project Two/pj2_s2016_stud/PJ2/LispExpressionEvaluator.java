@@ -122,7 +122,7 @@ public class LispExpressionEvaluator
     	String nextOperatorInTokensStack = (String) tokensStack.pop();
 
         //Push digits to currentOpStack while stack isn't empty
-        while(!isOperator(nextOperatorInTokensStack) && !tokensStack.empty()){
+        while(isNumeric(nextOperatorInTokensStack) && !tokensStack.empty()){
 
             //Convert to double and push to currentOpStack
             currentOpStack.push(Double.parseDouble(nextOperatorInTokensStack));
@@ -213,37 +213,31 @@ public class LispExpressionEvaluator
         }
         
         //If parensCounter isn't zero, we have too many, or not enough parentheses
-        if(parensCounter != 0){
-            throwException("Too many or too few parentheses");
-        }
+        checkThatParensCounterIsZero(parensCounter);
 
-        //Pop final result from the tokensStack, convert to String, then to double
-        double finalResult = Double.parseDouble(String.valueOf(tokensStack.pop()));
-
-        return finalResult;
+        return getFinalResult();
     }
 
 
     //This method uses the current operator to determine how the currentOpStack will be
     //utilized to push a resulting answer back to the tokensStack
     private double calculateCurrentOpStack(String operator){
-        int stackSize = currentOpStack.size();
         double result = 0.0;
 
-        if(stackSize == INT_STACK_SIZE_ONE){
+        if(currentOpStack.size() == INT_STACK_SIZE_ONE){
         	result = evaluateSingleDigit(operator);	
         }
         else if(operator.equals("+")){
-            result = add(stackSize);
+            result = add();
         }
         else if(operator.equals("-")){
-            result = subtract(stackSize);
+            result = subtract();
         }
         else if(operator.equals("*")){
-        	result = multiply(stackSize);
+        	result = multiply();
         }
         else if(operator.equals("/")){
-            result = divide(stackSize);
+            result = divide();
         }
 
         return result;
@@ -251,9 +245,9 @@ public class LispExpressionEvaluator
 
 
     //Adds all items on currentOpStack and returns a double result
-    private double add(int stackSize){
+    private double add(){
 	    double result = 0.0;
-        for(int i = 0; i < stackSize; i++){
+        while(!currentOpStack.empty()){
             double operand = currentOpStack.pop();
             result += operand;
         }
@@ -263,9 +257,9 @@ public class LispExpressionEvaluator
 
 
 	//Subtracts all items on currentOpStack and returns a double result
-    private double subtract(int stackSize){
+    private double subtract(){
 	    double result = currentOpStack.pop();
-        for(int i = 0; i < stackSize-1; i++){
+        while(!currentOpStack.empty()){
             double operand = currentOpStack.pop();
             result -= operand;
         }
@@ -275,9 +269,9 @@ public class LispExpressionEvaluator
 
 
     //Multiplies all items on currentOpStack and returns a double result
-    private double multiply(int stackSize){
+    private double multiply(){
     	double result = 1.0;
-        for(int i = 0; i < stackSize; i++){
+        while(!currentOpStack.empty()){
             double operand = currentOpStack.pop();
             result *= operand;
         }
@@ -287,9 +281,9 @@ public class LispExpressionEvaluator
 
 
     //Divides all items on currentOpStack and returns a double result
-    private double divide(int stackSize){
+    private double divide(){
         double result = currentOpStack.pop();
-        for(int i = 0; i < stackSize-1; i++){
+        while(!currentOpStack.empty()){
             double operand = currentOpStack.pop();
             result /= operand;
         }
@@ -321,6 +315,12 @@ public class LispExpressionEvaluator
     }
 
 
+    //Pops tokensStack to retrieve a final result after all calculations have been done
+    private double getFinalResult(){
+    	return Double.parseDouble(String.valueOf(tokensStack.pop()));
+    }
+
+
     //This method returns true if the input is an operator and false otherwise
     private boolean isOperator(String input){
         return input.equals("+") || input.equals("-") ||
@@ -328,9 +328,23 @@ public class LispExpressionEvaluator
     } 
 
 
+    //This method returns true if the input is numeric
+    private boolean isNumeric(String input){
+    	return input.matches("[-+]?\\d*\\.?\\d+");
+    }
+
+
     //This method takes a String as a parameter and throws a ListExpression Exception using that String
     private void throwException(String info){
     	throw new LispExpressionException(info);
+    }
+
+
+    //This method throws an exception if the parens counter is not 0. Meaning, too many/few parens in expression
+    private void checkThatParensCounterIsZero(int parensCounter){
+    	if(parensCounter != 0){
+            throwException("Too many or too few parentheses");
+        }
     }
     
 
