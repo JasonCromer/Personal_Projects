@@ -122,7 +122,7 @@ public class LispExpressionEvaluator
     	String nextOperatorInTokensStack = (String) tokensStack.pop();
 
         //Push digits to currentOpStack while stack isn't empty
-        while(isNumeric(nextOperatorInTokensStack) && !tokensStack.empty()){
+        while(!isOperator(nextOperatorInTokensStack) && !tokensStack.empty()){
 
             //Convert to double and push to currentOpStack
             currentOpStack.push(Double.parseDouble(nextOperatorInTokensStack));
@@ -138,7 +138,7 @@ public class LispExpressionEvaluator
             tokensStack.push(String.valueOf(currentOpStackResult));
         }
         else{
-            throwException("Operator is missing operands to evaluate!");
+        	throwException("Missing operands to evaluate!");	
         }
     }
 
@@ -168,6 +168,9 @@ public class LispExpressionEvaluator
 
         // use scanner to tokenize currentExpr
         Scanner currentExprScanner = new Scanner(currentExpr);
+
+        //If input is empty, throw exception
+        assertScannerInputIsNotEmpty(currentExprScanner);
         
         // Use zero or more white space as delimiter,
         // which breaks the string into single character tokens
@@ -328,9 +331,11 @@ public class LispExpressionEvaluator
     } 
 
 
-    //This method returns true if the input is numeric
-    private boolean isNumeric(String input){
-    	return input.matches("[-+]?\\d*\\.?\\d+");
+    //This method checks if the scanner's input is null, and if so, throws exception
+    private void assertScannerInputIsNotEmpty(Scanner scanner){
+    	if(!scanner.hasNext()){
+            	throwException("Empty input!");
+        }
     }
 
 
