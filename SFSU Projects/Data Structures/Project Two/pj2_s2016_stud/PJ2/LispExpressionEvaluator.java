@@ -78,7 +78,7 @@ public class LispExpressionEvaluator
     private LinkedStack<Double> currentOpStack;
 
     //Constant to determine if stack contains only one digit
-    private static final int INT_STACK_SIZE_ONE = 1;
+    private static final int STACK_SIZE_ONE = 1;
 
     // default constructor
     public LispExpressionEvaluator()
@@ -227,20 +227,17 @@ public class LispExpressionEvaluator
     private double calculateCurrentOpStack(String operator){
         double result = 0.0;
 
-        if(currentOpStack.size() == INT_STACK_SIZE_ONE){
-        	result = evaluateSingleDigit(operator);	
-        }
-        else if(operator.equals("+")){
+        if(operator.equals("+")){
             result = add();
         }
         else if(operator.equals("-")){
-            result = subtract();
+            result = (isCurrentOpStackSizeOne()) ? evaluateSingleDigit(operator) : subtract();
         }
         else if(operator.equals("*")){
         	result = multiply();
         }
         else if(operator.equals("/")){
-            result = divide();
+            result = (isCurrentOpStackSizeOne()) ? evaluateSingleDigit(operator) : divide();
         }
 
         return result;
@@ -249,7 +246,7 @@ public class LispExpressionEvaluator
 
     //Adds all items on currentOpStack and returns a double result
     private double add(){
-	    double result = 0.0;
+	    double result = currentOpStack.pop();
         while(!currentOpStack.empty()){
             double operand = currentOpStack.pop();
             result += operand;
@@ -273,7 +270,7 @@ public class LispExpressionEvaluator
 
     //Multiplies all items on currentOpStack and returns a double result
     private double multiply(){
-    	double result = 1.0;
+    	double result = currentOpStack.pop();
         while(!currentOpStack.empty()){
             double operand = currentOpStack.pop();
             result *= operand;
@@ -301,12 +298,7 @@ public class LispExpressionEvaluator
     	double operand = currentOpStack.pop();
 
     	switch(operator){
-    		case "+":	result += operand;
-    					break;
     		case "-":	result -= operand;
-    					break;
-    		case "*":	result = 1.0;
-    					result *= operand;
     					break;
     		case "/":	result = 1.0;
     					result /= operand;
@@ -329,6 +321,12 @@ public class LispExpressionEvaluator
         return input.equals("+") || input.equals("-") ||
                 input.equals("*") || input.equals("/");
     } 
+
+
+    //This method checks if the currentOpStack's size is equal to one
+    private boolean isCurrentOpStackSizeOne(){
+    	return currentOpStack.size() == STACK_SIZE_ONE;
+    }
 
 
     //This method checks if the scanner's input is null, and if so, throws exception
