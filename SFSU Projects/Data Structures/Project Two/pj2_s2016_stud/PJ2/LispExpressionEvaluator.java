@@ -316,14 +316,12 @@ public class LispExpressionEvaluator
     }
 
 
-    //This method returns true if the input is an operator and false otherwise
     private boolean isOperator(String input){
         return input.equals("+") || input.equals("-") ||
                 input.equals("*") || input.equals("/");
     } 
 
 
-    //This method checks if the currentOpStack's size is equal to one
     private boolean isCurrentOpStackSizeOne(){
     	return currentOpStack.size() == STACK_SIZE_ONE;
     }
@@ -337,13 +335,12 @@ public class LispExpressionEvaluator
     }
 
 
-    //This method takes a String as a parameter and throws a ListExpression Exception using that String
     private void throwException(String info){
     	throw new LispExpressionException(info);
     }
 
 
-    //This method throws an exception if the parens counter is not 0. Meaning, too many/few parens in expression
+    //If difference in closed/open parens is not zero, we have too many/few parens in expression
     private void checkThatParensCounterIsZero(int parensCounter){
     	if(parensCounter != 0){
             throwException("Too many or too few parentheses");
