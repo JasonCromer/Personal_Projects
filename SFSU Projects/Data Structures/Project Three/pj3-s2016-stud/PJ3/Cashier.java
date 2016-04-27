@@ -32,7 +32,7 @@ class Cashier {
    // Constructor with cashier id
    Cashier(int cashierId)
    {
-    casherId = cashierID;
+    cashierId = cashierID;
    }
 
    // accessor methods

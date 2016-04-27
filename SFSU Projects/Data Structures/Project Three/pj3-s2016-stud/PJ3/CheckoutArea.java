@@ -54,95 +54,78 @@ class CheckoutArea {
 
 
   // Constructor 
-  public CheckoutArea() 
-  {
-	// add statements
+  public CheckoutArea(){
+    busyCashierQ = new PriorityQueue<>();
+    customerQ = new ArrayDeque<>();
+    freeCashierQ = new ArrayDeque<>();
+    customerQLimit = 0;
   }
 
   // Constructor 
-  public CheckoutArea(int numCashiers, int customerQlimit)
-  {
-	// use ArrayDeque to construct FIFO queue objects
+  public CheckoutArea(int numCashiers, int customerQlimit){
 
-	// construct PriorityQueue object
- 	// overide compare() in Comparator to compare Cashier objects
-	busyCashierQ= new PriorityQueue<Cashier>( numCashiers, 
-						  new CompareCashier()); 
+    // use ArrayDeque to construct FIFO queue objects
+    customerQ = new ArrayDeque(customerQlimit);
+    freeCashierQ = new ArrayDeque(numCashiers);
 
-	// initialize customerQlimit
-        // Construct Cashier objects and insert into FreeCashierQ
+    // construct PriorityQueue object
+    // overide compare() in Comparator to compare Cashier objects
+    busyCashierQ = new PriorityQueue<Cashier>( numCashiers, new CompareCashier()); 
 
-	// add statements
+    // initialize customerQlimit
+    customerQLimit = customerQlimit;
+  
+    // Construct Cashier objects and insert into FreeCashierQ
+    for(int i = 0; i < numCashiers; i++){
+      Cashier newCashier = new Cashier(i);
+      freeCashierQ.add(newCashier);
+    }
+
   }
 
 
   // -------------------------------------------------
   // freeCashierQ methods: remove, insert, empty, size 
   // -------------------------------------------------
-  public Cashier removeFreeCashierQ()
-  {
-	// remove and return a free cashier
-	// Add statetments
-	return null;
+  public Cashier removeFreeCashierQ(){
+    return freeCashierQ.remove();
   }
 
-  public void insertFreeCashierQ(Cashier cashier)
-  {
-	  // insert a free cashier
-	  // Add statetments
+  public void insertFreeCashierQ(Cashier cashier){
+    freeCashierQ.add(cashier);
   }
 
-  public boolean emptyFreeCashierQ()
-  {
-	// is freeCashierQ empty?
-	// Add statetments
-	return false;
+  public boolean emptyFreeCashierQ(){
+    return freeCashierQ.isEmpty();
   }
 
-  public int sizeFreeCashierQ()
-  {
-	// get number of free cashiers
-	// Add statetments
-	return 0;
+  public int sizeFreeCashierQ(){
+    return freeCashierQ.size();
   }
 
   // -------------------------------------------------------
   // busyCashierQ methods: remove, insert, empty, size, peek 
   // -------------------------------------------------------
 
-  public Cashier removeBusyCashierQ() 
-  {
-	// remove and return a busy cashier
-	// Add statetments
-	return null;
+  public Cashier removeBusyCashierQ(){
+    return busyCashierQ.remove();
   }
 
-  public void insertBusyCashierQ(Cashier cashier)
-  {
-	// insert a busy cashier
-	// Add statetments
+  public void insertBusyCashierQ(Cashier cashier){
+    busyCashierQ.add(cashier);
   }
 
   public boolean emptyBusyCashierQ()
   {
-	// is busyCashierQ empty?
-	// Add statetments
-	return false;
+    return busyCashierQ.size() == 0;
   }
 
-  public int sizeBusyCashierQ()
-  {
-	// get number of busy cashiers
-	// Add statetments
-	return 0;
+  public int sizeBusyCashierQ(){
+    return busyCashierQ.size();
   }
 
-  public Cashier peekBusyCashierQ() 
-  {
-	// get highest prioirty cashier
-	// "retrieve" but not "remove"
-	// Add statetments
-	return null;
+  public Cashier peekBusyCashierQ(){
+    return busyCashierQ.peek();
   }
 
   // -------------------------------------------------------
@@ -150,38 +133,24 @@ class CheckoutArea {
   //                    and check isCustomerQTooLong()
   // -------------------------------------------------------
 
-  public Customer removeCustomerQ()
-  {
-	// remove and return a customer 
-	// Add statetments
-	return null;
+  public Customer removeCustomerQ(){
+    return customerQ.remove();
   }
 
-  public void insertCustomerQ(Customer customer)
-  {
-	// insert a customer 
-	// Add statetments
+  public void insertCustomerQ(Customer customer){
+    customerQ.add(customer);
   }
 
-  public boolean emptyCustomerQ()
-  {
-	// is customerQ empty?
-	// Add statetments
-	return false;
+  public boolean emptyCustomerQ(){
+    return customerQ.isEmpty();
   }
 
-  public int sizeCustomerQ()
-  {
-	// get number of customers 
-	// Add statetments
-	return 0;
+  public int sizeCustomerQ(){
+    return customerQ.size();
   }
 
-  public boolean isCustomerQTooLong()
-  {
-	// is customerQ too long?
-	// Add statetments
-	return false;
+  public boolean isCustomerQTooLong(){
+    return customerQ.size() > customerQLimit;
   }
 
 
