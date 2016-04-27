@@ -65,8 +65,8 @@ class CheckoutArea {
   public CheckoutArea(int numCashiers, int customerQlimit){
 
     // use ArrayDeque to construct FIFO queue objects
-    customerQ = new ArrayDeque(customerQlimit);
-    freeCashierQ = new ArrayDeque(numCashiers);
+    customerQ = new ArrayDeque<>(customerQlimit);
+    freeCashierQ = new ArrayDeque<>(numCashiers);
 
     // construct PriorityQueue object
     // overide compare() in Comparator to compare Cashier objects
@@ -77,7 +77,8 @@ class CheckoutArea {
   
     // Construct Cashier objects and insert into FreeCashierQ
     for(int i = 0; i < numCashiers; i++){
-      Cashier newCashier = new Cashier(i);
+      final int cashierIDIndex = i + 1;
+      Cashier newCashier = new Cashier(cashierIDIndex);
       freeCashierQ.add(newCashier);
     }
 
@@ -174,32 +175,32 @@ class CheckoutArea {
         Customer c4 = new Customer(4,37,13);
 
         // insert customers into customerQ
-  	sc.insertCustomerQ(c1);
-  	sc.insertCustomerQ(c2);
-  	sc.insertCustomerQ(c3);
-  	sc.insertCustomerQ(c4);
-	System.out.println("customerQ:"+sc.customerQ);
-	System.out.println("===============================================");
-	System.out.println("Remove customer:"+sc.removeCustomerQ());
-	System.out.println("Remove customer:"+sc.removeCustomerQ());
-	System.out.println("Remove customer:"+sc.removeCustomerQ());
-	System.out.println("Remove customer:"+sc.removeCustomerQ());
-	System.out.println("===============================================");
+      	sc.insertCustomerQ(c1);
+      	sc.insertCustomerQ(c2);
+      	sc.insertCustomerQ(c3);
+      	sc.insertCustomerQ(c4);
+      	System.out.println("customerQ:"+sc.customerQ);
+      	System.out.println("===============================================");
+      	System.out.println("Remove customer:"+sc.removeCustomerQ());
+      	System.out.println("Remove customer:"+sc.removeCustomerQ());
+      	System.out.println("Remove customer:"+sc.removeCustomerQ());
+      	System.out.println("Remove customer:"+sc.removeCustomerQ());
+      	System.out.println("===============================================");
 
         // remove cashiers from freeCashierQ
-	System.out.println("freeCashierQ:"+sc.freeCashierQ);
-	System.out.println("===============================================");
-	Cashier p1=sc.removeFreeCashierQ();
-	Cashier p2=sc.removeFreeCashierQ();
-	Cashier p3=sc.removeFreeCashierQ();
-	Cashier p4=sc.removeFreeCashierQ();
-	System.out.println("Remove free cashier:"+p1);
-	System.out.println("Remove free cashier:"+p2);
-	System.out.println("Remove free cashier:"+p3);
-	System.out.println("Remove free cashier:"+p4);
-	System.out.println("===============================================");
-	System.out.println("freeCashierQ:"+sc.freeCashierQ);
-	System.out.println("===============================================");
+      	System.out.println("freeCashierQ:"+sc.freeCashierQ);
+      	System.out.println("===============================================");
+      	Cashier p1=sc.removeFreeCashierQ();
+      	Cashier p2=sc.removeFreeCashierQ();
+      	Cashier p3=sc.removeFreeCashierQ();
+      	Cashier p4=sc.removeFreeCashierQ();
+      	System.out.println("Remove free cashier:"+p1);
+      	System.out.println("Remove free cashier:"+p2);
+      	System.out.println("Remove free cashier:"+p3);
+      	System.out.println("Remove free cashier:"+p4);
+      	System.out.println("===============================================");
+      	System.out.println("freeCashierQ:"+sc.freeCashierQ);
+      	System.out.println("===============================================");
 
         // insert customers to cashiers
         p1.freeToBusy (c1, 13);
@@ -208,28 +209,25 @@ class CheckoutArea {
         p4.freeToBusy (c4, 13);
 
         // insert cashiers to busyCashierQ
-	System.out.println("busyCashierQ:"+sc.busyCashierQ);
-	System.out.println("===============================================");
-	sc.insertBusyCashierQ(p1);
-	sc.insertBusyCashierQ(p4);
-	sc.insertBusyCashierQ(p2);
-	sc.insertBusyCashierQ(p3);
-	System.out.println("busyCashierQ:"+sc.busyCashierQ);
-	System.out.println("===============================================");
+      	System.out.println("busyCashierQ:"+sc.busyCashierQ);
+      	System.out.println("===============================================");
+      	sc.insertBusyCashierQ(p1);
+      	sc.insertBusyCashierQ(p4);
+      	sc.insertBusyCashierQ(p2);
+      	sc.insertBusyCashierQ(p3);
+      	System.out.println("busyCashierQ:"+sc.busyCashierQ);
+      	System.out.println("===============================================");
 
         // remove cashiers from busyCashierQ
-	p1=sc.removeBusyCashierQ();
-	p2=sc.removeBusyCashierQ();
-	p3=sc.removeBusyCashierQ();
-	p4=sc.removeBusyCashierQ();
-	System.out.println("Remove busy cashier:"+p1);
-	System.out.println("Remove busy cashier:"+p2);
-	System.out.println("Remove busy cashier:"+p3);
-	System.out.println("Remove busy cashier:"+p4);
-
+      	p1=sc.removeBusyCashierQ();
+      	p2=sc.removeBusyCashierQ();
+      	p3=sc.removeBusyCashierQ();
+      	p4=sc.removeBusyCashierQ();
+      	System.out.println("Remove busy cashier:"+p1);
+      	System.out.println("Remove busy cashier:"+p2);
+      	System.out.println("Remove busy cashier:"+p3);
+      	System.out.println("Remove busy cashier:"+p4);
    }
-
-
-};
+}
 
 

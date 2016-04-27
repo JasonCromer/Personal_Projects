@@ -32,7 +32,7 @@ class Cashier {
    // Constructor with cashier id
    Cashier(int cashierId)
    {
-    cashierId = cashierID;
+    cashierID = cashierId;
    }
 
    // accessor methods
@@ -51,14 +51,21 @@ class Cashier {
    void freeToBusy (Customer serveCustomer, int currentTime)
    {
   	// goal  : switch from free interval to busy interval
-  	//         i.e. end free interval, start busy interval 
-        //              to serve a new customer
-        //
+  	//i.e. end free interval, start busy interval 
+    //to serve a new customer
+    //
   	// steps : update totalFreeTime
   	// 	   set startTime, endTime, serveCustomer, 
   	// 	   update totalCustomers
 
-        // add statements
+    // add statements
+    this.serveCustomer = serveCustomer;
+    
+    totalFreeTime += currentTime - startTime;
+    startTime = currentTime;
+    endTime = currentTime + serveCustomer.getServiceTime();
+    totalCustomers += 1;
+
    }
 
    // Transition from busy interval to free interval
@@ -73,7 +80,11 @@ class Cashier {
   	//             return serveCustomer
 
         // add statements
-	return null;
+
+    totalBusyTime += serveCustomer.getServiceTime();
+    startTime = endTime;
+
+    return serveCustomer;
    }
 
    // Return end busy clock time, use in priority queue
@@ -89,7 +100,7 @@ class Cashier {
   	// for free interval at the end of simulation:
   	// set endTime, update totalFreeTime
 
-        // add statements
+    // add statements
    }
 
    // For busy interval at the end of simulation, 
@@ -123,10 +134,13 @@ class Cashier {
 
    public static void main(String[] args) {
         // quick check
-        Customer mycustomer = new Customer(1,15,5);
-	Cashier mycashier = new Cashier(5);
-        mycashier.freeToBusy (mycustomer, 12);
-        System.out.println(mycashier);
+      Customer mycustomer = new Customer(1,15,5);
+      Cashier mycashier = new Cashier(5);
+      mycashier.freeToBusy (mycustomer, 12);
+      mycashier.busyToFree();
+      System.out.println(mycashier);
+
+      mycashier.printStatistics();
 
    }
 

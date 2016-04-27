@@ -81,7 +81,7 @@ class SuperMart {
 	// add statements into this method!
 	// print out simulation results
 	// see the given example in project statement
-        // you need to display all free and busy cashiers 
+  // you need to display all free and busy cashiers 
   }
 
   // *** main method to run simulation ****

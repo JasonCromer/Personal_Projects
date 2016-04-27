@@ -19,8 +19,8 @@ class Customer
     // constructor to set customerID, serviceTime and arrivalTime
     Customer(int customerid, int servicetime, int arrivaltime)
     {
-	customerid = customerID;
-	servicetime = serviceTime;
+	customerID = customerid;
+	serviceTime = servicetime;
   	arrivalTime = arrivaltime;
     }
 
