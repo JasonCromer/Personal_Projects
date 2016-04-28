@@ -61,11 +61,18 @@ class Cashier {
     // add statements
     this.serveCustomer = serveCustomer;
     
+    //Free time interval start in busyToFree() via startTime variable, so the difference between current time (which is now busy)
+    //and the startTime of the time the cashier was free is the free time, which we add to the totalFreeTime.
     totalFreeTime += currentTime - startTime;
-    startTime = currentTime;
-    endTime = currentTime + serveCustomer.getServiceTime();
-    totalCustomers += 1;
 
+    //Update start time of being busy to the current time (since cashier is now busy)
+    startTime = currentTime;
+
+    //End time will be the time that being busy ends. We use this to set the start time of being free in busyToFree()
+    endTime = currentTime + serveCustomer.getServiceTime();
+
+    //Incremement the total amount of customers since we have assisted a customer when this method is called
+    totalCustomers += 1;
    }
 
    // Transition from busy interval to free interval
@@ -78,10 +85,12 @@ class Cashier {
   	// steps     : update totalBusyTime 
   	// 	       set startTime 
   	//             return serveCustomer
+    // add statements
 
-        // add statements
-
+    //Add to total busy time the time it takes to serve a customer
     totalBusyTime += serveCustomer.getServiceTime();
+
+    //End time is the time that the busy interval is over. This is when free time starts
     startTime = endTime;
 
     return serveCustomer;
@@ -101,6 +110,8 @@ class Cashier {
   	// set endTime, update totalFreeTime
 
     // add statements
+    totalFreeTime += endsimulationtime - startTime;
+    endTime = endsimulationtime;
    }
 
    // For busy interval at the end of simulation, 
@@ -110,7 +121,9 @@ class Cashier {
   	// for busy interval at the end of simulation:
   	// set endTime, update totalBusyTime
 
-        // add statements
+    // add statements
+    totalBusyTime += endsimulationtime - endTime;
+    endTime = endsimulationtime;
    }
 
    // functions for printing statistics :
@@ -137,11 +150,7 @@ class Cashier {
       Customer mycustomer = new Customer(1,15,5);
       Cashier mycashier = new Cashier(5);
       mycashier.freeToBusy (mycustomer, 12);
-      mycashier.busyToFree();
       System.out.println(mycashier);
-
-      mycashier.printStatistics();
-
    }
 
 };
