@@ -41,13 +41,14 @@ class SuperMart {
     try{
       System.out.println("*** Simulation Parameters ***" + "\n");
 
-      System.out.print("Enter simulation time (positive integer)    : ");
-      simulationTime = Integer.parseInt(dataFile.nextLine());
+      String[] argumentsArray = getArgumentStringsArray();
+      int[] parameterVariablesArray = getParameterVariablesArray();
 
-      System.out.print("Enter the number of cashiers                : ");
-      numCashiers = Integer.parseInt(dataFile.nextLine());
-
-      System.out.println("sim time: " + simulationTime + "////// num cash: " + numCashiers);
+      for(int i = 0; i < argumentsArray.length; i++){
+        System.out.print(argumentsArray[i]);
+        int userInput = Integer.parseInt(dataFile.nextLine());
+        parameterVariablesArray[i] = userInput;
+      }
     }
     catch(Exception e){
       System.out.println("Something happened");
@@ -95,6 +96,18 @@ class SuperMart {
 	// print out simulation results
 	// see the given example in project statement
   // you need to display all free and busy cashiers 
+  }
+
+
+  private String[] getArgumentStringsArray(){
+    return new String[] {"Enter simulation time (positive integer)     : ", "Enter the number of cashiers     : ", 
+            "Enter chances (0% < & <= 100%) of new customer     : ", "Enter maximum service time of customers     : ",
+              "Enter customer queue limit     : ", "Enter 0/1 to get data from random/file     : ",
+                "Enter filename "};
+  }
+
+  private int[] getParameterVariablesArray(){
+    return new int[] {simulationTime, numCashiers, chancesOfArrival, maxServiceTime, customerQLimit, dataSource};
   }
 
   // *** main method to run simulation ****
