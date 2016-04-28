@@ -29,16 +29,29 @@ class SuperMart {
   private int serviceTime;
 
   // initialize data fields
-  private SuperMart()
-  {
-	// add statements
+  private SuperMart(){
   }
 
-  private void setupParameters()
-  {
-        // read input parameters from user
-        // setup dataFile or dataRandom
-        // add statements
+  private void setupParameters(){
+    // read input parameters from user
+    // setup dataFile or dataRandom
+    // add statements
+    dataFile = new Scanner(System.in);
+
+    try{
+      System.out.println("*** Simulation Parameters ***" + "\n");
+
+      System.out.print("Enter simulation time (positive integer)    : ");
+      simulationTime = Integer.parseInt(dataFile.nextLine());
+
+      System.out.print("Enter the number of cashiers                : ");
+      numCashiers = Integer.parseInt(dataFile.nextLine());
+
+      System.out.println("sim time: " + simulationTime + "////// num cash: " + numCashiers);
+    }
+    catch(Exception e){
+      System.out.println("Something happened");
+    }
   }
 
   // use by step 1 in doSimulation()
