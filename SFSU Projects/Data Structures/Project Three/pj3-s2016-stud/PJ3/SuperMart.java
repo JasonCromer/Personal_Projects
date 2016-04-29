@@ -20,6 +20,7 @@ class SuperMart {
 
   // internal data
   private int counter;	             // customer ID counter
+  private int customerLeftCounter;    //Counts how many customers left because of full queue
   private CheckoutArea checkoutarea; // checkout area object
   private Scanner dataFile;	         // get customer data from file
   private Scanner inputScanner;    //Get user input from console
@@ -34,6 +35,7 @@ class SuperMart {
   // initialize data fields
   private SuperMart(){
     counter = 1;
+    customerLeftCounter = 0;
     inputScanner = new Scanner(System.in);
     shouldGetCashier = false;
   }
@@ -94,6 +96,7 @@ class SuperMart {
           }
           else{
             System.out.println("\tCustomer #" + counter + " leaves, as the customer queue is full");
+            customerLeftCounter++;
           }
 
     		} 
@@ -106,19 +109,42 @@ class SuperMart {
 
         // Step 3: get free cashiers to serve waiting customers 
         if(!checkoutarea.emptyFreeCashierQ() && !checkoutarea.emptyCustomerQ()){
-          setFreeCashiersToBusy(checkoutarea, counter, currentTime);
+          setFreeCashiersToBusy(checkoutarea, currentTime);
           counter ++;
         }
   	}
 
   }
 
-  private void printStatistics()
-  {
-	// add statements into this method!
-	// print out simulation results
-	// see the given example in project statement
-  // you need to display all free and busy cashiers 
+  private void printStatistics(){
+    System.out.println("\n\n=======================================================\n\n");
+    System.out.println("End of simulation report\n");
+
+    //Counter incremements at end of simulation loop, so account for final loop by subtracting one
+    System.out.println("\t# of arrival customers    : " + (counter + customerLeftCounter -1));
+    System.out.println("\t# customer gone-away      : " + customerLeftCounter);
+    System.out.println("\t# customers served        : " + (counter - 1));
+
+    System.out.println("\n\t*** Current Cashiers Info ***\n");
+    System.out.println("\t# WaitingCustomers        : " + checkoutarea.sizeCustomerQ());
+    System.out.println("\t# busy cashiers           : " + checkoutarea.sizeBusyCashierQ());
+    System.out.println("\t# free cashiers           : " + checkoutarea.sizeFreeCashierQ());
+
+    System.out.println("\n\tTotal waiting time       : 0");
+    System.out.println("\tAverage waiting time      : 0.0");
+
+    System.out.println("\n\n\tBusy Cashiers Info:");
+    while(!checkoutarea.emptyBusyCashierQ()){
+      Cashier busyCashier = checkoutarea.removeBusyCashierQ();
+      busyCashier.printStatistics();
+    }
+
+    System.out.println("\n\nFree Cashiers Info: ");
+    while(!checkoutarea.emptyFreeCashierQ()){
+      Cashier freeCashier = checkoutarea.removeFreeCashierQ();
+      freeCashier.printStatistics();
+    }
+
   }
 
 
@@ -222,7 +248,7 @@ class SuperMart {
   }
 
 
-  private void setFreeCashiersToBusy(CheckoutArea checkoutarea, int counter, int currentTime){
+  private void setFreeCashiersToBusy(CheckoutArea checkoutarea, int currentTime){
     System.out.println("\tCustomer #" + counter + " gets a cashier");
 
     //Get next free Cashier from freeCashierQ

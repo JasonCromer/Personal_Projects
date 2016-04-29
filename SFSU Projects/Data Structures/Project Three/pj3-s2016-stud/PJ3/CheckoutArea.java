@@ -61,7 +61,7 @@ class CheckoutArea {
     customerQLimit = 0;
   }
 
-  // Constructor 
+
   public CheckoutArea(int numCashiers, int customerQlimit){
 
     // use ArrayDeque to construct FIFO queue objects

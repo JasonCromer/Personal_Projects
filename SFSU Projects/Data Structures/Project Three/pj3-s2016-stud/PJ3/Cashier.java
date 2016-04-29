@@ -17,9 +17,7 @@ class Cashier {
    private int totalBusyTime;
    private int totalCustomers;
 
-   // Constructor
-   Cashier()
-   {
+   Cashier(){
     cashierID = 0;
     startTime = 0;
     endTime = 0;
@@ -29,36 +27,23 @@ class Cashier {
    }
 
 
-   // Constructor with cashier id
-   Cashier(int cashierId)
-   {
+   Cashier(int cashierId){
     cashierID = cashierId;
    }
 
-   // accessor methods
 
-   int getCashierID() 
-   {
+   int getCashierID(){
     return cashierID;
    }
 
-   Customer getCurrentCustomer() 
-   {
-        return serveCustomer;
+
+   Customer getCurrentCustomer(){
+    return serveCustomer;
    }
 
-   // Transition from free interval to busy interval
-   void freeToBusy (Customer serveCustomer, int currentTime)
-   {
-  	// goal  : switch from free interval to busy interval
-  	//i.e. end free interval, start busy interval 
-    //to serve a new customer
-    //
-  	// steps : update totalFreeTime
-  	// 	   set startTime, endTime, serveCustomer, 
-  	// 	   update totalCustomers
 
-    // add statements
+   // Transition from free interval to busy interval
+   void freeToBusy(Customer serveCustomer, int currentTime){
     this.serveCustomer = serveCustomer;
     
     //Free time interval start in busyToFree() via startTime variable, so the difference between current time (which is now busy)
@@ -75,17 +60,9 @@ class Cashier {
     totalCustomers += 1;
    }
 
+
    // Transition from busy interval to free interval
-   Customer busyToFree ()
-   {
-  	// goal  : switch from busy interval to free interval
-  	//         i.e. end busy interval to return served customer, 
-        //              start free interval 
-   	// 
-  	// steps     : update totalBusyTime 
-  	// 	       set startTime 
-  	//             return serveCustomer
-    // add statements
+   Customer busyToFree(){
 
     //Add to total busy time the time it takes to serve a customer
     totalBusyTime += serveCustomer.getServiceTime();
@@ -96,40 +73,32 @@ class Cashier {
     return serveCustomer;
    }
 
+
    // Return end busy clock time, use in priority queue
    int getEndBusyTime() 
    {
     return endTime + totalBusyTime;
    }
 
+
    // For free interval at the end of simulation, 
    // update totalFreeTime 
-   void setEndFreeTime (int endsimulationtime)
-   {
-  	// for free interval at the end of simulation:
-  	// set endTime, update totalFreeTime
-
-    // add statements
+   void setEndFreeTime(int endsimulationtime){
     totalFreeTime += endsimulationtime - startTime;
     endTime = endsimulationtime;
    }
 
+
    // For busy interval at the end of simulation, 
    // update totalBusyTime 
-   void setEndBusyTime (int endsimulationtime)
-   {
-  	// for busy interval at the end of simulation:
-  	// set endTime, update totalBusyTime
-
-    // add statements
+   void setEndBusyTime(int endsimulationtime){
     totalBusyTime += endsimulationtime - endTime;
     endTime = endsimulationtime;
    }
 
+
    // functions for printing statistics :
-   void printStatistics () 
-   {
-  	// print cashier statistics, see project statement
+   void printStatistics(){
 
   	System.out.println("\t\tCashier ID             : "+cashierID);
   	System.out.println("\t\tTotal free time        : "+totalFreeTime);
@@ -139,19 +108,19 @@ class Cashier {
   	    System.out.format("\t\tAverage checkout time  : %.2f%n\n",(totalBusyTime*1.0)/totalCustomers);
    }
 
-   public String toString()
-   {
-	return "CashierID="+cashierID+":startTime="+startTime+
+
+   public String toString(){
+	   return "CashierID="+cashierID+":startTime="+startTime+
                ":endTime="+endTime+">>serveCustomer:"+serveCustomer;
    }
 
-   public static void main(String[] args) {
+
+   public static void main(String[] args){
         // quick check
       Customer mycustomer = new Customer(1,15,5);
       Cashier mycashier = new Cashier(5);
       mycashier.freeToBusy (mycustomer, 12);
       System.out.println(mycashier);
    }
-
 };
 
