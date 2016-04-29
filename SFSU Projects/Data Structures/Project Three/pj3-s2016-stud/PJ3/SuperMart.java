@@ -21,71 +21,106 @@ class SuperMart {
   // internal data
   private int counter;	             // customer ID counter
   private CheckoutArea checkoutarea; // checkout area object
-  private Scanner dataFile;	     // get customer data from file
+  private Scanner dataFile;	         // get customer data from file
+  private Scanner inputScanner;    //Get user input from console
   private Random dataRandom;	     // get customer data using random function
 
   // most recent customer arrival info, see getCustomerData()
-  private boolean anyNewArrival;  
+  private boolean anyNewArrival; 
+  private boolean shouldGetCashier; 
   private int serviceTime;
+
 
   // initialize data fields
   private SuperMart(){
-    numCashiers = 0;
-    customerQLimit = 0;
-    chancesOfArrival = 0;
-    maxServiceTime = 0;
-    simulationTime = 0;
-    dataSource = 0;
+    counter = 1;
+    inputScanner = new Scanner(System.in);
+    shouldGetCashier = false;
   }
 
-  private void setupParameters(){
-    // read input parameters from user
-    // setup dataFile or dataRandom
-    // add statements
-    dataFile = new Scanner(System.in);
 
+  private void setupParameters(){
     //Iterate through initial parameters
-    iterateThroughParameters(dataFile);
+    iterateThroughParameters();
+
+    //Open data file for streaming (if it exists)
+    if(isDataInFile(dataSource)){
+      final String fileName = getDataSourceFileName();
+      openDataFile(fileName);
+    }
+  }
+
+
+  /*
+    This method sets the anyNewArrival and serviceTime variables either
+    through the DataFile given by the user, or through a Randomly generated number.
+  */
+  private void getCustomerData(){
 
     if(isDataInFile(dataSource)){
-      parseDataFile();
+      setNewArrivalAndServiceTimeFromDataFile();
     }
     else{
       generateRandomArrivalChanceAndServiceTime();
     }
-    
   }
 
-  // use by step 1 in doSimulation()
-  private void getCustomerData()
-  {
-	// get next customer data : from file or random number generator
-	// set anyNewArrival and serviceTime
-        // add statements
-  }
 
-  private void doSimulation()
-  {
-        // add statements
+  private void doSimulation(){ 
+    System.out.println("\n\n" + "*** Start Simulation ***" + "\n\n");
+    // Initialize CheckoutArea
+    checkoutarea = new CheckoutArea(numCashiers, customerQLimit);
 
-	// Initialize CheckoutArea
+    System.out.println("Cashiers #1 to #" + numCashiers + " are ready...");
 
-	// Time driver simulation loop
+    // Time driver simulation loop
   	for (int currentTime = 0; currentTime < simulationTime; currentTime++) {
-
+        System.out.println("---------------------------------------------------------");
+        System.out.println("Time : " + currentTime);
 
     		// Step 1: any new customer enters the checkout area?
     		getCustomerData();
 
     		if (anyNewArrival) {
-      		    // Step 1.1: setup customer data
-      		    // Step 1.2: check customer waiting queue too long?
-    		} else {
+      		// Step 1.1: setup customer data
+          Customer customer = new Customer(counter,serviceTime,currentTime);
+
+          System.out.println("\tCustomer #" + counter + " arrives with service time " + serviceTime + " units");
+
+      		// Step 1.2: check customer waiting queue too long?
+          if(!checkoutarea.isCustomerQTooLong()){
+            checkoutarea.insertCustomerQ(customer);
+            System.out.println("\tCustomer #" + counter + " waits in the customer queue");
+            shouldGetCashier = true;
+          }
+          else{
+            System.out.println("\tCustomer #" + counter + " leaves, as the customer queue is full");
+          }
+
+    		} 
+        else {
       		    System.out.println("\tNo new customer!");
     		}
 
-    		// Step 2: free busy cashiers, add to free cashierQ
-    		// Step 3: get free cashiers to serve waiting customers 
+    		// Step 2: free busy cashiers, add to freeCashierQ
+        while(!checkoutarea.emptyBusyCashierQ){
+          
+        }
+
+
+        // Step 3: get free cashiers to serve waiting customers 
+        if(!checkoutarea.emptyFreeCashierQ() && shouldGetCashier){
+          System.out.println("\tCustomer #" + counter + " gets a cashier");
+
+          Cashier cashier = checkoutarea.removeFreeCashierQ();
+          cashier.freeToBusy(customer, currentTime);
+          checkoutarea.insertBusyCashierQ(cashier);
+
+          System.out.println("\tCashier #" + cashier.getCashierID() + " starts serving customer #" +
+                                  counter + "for " + serviceTime + " units");
+        }
+
+        counter++;
   	} // end simulation loop
 
   }
@@ -99,14 +134,22 @@ class SuperMart {
   }
 
 
+  /*
+    A string array containing the arguments that we prompt to the user
+  */
   private String[] getArgumentStringsArray(){
     return new String[] {"Enter simulation time (positive integer)     : ", "Enter the number of cashiers     : ", 
             "Enter chances (0% < & <= 100%) of new customer     : ", "Enter maximum service time of customers     : ",
-              "Enter customer queue limit     : "};
+              "Enter customer queue limit     : ","Enter 0/1 to get data from random/file     : "};
   }
 
 
-  private void iterateThroughParameters(Scanner scanner){
+  /*
+    In this method we iterate trough the getArgumentsStringArray and apply the user input returned
+    from each of their prompts to their respective constants (defined at the top of the page).
+    i.e user reponse from the prompt "Enter simulation time (positive integer" will be assigned to simulationTime
+  */
+  private void iterateThroughParameters(){
 
     try{
       System.out.println("*** Simulation Parameters ***" + "\n");
@@ -121,41 +164,33 @@ class SuperMart {
         //Print parameter argumenth
         System.out.print(argumentsStringArray[i]);
 
-        String userInput = scanner.nextLine();
+        int userInput = Integer.parseInt(inputScanner.nextLine());
 
-        //0 parameter indicates exit without errors
-        if(userInput.equals("exit"))
-          System.exit(0);
-
-        //Assign user input to variable in parameterVariablesArray
-        setParameter(i, Integer.parseInt(userInput));
-
-        //Prompts user, and sets dataSource to 0 or 1 depending on user input
-        setDataSourceParameter(dataFile);
+        //Assign user input to corresponding prompt in argumentsStringArray using ith index
+        setParameter(i, userInput);
       }
     }
     catch(NumberFormatException e){
-      System.out.println("\n\n" + "ERROR >>> Input can only contain Integers!" + "\n\n");
-      iterateThroughParameters(scanner);
+      printNumberFormatExceptionError();
+
+      //reprompt
+      iterateThroughParameters();
     }
   }
 
 
-  //This methods sets the corresponding argument in getArgumentsStringArray to constants
+  /*
+    This methods sets the corresponding argument in getArgumentsStringArray to constants
+  */
   private void setParameter(int correspondingIndexInArgArray, int userInput){
     simulationTime = (correspondingIndexInArgArray == 0) ? userInput: simulationTime;
     numCashiers = (correspondingIndexInArgArray == 1) ? userInput : numCashiers;
     chancesOfArrival = (correspondingIndexInArgArray == 2) ? userInput : chancesOfArrival;
     maxServiceTime = (correspondingIndexInArgArray == 3) ? userInput : maxServiceTime;
     customerQLimit = (correspondingIndexInArgArray == 4) ? userInput : customerQLimit;
-
+    dataSource = (correspondingIndexInArgArray == 5) ? userInput : dataSource;
   }
 
-
-  private void setDataSourceParameter(Scanner scanner){
-      System.out.print("Enter 0/1 to get data from random/file     : ");
-      dataSource = Integer.parseInt(dataFile.nextLine());
-  }
 
   //If the input is 1, the data contained for the simulation is contained in an external file
   private boolean isDataInFile(int input){
@@ -163,11 +198,32 @@ class SuperMart {
   }
 
 
-  private void parseDataFile(){
-    //TODO: get path to file and parse it (See README)
+  /*
+    This method retrieves the filename that the user enters
+  */
+  private String getDataSourceFileName(){
+    //Prompt user for file name
+    System.out.print("Enter filename     : ");
+
+    return inputScanner.nextLine();
   }
 
 
+  private void openDataFile(String fileName){
+    try{
+      dataFile = new Scanner(new File(fileName));
+    }
+    catch(FileNotFoundException e){
+      System.out.println("File not found!");
+      openDataFile(fileName);
+    }
+  }
+
+
+  /*
+    This method generates a random Int and uses it to produce random results for
+    anyNewArrival boolean and the serviceTime constant for each customer
+  */
   private void generateRandomArrivalChanceAndServiceTime(){
     Random randomInteger = new Random();
 
@@ -178,6 +234,21 @@ class SuperMart {
     serviceTime = randomInteger.nextInt(maxServiceTime)+1;
   }
 
+
+  private void setNewArrivalAndServiceTimeFromDataFile(){
+    try{
+      anyNewArrival = (((dataFile.nextInt() % 100) + 1) <= chancesOfArrival);
+      serviceTime = (dataFile.nextInt() % maxServiceTime) + 1;
+    }
+    catch(NoSuchElementException e){
+      System.out.println("ERROR: given simulation time exceeds the amount of lines in the data file!");
+    }
+  }
+
+
+  private void printNumberFormatExceptionError(){
+    System.out.println("\n\n" + "ERROR:   Input can only contain Integers!" + "\n\n");
+  }
 
   // *** main method to run simulation ****
 

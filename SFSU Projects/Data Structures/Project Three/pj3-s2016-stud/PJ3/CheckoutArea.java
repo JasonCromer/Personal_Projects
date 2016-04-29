@@ -118,7 +118,7 @@ class CheckoutArea {
 
   public boolean emptyBusyCashierQ()
   {
-    return busyCashierQ.size() == 0;
+    return busyCashierQ.isEmpty();
   }
 
   public int sizeBusyCashierQ(){
