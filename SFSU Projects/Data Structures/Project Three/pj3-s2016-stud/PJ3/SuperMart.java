@@ -38,21 +38,18 @@ class SuperMart {
     // add statements
     dataFile = new Scanner(System.in);
 
-    try{
-      System.out.println("*** Simulation Parameters ***" + "\n");
+    //Iterate through initial parameters
+    iterateThroughParameters(dataFile);
 
-      String[] argumentsArray = getArgumentStringsArray();
-      int[] parameterVariablesArray = getParameterVariablesArray();
+    setDataSource(dataFile);
 
-      for(int i = 0; i < argumentsArray.length; i++){
-        System.out.print(argumentsArray[i]);
-        int userInput = Integer.parseInt(dataFile.nextLine());
-        parameterVariablesArray[i] = userInput;
-      }
+    if(isDataInFile(dataSource)){
+      parseDataFile();
     }
-    catch(Exception e){
-      System.out.println("Something happened");
+    else{
+      generateRandomArrivalChanceAndServiceTime();
     }
+    
   }
 
   // use by step 1 in doSimulation()
@@ -77,7 +74,6 @@ class SuperMart {
     		getCustomerData();
 
     		if (anyNewArrival) {
-
       		    // Step 1.1: setup customer data
       		    // Step 1.2: check customer waiting queue too long?
     		} else {
@@ -102,13 +98,86 @@ class SuperMart {
   private String[] getArgumentStringsArray(){
     return new String[] {"Enter simulation time (positive integer)     : ", "Enter the number of cashiers     : ", 
             "Enter chances (0% < & <= 100%) of new customer     : ", "Enter maximum service time of customers     : ",
-              "Enter customer queue limit     : ", "Enter 0/1 to get data from random/file     : ",
-                "Enter filename "};
+              "Enter customer queue limit     : "};
   }
 
-  private int[] getParameterVariablesArray(){
-    return new int[] {simulationTime, numCashiers, chancesOfArrival, maxServiceTime, customerQLimit, dataSource};
+
+  private void iterateThroughParameters(Scanner scanner){
+
+    try{
+      System.out.println("*** Simulation Parameters ***" + "\n");
+
+      //Get arrays containing the output strings, and the variables we wish to assign user input to
+      String[] argumentsStringArray = getArgumentStringsArray();
+
+      //Iterate through our argumentsStringArray and assign each input to each integer variable in our
+      //parameterVariablesArray
+      for(int i = 0; i < argumentsStringArray.length; i++){
+
+        //Print parameter argumenth
+        System.out.print(argumentsStringArray[i]);
+
+        String userInput = scanner.nextLine();
+
+        if(userInput.equals("exit"))
+          break;
+
+        //Assign user input to variable in parameterVariablesArray
+        setParameter(i, Integer.parseInt(userInput));
+      }
+
+    }
+    catch(NumberFormatException e){
+      System.out.println("\n\n" + "ERROR >>> Input can only contain Integers!" + "\n\n");
+      iterateThroughParameters(scanner);
+    }
   }
+
+
+  //This methods sets the corresponding argument in getArgumentsStringArray to constants
+  private void setParameter(int correspondingIndexInArgArray, int userInput){
+    switch(correspondingIndexInArgArray){
+
+      case 0: simulationTime = userInput;
+              break;
+      case 1: numCashiers = userInput;
+              break;
+      case 2: chancesOfArrival = userInput;
+              break;
+      case 3: maxServiceTime = userInput;
+              break;
+      case 4: customerQLimit = userInput;
+              break; 
+    }
+  }
+
+
+  private void setDataSource(Scanner scanner){
+      System.out.print("Enter 0/1 to get data from random/file     : ");
+      dataSource = Integer.parseInt(dataFile.nextLine());
+  }
+
+  //If the input is 1, the data contained for the simulation is contained in an external file
+  private boolean isDataInFile(int input){
+    return input == 1;
+  }
+
+
+  private void parseDataFile(){
+    //TODO: get path to file and parse it (See README)
+  }
+
+
+  private void generateRandomArrivalChanceAndServiceTime(){
+    Random randomInteger = new Random();
+
+    //Assign random value to whether or not there is a new arrival of a customer
+    anyNewArrival = ((randomInteger.nextInt(100)+1) <= chancesOfArrival);
+
+    //Assign random value to the service time of customers
+    serviceTime = randomInteger.nextInt(maxServiceTime)+1;
+  }
+
 
   // *** main method to run simulation ****
 
