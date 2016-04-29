@@ -91,7 +91,7 @@ class SuperMart {
           if(!checkoutarea.isCustomerQTooLong()){
             checkoutarea.insertCustomerQ(customer);
             System.out.println("\tCustomer #" + counter + " waits in the customer queue");
-            shouldGetCashier = true;
+            
           }
           else{
             System.out.println("\tCustomer #" + counter + " leaves, as the customer queue is full");
@@ -103,24 +103,39 @@ class SuperMart {
     		}
 
     		// Step 2: free busy cashiers, add to freeCashierQ
-        while(!checkoutarea.emptyBusyCashierQ){
-          
+        while(!checkoutarea.emptyBusyCashierQ()){
+          Cashier busyCashier = checkoutarea.peekBusyCashierQ();
+          Customer busyCustomer = busyCashier.getCurrentCustomer();
+          int arrivalTime = busyCustomer.getArrivalTime();
+          int serviceTime = busyCustomer.getServiceTime();
+
+          if((arrivalTime + serviceTime) <= currentTime){
+            busyCashier = checkoutarea.removeBusyCashierQ();
+            System.out.println("\tCashier #" + busyCashier.getCashierID() + " is free");
+            Customer customer = busyCashier.busyToFree();
+            System.out.println("\tCustomer #" + customer.getCustomerID() + " is done");
+            checkoutarea.insertFreeCashierQ(busyCashier);
+          }
+          else{
+            break;
+          }
         }
 
-
         // Step 3: get free cashiers to serve waiting customers 
-        if(!checkoutarea.emptyFreeCashierQ() && shouldGetCashier){
+        if(!checkoutarea.emptyFreeCashierQ() && !checkoutarea.emptyCustomerQ()){
           System.out.println("\tCustomer #" + counter + " gets a cashier");
 
           Cashier cashier = checkoutarea.removeFreeCashierQ();
+          Customer customer = checkoutarea.removeCustomerQ();
           cashier.freeToBusy(customer, currentTime);
+          cashier.setEndBusyTime(currentTime + serviceTime);
           checkoutarea.insertBusyCashierQ(cashier);
 
           System.out.println("\tCashier #" + cashier.getCashierID() + " starts serving customer #" +
-                                  counter + "for " + serviceTime + " units");
-        }
+                                  counter + " for " + serviceTime + " units");
 
-        counter++;
+          counter ++;
+        }
   	} // end simulation loop
 
   }
