@@ -185,7 +185,6 @@ class SuperMart {
   */
   private void freeBusyCashiers(CheckoutArea checkoutarea, int currentTime){
     while(!checkoutarea.emptyBusyCashierQ()){
-
       //Peek at next cashier's customer to see if their service time is now done
       Cashier busyCashier = checkoutarea.peekBusyCashierQ();
       int busyCustomerEndServiceTime = getBusyCashiersCustomerEndServiceTime(busyCashier);

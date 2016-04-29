@@ -99,7 +99,7 @@ class Cashier {
    // Return end busy clock time, use in priority queue
    int getEndBusyTime() 
    {
-    return totalBusyTime;
+    return endTime + totalBusyTime;
    }
 
    // For free interval at the end of simulation, 
