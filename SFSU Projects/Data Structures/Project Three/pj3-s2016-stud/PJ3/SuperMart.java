@@ -30,6 +30,12 @@ class SuperMart {
 
   // initialize data fields
   private SuperMart(){
+    numCashiers = 0;
+    customerQLimit = 0;
+    chancesOfArrival = 0;
+    maxServiceTime = 0;
+    simulationTime = 0;
+    dataSource = 0;
   }
 
   private void setupParameters(){
@@ -40,8 +46,6 @@ class SuperMart {
 
     //Iterate through initial parameters
     iterateThroughParameters(dataFile);
-
-    setDataSource(dataFile);
 
     if(isDataInFile(dataSource)){
       parseDataFile();
@@ -119,13 +123,16 @@ class SuperMart {
 
         String userInput = scanner.nextLine();
 
+        //0 parameter indicates exit without errors
         if(userInput.equals("exit"))
-          break;
+          System.exit(0);
 
         //Assign user input to variable in parameterVariablesArray
         setParameter(i, Integer.parseInt(userInput));
-      }
 
+        //Prompts user, and sets dataSource to 0 or 1 depending on user input
+        setDataSourceParameter(dataFile);
+      }
     }
     catch(NumberFormatException e){
       System.out.println("\n\n" + "ERROR >>> Input can only contain Integers!" + "\n\n");
@@ -136,23 +143,16 @@ class SuperMart {
 
   //This methods sets the corresponding argument in getArgumentsStringArray to constants
   private void setParameter(int correspondingIndexInArgArray, int userInput){
-    switch(correspondingIndexInArgArray){
+    simulationTime = (correspondingIndexInArgArray == 0) ? userInput: simulationTime;
+    numCashiers = (correspondingIndexInArgArray == 1) ? userInput : numCashiers;
+    chancesOfArrival = (correspondingIndexInArgArray == 2) ? userInput : chancesOfArrival;
+    maxServiceTime = (correspondingIndexInArgArray == 3) ? userInput : maxServiceTime;
+    customerQLimit = (correspondingIndexInArgArray == 4) ? userInput : customerQLimit;
 
-      case 0: simulationTime = userInput;
-              break;
-      case 1: numCashiers = userInput;
-              break;
-      case 2: chancesOfArrival = userInput;
-              break;
-      case 3: maxServiceTime = userInput;
-              break;
-      case 4: customerQLimit = userInput;
-              break; 
-    }
   }
 
 
-  private void setDataSource(Scanner scanner){
+  private void setDataSourceParameter(Scanner scanner){
       System.out.print("Enter 0/1 to get data from random/file     : ");
       dataSource = Integer.parseInt(dataFile.nextLine());
   }
