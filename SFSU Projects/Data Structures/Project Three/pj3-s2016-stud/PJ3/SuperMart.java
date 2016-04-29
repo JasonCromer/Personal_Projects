@@ -75,8 +75,7 @@ class SuperMart {
 
     // Time driver simulation loop
   	for (int currentTime = 0; currentTime < simulationTime; currentTime++) {
-        System.out.println("---------------------------------------------------------");
-        System.out.println("Time : " + currentTime);
+        printCurrentTimeInterval(currentTime);
 
     		// Step 1: any new customer enters the checkout area?
     		getCustomerData();
@@ -103,40 +102,14 @@ class SuperMart {
     		}
 
     		// Step 2: free busy cashiers, add to freeCashierQ
-        while(!checkoutarea.emptyBusyCashierQ()){
-          Cashier busyCashier = checkoutarea.peekBusyCashierQ();
-          Customer busyCustomer = busyCashier.getCurrentCustomer();
-          int arrivalTime = busyCustomer.getArrivalTime();
-          int serviceTime = busyCustomer.getServiceTime();
-
-          if((arrivalTime + serviceTime) <= currentTime){
-            busyCashier = checkoutarea.removeBusyCashierQ();
-            System.out.println("\tCashier #" + busyCashier.getCashierID() + " is free");
-            Customer customer = busyCashier.busyToFree();
-            System.out.println("\tCustomer #" + customer.getCustomerID() + " is done");
-            checkoutarea.insertFreeCashierQ(busyCashier);
-          }
-          else{
-            break;
-          }
-        }
+        freeBusyCashiers(checkoutarea, currentTime);
 
         // Step 3: get free cashiers to serve waiting customers 
         if(!checkoutarea.emptyFreeCashierQ() && !checkoutarea.emptyCustomerQ()){
-          System.out.println("\tCustomer #" + counter + " gets a cashier");
-
-          Cashier cashier = checkoutarea.removeFreeCashierQ();
-          Customer customer = checkoutarea.removeCustomerQ();
-          cashier.freeToBusy(customer, currentTime);
-          cashier.setEndBusyTime(currentTime + serviceTime);
-          checkoutarea.insertBusyCashierQ(cashier);
-
-          System.out.println("\tCashier #" + cashier.getCashierID() + " starts serving customer #" +
-                                  counter + " for " + serviceTime + " units");
-
+          setFreeCashiersToBusy(checkoutarea, counter, currentTime);
           counter ++;
         }
-  	} // end simulation loop
+  	}
 
   }
 
@@ -207,6 +180,71 @@ class SuperMart {
   }
 
 
+  /*
+    This method frees any busy cashier's who are done serving their customers
+  */
+  private void freeBusyCashiers(CheckoutArea checkoutarea, int currentTime){
+    while(!checkoutarea.emptyBusyCashierQ()){
+
+      //Peek at next cashier's customer to see if their service time is now done
+      Cashier busyCashier = checkoutarea.peekBusyCashierQ();
+      int busyCustomerEndServiceTime = getBusyCashiersCustomerEndServiceTime(busyCashier);
+
+      if(busyCustomerEndServiceTime <= currentTime){
+        //If busy cashier is done serving customer, remove cashier from Queue
+        busyCashier = checkoutarea.removeBusyCashierQ();
+        System.out.println("\tCashier #" + busyCashier.getCashierID() + " is free");
+
+        //Update Cashier's stats by changing availability as free
+        Customer customer = busyCashier.busyToFree();
+        System.out.println("\tCustomer #" + customer.getCustomerID() + " is done");
+
+        //Place the now free cashier in the freeCashierQ
+        checkoutarea.insertFreeCashierQ(busyCashier);
+      }
+      else{
+        //If top cashier is not free (priority queue), end check
+        break;
+      }
+    } 
+  }
+
+
+  /*
+    This method gets a cashiers customer and returns the time at which service should be complete
+  */
+  private int getBusyCashiersCustomerEndServiceTime(Cashier cashier){
+      Customer busyCustomer = cashier.getCurrentCustomer();
+      int arrivalTime = busyCustomer.getArrivalTime();
+      int serviceTime = busyCustomer.getServiceTime();
+
+      return arrivalTime + serviceTime;
+
+  }
+
+
+  private void setFreeCashiersToBusy(CheckoutArea checkoutarea, int counter, int currentTime){
+    System.out.println("\tCustomer #" + counter + " gets a cashier");
+
+    //Get next free Cashier from freeCashierQ
+    Cashier cashier = checkoutarea.removeFreeCashierQ();
+
+    //Get next free custoemr from customerQ
+    Customer customer = checkoutarea.removeCustomerQ();
+
+    //Set Cashier as busy, and set its customer to the recently removed customer
+    cashier.freeToBusy(customer, currentTime);
+
+    //Set end busy time of cashier to the current time plus how long it takes to help the customer
+    cashier.setEndBusyTime(currentTime + serviceTime);
+
+    //Insert cashier into the busyCashierQ
+    checkoutarea.insertBusyCashierQ(cashier);
+
+    System.out.println("\tCashier #" + cashier.getCashierID() + " starts serving customer #" +
+                            counter + " for " + serviceTime + " units");
+  }
+
   //If the input is 1, the data contained for the simulation is contained in an external file
   private boolean isDataInFile(int input){
     return input == 1;
@@ -250,6 +288,10 @@ class SuperMart {
   }
 
 
+  /*
+    This method scans a previously declared input file and retrieves two integers at a time,
+    using them to calculate the values of anyNewArrival and serviceTime
+  */
   private void setNewArrivalAndServiceTimeFromDataFile(){
     try{
       anyNewArrival = (((dataFile.nextInt() % 100) + 1) <= chancesOfArrival);
@@ -260,6 +302,11 @@ class SuperMart {
     }
   }
 
+
+  private void printCurrentTimeInterval(int currentTime){
+    System.out.println("---------------------------------------------------------");
+    System.out.println("Time : " + currentTime);
+  }
 
   private void printNumberFormatExceptionError(){
     System.out.println("\n\n" + "ERROR:   Input can only contain Integers!" + "\n\n");
