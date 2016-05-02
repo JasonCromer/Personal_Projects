@@ -116,6 +116,7 @@ class SuperMart {
 
   }
 
+
   private void printStatistics(){
     System.out.println("\n\n=======================================================\n\n");
     System.out.println("End of simulation report\n");
@@ -248,6 +249,10 @@ class SuperMart {
   }
 
 
+  /*
+    This method gets the next cutomer in line and assigns it to a cashier,
+    then making the necessary changes to set the cashier to busy
+  */
   private void setFreeCashiersToBusy(CheckoutArea checkoutarea, int currentTime){
     System.out.println("\tCustomer #" + counter + " gets a cashier");
 
@@ -270,6 +275,7 @@ class SuperMart {
                             counter + " for " + serviceTime + " units");
   }
 
+
   //If the input is 1, the data contained for the simulation is contained in an external file
   private boolean isDataInFile(int input){
     return input == 1;
@@ -287,6 +293,11 @@ class SuperMart {
   }
 
 
+  /*
+    This method scans the local directory for the user inputted filename.
+    If no file with the name is found, the method will call itself to 
+    give the user a retry with entering the file name.
+  */
   private void openDataFile(String fileName){
     try{
       dataFile = new Scanner(new File(fileName));
@@ -332,6 +343,7 @@ class SuperMart {
     System.out.println("---------------------------------------------------------");
     System.out.println("Time : " + currentTime);
   }
+  
 
   private void printNumberFormatExceptionError(){
     System.out.println("\n\n" + "ERROR:   Input can only contain Integers!" + "\n\n");
