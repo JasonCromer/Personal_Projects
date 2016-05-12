@@ -51,7 +51,7 @@ public class VideoPoker {
     // default constant payout value and playerHand types
     private static final int[] multipliers={1,2,3,5,6,9,25,50,250};
     private static final String[] goodHandTypes={ 
-	  "Royal Pair" , "Two Pairs" , "Three of a Kind", "Straight", "Flush", 
+	  "Royal Pair" , "Two Pairs" , "Three of a Kind", "Straight", "Flush 	", 
 	  "Full House", "Four of a Kind", "Straight Flush", "Royal Flush" };
 
     // must use only one deck
@@ -59,32 +59,40 @@ public class VideoPoker {
 
     // holding current poker 5-card hand, balance, bet    
     private List<Card> playerHand;
+    private HashMap<Integer,Card> playerCardsToKeepMap;
     private int playerBalance;
     private int playerBet;
 
+    //Scanner for user input
+    private Scanner scanner;
+
+
+
     /** default constructor, set balance = startingBalance */
     public VideoPoker(){
-	this(startingBalance);
-	playerBalance = startingBalance;
+		this(startingBalance);
+		playerBalance = startingBalance;
+		scanner = new Scanner(System.in);
+		playerCardsToKeepMap = new HashMap<>();
     }
 
     /** constructor, set given balance */
-    public VideoPoker(int balance)
-    {
-	this.playerBalance = balance;
+    public VideoPoker(int balance){
+		this.playerBalance = balance;
+		scanner = new Scanner(System.in);
+		playerCardsToKeepMap = new HashMap<>();
     }
 
     /** This display the payout table based on multipliers and goodHandTypes arrays */
-    private void showPayoutTable()
-    { 
-	System.out.println("\n\n");
-	System.out.println("Payout Table   	      Multiplier   ");
-	System.out.println("=======================================");
-	int size = multipliers.length;
-	for (int i=size-1; i >= 0; i--) {
-		System.out.println(goodHandTypes[i]+"\t|\t"+multipliers[i]);
-	}
-	System.out.println("\n\n");
+    private void showPayoutTable(){ 
+		System.out.println("\n\n");
+		System.out.println("Payout Table   	      Multiplier   ");
+		System.out.println("=======================================");
+		int size = multipliers.length;
+		for (int i=size-1; i >= 0; i--) {
+			System.out.println(goodHandTypes[i]+"\t|\t"+multipliers[i]);
+		}
+		System.out.println("\n\n");
     }
 
     /** Check current playerHand using multipliers and goodHandTypes arrays
@@ -114,6 +122,13 @@ public class VideoPoker {
     		System.out.println("Sorry, you lost!");
     }
 
+
+     /*************************************************
+     *   add other private methods here ....
+     *
+     *************************************************/
+
+
     //Consective cards of same suit of rank: A, 10, J, Q, K
     private boolean isRoyalFlush(){
     	int firstCardSuit = playerHand.get(0).getSuit();
@@ -128,6 +143,7 @@ public class VideoPoker {
     }
 
 
+    //Consecutive card ranks of same suit
     private boolean isStraightFlush(){
     	int firstCardSuit = playerHand.get(0).getSuit();
     	List<Integer> sortedCardRanks = new ArrayList<>();
@@ -155,6 +171,8 @@ public class VideoPoker {
     	return true;
     }
 
+
+    //Consective cards of different suits
 	private boolean isStraight(){
     	int firstCardSuit = playerHand.get(0).getSuit();
     	List<Integer> sortedCardRanks = new ArrayList<>();
@@ -186,6 +204,7 @@ public class VideoPoker {
     }
 
 
+    //Hand of entirely identical suits
     private boolean isFlush(){
     	int firstCardSuit = playerHand.get(0).getSuit();
 
@@ -199,6 +218,7 @@ public class VideoPoker {
     }
 
 
+    //Hand consisting of 3 same ranks, and 2 other same ranks
     private boolean isFullHouse(){
     	HashMap<Integer,Integer> rankMap = new HashMap<>();
 
@@ -213,9 +233,10 @@ public class VideoPoker {
     	}
 
     	return rankMap.containsValue(3) && rankMap.containsValue(2);
-
     }
 
+
+    //Hand consisting of either 3, 4 or N of same kinds of ranks
     private boolean isOfAKind(int kindType){
     	HashMap<Integer,Integer> rankMap = new HashMap<>();
 
@@ -233,6 +254,7 @@ public class VideoPoker {
     }
 
 
+    //Hand consisting of two pairs of identical ranks, and 1 different rank
     private boolean isTwoPair(){
     	HashMap<Integer,Integer> rankMap = new HashMap<>();
     	int pairCounter = 0;
@@ -251,6 +273,8 @@ public class VideoPoker {
     	return pairCounter == 2 && rankMap.containsValue(1);
     }
 
+
+    //Hand consisting of one pair of identical rank, and 3 cards of different ranks
     private boolean isRoyalPair(){
     	HashMap<Integer,Integer> rankMap = new HashMap<>();
     	int pairCounter = 0;
@@ -270,14 +294,84 @@ public class VideoPoker {
     	return pairCounter == 2 && rankMap.containsValue(1);
     }
 
-    /*************************************************
-     *   add other private methods here ....
-     *
-     *************************************************/
 
 
-    public void play() 
-    {
+    private void getPlayerBet(){
+    	System.out.print("Enter bet: ");
+    	try{
+    		playerBet = scanner.nextInt();
+
+    		if(playerBet > playerBalance){
+    			System.out.println("\nBet is larger than balance, try again");
+    			getPlayerBet();
+    		}
+    	}
+    	catch(InputMismatchException e){
+    		System.out.println("\nPlease input integers only. Try again");
+    		getPlayerBet();
+    	}
+    }
+
+
+    private void updateBalance(){
+    	playerBalance -= playerBet;
+    }
+
+
+    private void dealHand(){
+    	try{
+    		playerHand = oneDeck.deal(numberOfCards);
+    	}
+    	catch(PlayingCardException e){
+    		System.out.println("PlayingCardException: " + e.getMessage());
+    	}
+    }
+
+
+    private void getPlayerCardRetainingPositions(){
+    	System.out.print("Enter positions of cards to keep (e.g. 1 4 5 ): ");
+
+    	//Create new instance of scanner and get input line
+    	scanner = new Scanner(System.in);
+    	String input = scanner.nextLine();
+
+    	if(input.isEmpty()){
+    		return;
+    	}
+
+    	//Strip preceding and trailing whitespace, and split input by space delimeter
+    	String[] positionsToKeep = input.trim().split("\\s+");
+
+    	try{
+    		for(int i = 0; i < positionsToKeep.length; i++){
+
+    			//Subtract one to account for offset (we assume first position is 1)
+    			int position = Integer.parseInt(positionsToKeep[i]) - 1;
+    			Card card = playerHand.get(position);
+    			playerCardsToKeepMap.put(position, card);
+    		}
+    	}
+    	catch(Exception e){
+    		System.out.println("\nPlease input integers only. Try again");
+    		getPlayerCardRetainingPositions();
+    	}
+    }
+
+
+    private void setAndDisplayNewPlayerHand(){
+    	//Deal new hand
+    	dealHand();
+
+    	//Iterate through hashmap and add in the cards the player chose to keep
+    	for(Map.Entry<Integer, Card> card : playerCardsToKeepMap.entrySet()){
+    		playerHand.set(card.getKey(), card.getValue());
+    	}
+		
+		System.out.println(playerHand.toString());
+    }
+
+
+    public void play(){
     /** The main algorithm for single player poker game 
      *
      * Steps:
@@ -304,6 +398,33 @@ public class VideoPoker {
 
 
         // implement this method!
+
+    	showPayoutTable();
+
+    	System.out.println("\n\n-----------------------------------");
+    	System.out.println("Balance: $" + playerBalance);
+
+    	//Get user bet input
+    	getPlayerBet();
+
+    	//Update user balance to reflect bet
+    	updateBalance();
+
+    	//Reset and shuffle Deck
+    	oneDeck.reset();
+    	oneDeck.shuffle();
+
+    	//Deal cards and display them
+    	dealHand();
+    	System.out.println(playerHand.toString());
+
+    	//Get the positions of cards players want to keep
+    	getPlayerCardRetainingPositions();
+
+    	//Deal new cards after user specifies which to keep
+    	setAndDisplayNewPlayerHand();
+
+    	checkHands();
     }
 
 
