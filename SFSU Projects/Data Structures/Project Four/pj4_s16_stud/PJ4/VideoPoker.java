@@ -66,6 +66,9 @@ public class VideoPoker {
     //Scanner for user input
     private Scanner scanner;
 
+    //boolean to check if user wants to see checkout table
+    boolean showPayoutTable = true;
+
 
 
     /** default constructor, set balance = startingBalance */
@@ -100,24 +103,42 @@ public class VideoPoker {
      *  This can be checked by testCheckHands() and main() method.
      */
     private void checkHands(){
-    	if(isRoyalFlush())
+    	if(isRoyalFlush()){
     		System.out.println("Royal Flush!");
-    	else if(isStraightFlush())
-    		System.out.println("Straight Flush!");	
-    	else if(isStraight())
+    		playerBalance += multipliers[8] * playerBet;
+    	}
+    	else if(isStraightFlush()){
+    		System.out.println("Straight Flush!");
+    		playerBalance += multipliers[7] * playerBet;	
+    	}
+    	else if(isStraight()){
     		System.out.println("Straight!");
-    	else if(isFlush())
+    		playerBalance += multipliers[3] * playerBet;
+    	}
+    	else if(isFlush()){
     		System.out.println("Flush!");
-    	else if(isFullHouse())
+    		playerBalance += multipliers[4] * playerBet;
+    	}
+    	else if(isFullHouse()){
     		System.out.println("Full House");
-    	else if(isOfAKind(4))
+    		playerBalance += multipliers[5] * playerBet;
+    	}
+    	else if(isOfAKind(4)){
     		System.out.println("Four of a Kind!");
-    	else if(isOfAKind(3))
+    		playerBalance += multipliers[6] * playerBet;
+    	}
+    	else if(isOfAKind(3)){
     		System.out.println("Three of a Kind!");
-    	else if(isTwoPair())
+    		playerBalance += multipliers[2] * playerBet;
+    	}
+    	else if(isTwoPair()){
     		System.out.println("Two Pair!");
-    	else if(isRoyalPair())
+    		playerBalance += multipliers[1] * playerBet;
+    	}
+    	else if(isRoyalPair()){
     		System.out.println("Royal Pair!");
+    		playerBalance += multipliers[0] * playerBet;
+    	}
     	else
     		System.out.println("Sorry, you lost!");
     }
@@ -352,7 +373,7 @@ public class VideoPoker {
     		}
     	}
     	catch(Exception e){
-    		System.out.println("\nPlease input integers only. Try again");
+    		System.out.println("\nPlease input integers 1-5 only. Try again");
     		getPlayerCardRetainingPositions();
     	}
     }
@@ -370,6 +391,46 @@ public class VideoPoker {
 		System.out.println(playerHand.toString());
     }
 
+
+    private void checkToPlayNewGame(){
+    	System.out.println("\nDo you want to play a new game? (y or n)");
+    	scanner = new Scanner(System.in);
+
+    	String input = scanner.nextLine();
+    	if(input.equals("y")){
+    		checkAndDisplayIfPlayerWantsCheckoutTable();
+    		play();
+    	}
+    	else if(input.equals("n")){
+    		exitGame();
+    	}
+    	else{
+    		System.out.println("Please enter (y or n)");
+    		checkToPlayNewGame();
+    	}
+    }
+
+
+    private void checkAndDisplayIfPlayerWantsCheckoutTable(){
+    	System.out.println("\nWant to see payout table (y or n)");
+    	String input = scanner.nextLine();
+
+    	if(input.equals("n")){
+    		showPayoutTable = false;
+    	}
+    }
+
+
+    private void exitGame(){
+    	showBalance();
+    	System.out.println("\nBye!");
+		System.exit(0);
+    }
+
+
+    private void showBalance(){
+    	System.out.println("\nBalance: $" + playerBalance);
+    }
 
     public void play(){
     /** The main algorithm for single player poker game 
@@ -399,10 +460,12 @@ public class VideoPoker {
 
         // implement this method!
 
-    	showPayoutTable();
+    	if(showPayoutTable){
+    		showPayoutTable();
+    	}
 
     	System.out.println("\n\n-----------------------------------");
-    	System.out.println("Balance: $" + playerBalance);
+    	showBalance();
 
     	//Get user bet input
     	getPlayerBet();
@@ -424,7 +487,18 @@ public class VideoPoker {
     	//Deal new cards after user specifies which to keep
     	setAndDisplayNewPlayerHand();
 
+    	//Check what hand type player has and adjust balance
     	checkHands();
+
+    	//Show Balance
+    	showBalance();
+
+    	if(playerBalance == 0){
+    		exitGame();
+    	}
+    	else{
+    		checkToPlayNewGame();
+    	}
     }
 
 
