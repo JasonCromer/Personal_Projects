@@ -102,10 +102,10 @@ class Decks {
     private int numberDecks;
 
     //constants
-    public static final int suitTypeStart = 1;
-    public static final int suitTypeEnd = 4;
-    public static final int rankTypeStart = 1;
-    public static final int rankTypeEnd = 13;
+    public static final int firstSuit = 1;
+    public static final int lastSuit = 4;
+    public static final int firstRank = 1;
+    public static final int lastRank = 13;
 
 
     /**
@@ -117,17 +117,24 @@ class Decks {
      */
     public Decks()
     {
-        // implement this method!
+    	numberDecks = 1;
+    	saveDecks = new ArrayList<>();
+    	playDecks = new ArrayList<>();
+
+        //Add a card of each type to both decks
         try{
-            for(int suit = suitTypeStart; suit <= suitTypeEnd; suit++){
-                for(int rank = rankTypeStart; rank <= rankTypeEnd; rank++){
-                    //
+            for(int suit = firstSuit; suit <= lastSuit; suit++){
+                for(int rank = firstRank; rank <= lastRank; rank++){
+                	Card newCard = new Card(suit, rank);
+                    saveDecks.add(newCard);
+                    playDecks.add(newCard);
                 }
             }
 
         }
-        catch(Exception e){
-
+        catch(PlayingCardException e){
+        	e.printStackTrace();
+        	System.out.println("PlayingCardException: " + e.getMessage());
         }
 
     }
@@ -140,10 +147,26 @@ class Decks {
      * Note: You need to catch PlayingCardException from Card constructor
      *	     Use ArrayList for both saveDecks & playDecks
      */
-    public Decks(int n)
-    {
-        // implement this method!
+    public Decks(int n){
+	   	numberDecks = n;
+    	saveDecks = new ArrayList<>();
+    	playDecks = new ArrayList<>();
 
+        //Add a card of each type to both decks, n amount of times
+        try{
+        	for(int deckNumber = 0; deckNumber < n; deckNumber++){
+	            for(int suit = firstSuit; suit <= lastSuit; suit++){
+	                for(int rank = firstRank; rank <= lastRank; rank++){
+	                	Card newCard = new Card(suit, rank);
+	                    saveDecks.add(newCard);
+	                    playDecks.add(newCard);
+	                }
+	            }
+        	}
+        }
+        catch(PlayingCardException e){
+        	System.out.println("PlayingCardException: " + e.getMessage());
+        }
     }
 
 
@@ -151,9 +174,8 @@ class Decks {
      * Task: Shuffles cards in playDecks.
      * Hint: Look at java.util.Collections
      */
-    public void shuffle()
-    {
-        // implement this method!
+    public void shuffle(){
+    	Collections.shuffle(playDecks);
     }
 
 
@@ -168,19 +190,36 @@ class Decks {
      *       and remove dealt cards from playDecks
      *
      */
-    public List<Card> deal(int numberCards) throws PlayingCardException
-    {
-        // implement this method!
-        return null;
+    public List<Card> deal(int numberCards) throws PlayingCardException{
+        
+        List<Card> dealtCards = new ArrayList<>();
+
+        try{
+        	if(numberCards > remain()){
+        		throw new PlayingCardException("Not enough cards in deck");
+        	}
+
+		    //Iterate through playDecks, remove cards, and put them in the dealtCards List
+		    for(int i = numberCards-1; i >= 0; i--){
+		    	Card randomCard = playDecks.remove(i);
+		    	dealtCards.add(randomCard);
+        	}
+		}
+		catch(PlayingCardException e){
+			System.out.println("PlayingCardException: " + e.getMessage());
+		}
+
+
+        return dealtCards;
     }
 
 
     /**
-     * Task: Resets playedDeck by cpoying all cards from the resetDeck.
+     * Task: Resets playedDeck by cpoying all cards from the saveDeck.
      */
     public void reset()
     {
-        // implement this method!
+        playDecks = saveDecks;
 
     }
 

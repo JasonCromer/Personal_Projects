@@ -51,7 +51,7 @@ public class VideoPoker {
     // default constant payout value and playerHand types
     private static final int[] multipliers={1,2,3,5,6,9,25,50,250};
     private static final String[] goodHandTypes={ 
-	  "Royal Pair" , "Two Pairs" , "Three of a Kind", "Straight", "Flush	", 
+	  "Royal Pair" , "Two Pairs" , "Three of a Kind", "Straight", "Flush", 
 	  "Full House", "Four of a Kind", "Straight Flush", "Royal Flush" };
 
     // must use only one deck
@@ -63,15 +63,15 @@ public class VideoPoker {
     private int playerBet;
 
     /** default constructor, set balance = startingBalance */
-    public VideoPoker()
-    {
+    public VideoPoker(){
 	this(startingBalance);
+	playerBalance = startingBalance;
     }
 
     /** constructor, set given balance */
     public VideoPoker(int balance)
     {
-	this.playerBalance= balance;
+	this.playerBalance = balance;
     }
 
     /** This display the payout table based on multipliers and goodHandTypes arrays */
@@ -91,11 +91,184 @@ public class VideoPoker {
      *  Must print yourHandType (default is "Sorry, you lost") at the end of function.
      *  This can be checked by testCheckHands() and main() method.
      */
-    private void checkHands()
-    {
-	// implement this method!
+    private void checkHands(){
+    	if(isRoyalFlush())
+    		System.out.println("Royal Flush!");
+    	else if(isStraightFlush())
+    		System.out.println("Straight Flush!");	
+    	else if(isStraight())
+    		System.out.println("Straight!");
+    	else if(isFlush())
+    		System.out.println("Flush!");
+    	else if(isFullHouse())
+    		System.out.println("Full House");
+    	else if(isOfAKind(4))
+    		System.out.println("Four of a Kind!");
+    	else if(isOfAKind(3))
+    		System.out.println("Three of a Kind!");
+    	else if(isTwoPair())
+    		System.out.println("Two Pair!");
+    	else if(isRoyalPair())
+    		System.out.println("Royal Pair!");
+    	else
+    		System.out.println("Sorry, you lost!");
     }
 
+    //Consective cards of same suit of rank: A, 10, J, Q, K
+    private boolean isRoyalFlush(){
+    	int firstCardSuit = playerHand.get(0).getSuit();
+    	List<Integer> royalFlushRankList = Arrays.asList(1,10,11,12,13);
+
+    	for(Card card : playerHand){
+    		if(card.getSuit() != firstCardSuit || !royalFlushRankList.contains(card.getRank()))
+    			return false;
+    	}
+
+    	return true;
+    }
+
+
+    private boolean isStraightFlush(){
+    	int firstCardSuit = playerHand.get(0).getSuit();
+    	List<Integer> sortedCardRanks = new ArrayList<>();
+
+    	//Create an Integer list containing all the player's ranks
+    	for(Card card : playerHand){
+    		sortedCardRanks.add(card.getRank());
+    	}
+
+    	//Sort the ranks
+    	Collections.sort(sortedCardRanks);
+
+    	//Check to see that all card suits are identical
+    	for(Card card : playerHand){
+    		if(card.getSuit() != firstCardSuit)
+    			return false;
+    	}
+
+    	//Go Step by step to see if the next card's rank is only 1 more than it
+    	for(int i = 0; i < 4; i++){
+    		if(!(sortedCardRanks.get(i) == (sortedCardRanks.get(i+1) - 1)))
+    			return false;
+    	}
+
+    	return true;
+    }
+
+	private boolean isStraight(){
+    	int firstCardSuit = playerHand.get(0).getSuit();
+    	List<Integer> sortedCardRanks = new ArrayList<>();
+    	List<Integer> cardSuits = new ArrayList<>();
+
+    	//Create an Integer list containing all the player's ranks
+    	for(Card card : playerHand){
+    		sortedCardRanks.add(card.getRank());
+    		cardSuits.add(card.getSuit());
+    	}
+
+    	//Sort the ranks
+    	Collections.sort(sortedCardRanks);
+
+    	//Check to see that all card suits are not identical
+    	Set<Integer> suitSet = new HashSet<>(cardSuits);
+
+    	//If set size is smaller, there are duplicates, meaning more than one suit, which a Straight requires
+    	if(suitSet.size() > cardSuits.size())
+    		return false;
+
+    	//Go Step by step to see if the next card's rank is only 1 more than it
+    	for(int i = 0; i < 4; i++){
+    		if(!(sortedCardRanks.get(i) == (sortedCardRanks.get(i+1) - 1)))
+    			return false;
+    	}
+
+    	return true;
+    }
+
+
+    private boolean isFlush(){
+    	int firstCardSuit = playerHand.get(0).getSuit();
+
+    	//Check to see that all card suits are identical
+    	for(Card card : playerHand){
+    		if(card.getSuit() != firstCardSuit)
+    			return false;
+    	}
+
+    	return true;
+    }
+
+
+    private boolean isFullHouse(){
+    	HashMap<Integer,Integer> rankMap = new HashMap<>();
+
+    	for(Card card : playerHand){
+    		if(!rankMap.containsKey(card.getRank())){
+    			rankMap.put(card.getRank(), 1);
+    		}
+    		else{
+    			int value = rankMap.get(card.getRank());
+    			rankMap.put(card.getRank(), value+1);
+    		}
+    	}
+
+    	return rankMap.containsValue(3) && rankMap.containsValue(2);
+
+    }
+
+    private boolean isOfAKind(int kindType){
+    	HashMap<Integer,Integer> rankMap = new HashMap<>();
+
+    	for(Card card : playerHand){
+    		if(!rankMap.containsKey(card.getRank())){
+    			rankMap.put(card.getRank(), 1);
+    		}
+    		else{
+    			int value = rankMap.get(card.getRank());
+    			rankMap.put(card.getRank(), value+1);
+    		}
+    	}
+
+    	return rankMap.containsValue(kindType);
+    }
+
+
+    private boolean isTwoPair(){
+    	HashMap<Integer,Integer> rankMap = new HashMap<>();
+    	int pairCounter = 0;
+
+    	for(Card card : playerHand){
+    		if(!rankMap.containsKey(card.getRank())){
+    			rankMap.put(card.getRank(), 1);
+    		}
+    		else{
+    			int value = rankMap.get(card.getRank());
+    			rankMap.put(card.getRank(), value+1);
+    			pairCounter++;
+    		}
+    	}
+
+    	return pairCounter == 2 && rankMap.containsValue(1);
+    }
+
+    private boolean isRoyalPair(){
+    	HashMap<Integer,Integer> rankMap = new HashMap<>();
+    	int pairCounter = 0;
+
+    	for(Card card : playerHand){
+    		if(!rankMap.containsKey(card.getRank())){
+    			rankMap.put(card.getRank(), 1);
+    			pairCounter = 1;
+    		}
+    		else{
+    			int value = rankMap.get(card.getRank());
+    			rankMap.put(card.getRank(), value+1);
+    			pairCounter++;
+    		}
+    	}
+
+    	return pairCounter == 2 && rankMap.containsValue(1);
+    }
 
     /*************************************************
      *   add other private methods here ....
