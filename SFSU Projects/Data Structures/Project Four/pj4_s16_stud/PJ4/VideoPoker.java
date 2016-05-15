@@ -433,32 +433,6 @@ public class VideoPoker {
     }
 
     public void play(){
-    /** The main algorithm for single player poker game 
-     *
-     * Steps:
-     * 		showPayoutTable()
-     *
-     * 		++	
-     * 		show balance, get bet 
-     *		verify bet value, update balance
-     *		reset deck, shuffle deck, 
-     *		deal cards and display cards
-     *		ask for positions of cards to keep  
-     *          get positions in one input line
-     *		update cards
-     *		check hands, display proper messages
-     *		update balance if there is a payout
-     *		if balance = O:
-     *			end of program 
-     *		else
-     *			ask if the player wants to play a new game
-     *			if the answer is "no" : end of program
-     *			else : showPayoutTable() if user wants to see it
-     *			goto ++
-     */
-
-
-        // implement this method!
 
     	if(showPayoutTable){
     		showPayoutTable();
