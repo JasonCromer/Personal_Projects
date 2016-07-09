@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MapMeKeyboard</string>
+    <string name="simple_ime">Simple IME</string>
+    <string name="subtype_en_US">Blah</string>
 </resources>
