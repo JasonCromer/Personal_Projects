@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Renderscript Hello World</string>
+    <string name="before_label">Before:</string>
+    <string name="after_label">After:</string>
 </resources>
