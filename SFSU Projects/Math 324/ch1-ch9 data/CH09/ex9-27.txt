@@ -1,3 +1,0 @@
-'Condition'	'Size'	'Mean'	'SD'
-'AN'	16	0.52	0.26
-'Control'	8	0.35	0.15

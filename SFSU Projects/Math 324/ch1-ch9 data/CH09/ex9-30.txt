@@ -1,3 +1,0 @@
-'Type'	'Size'	'Mean'	'SD'
-'Fiberglass grid'	26	33.4	2.2
-'Carbon grid'	26	42.8	4.3

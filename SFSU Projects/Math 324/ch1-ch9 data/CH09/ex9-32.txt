@@ -1,3 +1,0 @@
-'Age'	'Size'	'Mean'	'SD'
-'Older'	28	801	117
-'Younger'	16	780	72

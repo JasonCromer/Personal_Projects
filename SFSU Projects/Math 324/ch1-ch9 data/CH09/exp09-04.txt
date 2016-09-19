@@ -1,3 +1,0 @@
-'eat fast food'	'size'	'mean'	'sd'
-'No'	663	2258	1519
-'Yes'	413	2637	1138
