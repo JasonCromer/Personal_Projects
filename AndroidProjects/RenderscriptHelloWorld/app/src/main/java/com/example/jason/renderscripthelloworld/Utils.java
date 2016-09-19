@@ -35,7 +35,7 @@ class Utils {
         RenderScript renderScript = RenderScript.create(context);
 
         // Create allocation from Bitmap
-        Allocation allocatiitonA = Allocation.createFromBitmap(renderScript, bitmap);
+        Allocation allocationA = Allocation.createFromBitmap(renderScript, bitmap);
 
         // Create allocation with same type
         Allocation allocationB = Allocation.createTyped(renderScript, allocationA.getType());
