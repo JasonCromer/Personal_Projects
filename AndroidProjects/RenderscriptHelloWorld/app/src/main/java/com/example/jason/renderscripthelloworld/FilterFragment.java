@@ -13,11 +13,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.commit451.nativestackblur.NativeStackBlur;
+
 public class FilterFragment extends Fragment implements View.OnClickListener {
+
+    private static final float BLUR_RADIUS = 25.0f;
 
     private ImageView mBeforeImageView;
     private ImageView mAfterImageView;
     private TextView mTimeLabel;
+    private TextView mTitleLabel;
     private Bitmap mBeforeImage;
     private Bitmap mAfterImage;
 
@@ -37,6 +42,7 @@ public class FilterFragment extends Fragment implements View.OnClickListener {
         mBeforeImageView = (ImageView) view.findViewById(R.id.before_image_view);
         mAfterImageView = (ImageView) view.findViewById(R.id.after_image_view);
         mTimeLabel = (TextView) view.findViewById(R.id.time_label);
+        mTitleLabel = (TextView) view.findViewById(R.id.algorithm_title);
         view.findViewById(R.id.next_button).setOnClickListener(this);
 
         // Convert drawable to bitmap
@@ -44,7 +50,10 @@ public class FilterFragment extends Fragment implements View.OnClickListener {
         mBeforeImageView.setImageBitmap(mBeforeImage);
 
         // Equalize our before bitmap and set it to mAfterImageView
-        new HistogramEqualizationTask().execute();
+        //new HistogramEqualizationTask().execute();
+
+        // Blur image using standard Gaussian Blur
+        standardGaussianBlur();
 
         return view;
     }
@@ -58,9 +67,31 @@ public class FilterFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.next_button:
-                slowEqualize(mBeforeImage);
+                //slowEqualize(mBeforeImage);
+                nativeStackBlur();
                 break;
         }
+
+    }
+
+    private void standardGaussianBlur() {
+        Bitmap blurredImage = BitmapFactory.decodeResource(getResources(), R.drawable.landscape);
+        long startTime = System.currentTimeMillis();
+        blurredImage = Utils.gaussianBlur(blurredImage, getContext(), BLUR_RADIUS);
+        long endTime = System.currentTimeMillis();
+        mTimeLabel.setText(getString(R.string.time_label, endTime - startTime));
+        mTitleLabel.setText(getString(R.string.standard_gaussian_blur));
+        mAfterImageView.setImageBitmap(blurredImage);
+    }
+
+    private void nativeStackBlur() {
+        Bitmap blurredImage = BitmapFactory.decodeResource(getResources(), R.drawable.landscape);
+        long startTime = System.currentTimeMillis();
+        blurredImage = NativeStackBlur.process(blurredImage, Math.round(BLUR_RADIUS));
+        long endTime = System.currentTimeMillis();
+        mTimeLabel.setText(getString(R.string.time_label, endTime - startTime));
+        mTitleLabel.setText(getString(R.string.native_stack_blur));
+        mAfterImageView.setImageBitmap(blurredImage);
 
     }
 

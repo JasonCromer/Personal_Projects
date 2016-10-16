@@ -6,7 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v8.renderscript.Allocation;
+import android.support.v8.renderscript.Element;
 import android.support.v8.renderscript.RenderScript;
+import android.support.v8.renderscript.ScriptIntrinsicBlur;
 
 class Utils {
 
@@ -65,5 +67,18 @@ class Utils {
         renderScript.destroy();
 
         return bitmap;
+    }
+
+    static Bitmap gaussianBlur(Bitmap image, Context context, float blurRadius) {
+        final RenderScript rs = RenderScript.create(context);
+        final Allocation input = Allocation.createFromBitmap( rs, image, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT );
+        final Allocation output = Allocation.createTyped( rs, input.getType() );
+        final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create( rs, Element.U8_4( rs ) );
+        script.setRadius(blurRadius);
+        script.setInput(input);
+        script.forEach(output);
+        output.copyTo(image);
+
+        return image;
     }
 }

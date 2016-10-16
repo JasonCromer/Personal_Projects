@@ -4,4 +4,6 @@
     <string name="after_label">After:</string>
     <string name="time_label">Time: %1$d ms</string>
     <string name="next_button">Next</string>
+    <string name="standard_gaussian_blur">Standard Gassian Blur</string>
+    <string name="native_stack_blur">Native Stack Blur</string>
 </resources>
