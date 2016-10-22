@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">Renderscript Hello World</string>
-    <string name="before_label">Before:</string>
-    <string name="after_label">After:</string>
-    <string name="time_label">Time: %1$d ms</string>
-    <string name="next_button">Next</string>
-    <string name="standard_gaussian_blur">Standard Gassian Blur</string>
-    <string name="native_stack_blur">Native Stack Blur</string>
+    <string name="spinner_label">Choose number of runs:</string>
+    <string name="gaussian_blur_toolbar_title">Gaussian Blur Benchmark</string>
+    <string name="standard_gaussian_result">Standard Gaussian Blur: %1$d runs in %2$d milliseconds</string>
+    <string name="native_stack_blur_result">Native Stack Blur: %1$d runs in %2$d milliseconds</string>
 </resources>

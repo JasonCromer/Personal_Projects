@@ -2,7 +2,6 @@ package com.example.jason.renderscripthelloworld;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,21 +9,25 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.commit451.nativestackblur.NativeStackBlur;
 
-public class FilterFragment extends Fragment implements View.OnClickListener {
+import java.util.ArrayList;
+import java.util.List;
+
+public class FilterFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private static final float BLUR_RADIUS = 25.0f;
 
-    private ImageView mBeforeImageView;
-    private ImageView mAfterImageView;
-    private TextView mTimeLabel;
-    private TextView mTitleLabel;
-    private Bitmap mBeforeImage;
-    private Bitmap mAfterImage;
+    private Spinner mSpinner;
+    private TextView mStandardGaussianResultsLabel;
+    private TextView mNativeStackBlurResultsLabel;
+
+    private int mSelectedAmount;
 
     public FilterFragment() {
         // Required empty constructor
@@ -39,146 +42,109 @@ public class FilterFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_filter, container, false);
 
-        mBeforeImageView = (ImageView) view.findViewById(R.id.before_image_view);
-        mAfterImageView = (ImageView) view.findViewById(R.id.after_image_view);
-        mTimeLabel = (TextView) view.findViewById(R.id.time_label);
-        mTitleLabel = (TextView) view.findViewById(R.id.algorithm_title);
-        view.findViewById(R.id.next_button).setOnClickListener(this);
-
         // Convert drawable to bitmap
-        mBeforeImage = BitmapFactory.decodeResource(getResources(), R.drawable.landscape);
-        mBeforeImageView.setImageBitmap(mBeforeImage);
+        mSpinner = (Spinner) view.findViewById(R.id.spinner);
+        mSpinner.setOnItemSelectedListener(this);
+        mStandardGaussianResultsLabel = (TextView) view.findViewById(R.id.standard_gaussian_results_label);
+        mNativeStackBlurResultsLabel = (TextView) view.findViewById(R.id.native_stack_blur_results_label);
+
+        // set toolbar title
+        setToolbarTitle();
+
+        // initialize spinner with items
+        initSpinner();
 
         // Equalize our before bitmap and set it to mAfterImageView
         //new HistogramEqualizationTask().execute();
 
-        // Blur image using standard Gaussian Blur
-        standardGaussianBlur();
-
         return view;
     }
 
-    private void setResultBitmap(Long timeToComplete) {
-        mAfterImageView.setImageBitmap(mAfterImage);
-        mTimeLabel.setText(getResources().getString(R.string.time_label, timeToComplete));
+    private void setToolbarTitle() {
+        getActivity().setTitle(getString(R.string.gaussian_blur_toolbar_title));
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.next_button:
-                //slowEqualize(mBeforeImage);
-                nativeStackBlur();
-                break;
-        }
+    private void initSpinner() {
+        List<Integer> mSpinnerList = new ArrayList<>();
+        mSpinnerList.add(0);
+        mSpinnerList.add(1);
+        mSpinnerList.add(5);
+        mSpinnerList.add(10);
+        mSpinnerList.add(20);
+        mSpinnerList.add(30);
+        mSpinnerList.add(40);
+        mSpinnerList.add(50);
 
+        ArrayAdapter<Integer> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, mSpinnerList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(adapter);
     }
 
     private void standardGaussianBlur() {
         Bitmap blurredImage = BitmapFactory.decodeResource(getResources(), R.drawable.landscape);
-        long startTime = System.currentTimeMillis();
-        blurredImage = Utils.gaussianBlur(blurredImage, getContext(), BLUR_RADIUS);
-        long endTime = System.currentTimeMillis();
-        mTimeLabel.setText(getString(R.string.time_label, endTime - startTime));
-        mTitleLabel.setText(getString(R.string.standard_gaussian_blur));
-        mAfterImageView.setImageBitmap(blurredImage);
+        Utils.gaussianBlur(blurredImage, getContext(), BLUR_RADIUS);
     }
 
     private void nativeStackBlur() {
         Bitmap blurredImage = BitmapFactory.decodeResource(getResources(), R.drawable.landscape);
-        long startTime = System.currentTimeMillis();
-        blurredImage = NativeStackBlur.process(blurredImage, Math.round(BLUR_RADIUS));
-        long endTime = System.currentTimeMillis();
-        mTimeLabel.setText(getString(R.string.time_label, endTime - startTime));
-        mTitleLabel.setText(getString(R.string.native_stack_blur));
-        mAfterImageView.setImageBitmap(blurredImage);
-
+        NativeStackBlur.process(blurredImage, Math.round(BLUR_RADIUS));
     }
 
-    private void slowEqualize(Bitmap src) {
-        long startTime = System.currentTimeMillis();
-
-        float histogram[][];
-        histogram = new float[3][];
-
-        histogram[0] = getHistogramByColor(src, 1);
-        histogram[1] = getHistogramByColor(src, 2);
-        histogram[2] = getHistogramByColor(src, 3);
-
-        normalizedFunction(histogram[0], 0, histogram[0].length - 1);
-        normalizedFunction(histogram[1], 0, histogram[0].length - 1);
-        normalizedFunction(histogram[2], 0, histogram[0].length - 1);
-
-        histogramEqualization(histogram[0], 0, 255);
-        histogramEqualization(histogram[1], 0, 255);
-        histogramEqualization(histogram[2], 0, 255);
-
-        mBeforeImageView.setImageBitmap(mBeforeImage);
-
-        long endTime = System.currentTimeMillis();
-        mTimeLabel.setText(getString(R.string.time_label, endTime - startTime));
-        mAfterImageView.setImageBitmap(src);
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        mSelectedAmount = (int) adapterView.getItemAtPosition(i);
+        new StandardGaussianTask().execute();
+        new NativeStackBlurTask().execute();
     }
 
-    public void histogramEqualization(float histogram[], int low, int high) {
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+    }
 
-        float sumr, sumrx;
-        sumr = 0;
-        for (int i = low; i <= high; i++) {
-            sumr += (histogram[i]);
-            sumrx = low + (high - low) * sumr;
-            int valr = (int) (sumrx);
-            if (valr > 255) {
-                histogram[i] = 255;
-            } else {
-                histogram[i] = valr;
+    private class StandardGaussianTask extends AsyncTask<Void, Void, Long> {
+
+        @Override
+        protected Long doInBackground(Void... voids) {
+            long startTime = System.currentTimeMillis();
+            for (int j = 0; j < mSelectedAmount; j++) {
+                standardGaussianBlur();
             }
+            long endTime = System.currentTimeMillis();
+
+            return endTime - startTime;
+        }
+
+        @Override
+        protected void onPostExecute(Long runTime) {
+            mStandardGaussianResultsLabel.setText(getString(R.string.standard_gaussian_result, mSelectedAmount, runTime));
         }
     }
 
-    public void normalizedFunction(float myArr[], int low, int high) {
+    private class NativeStackBlurTask extends AsyncTask<Void, Void, Long> {
 
-        float sumV = 0.0f;
-        for (int i = low; i <= high; i++) {
-            sumV = sumV + (myArr[i]);
-        }
-        for (int i = low; i <= high; i++) {
-            myArr[i] /= sumV;
-        }
-    }
-
-    public float[] getHistogramByColor(Bitmap input, int colorVal) {
-        // colorVal 1 -> RED     2 -> GREEN     3 -> BLUE
-        float[] histogram = new float[256];
-
-        for (int i = 0; i < histogram.length; i++) {
-            histogram[i] = 0.0f;
-        }
-        for (int i = 0; i < input.getWidth(); i++) {
-            for (int j = 0; j < input.getHeight(); j++) {
-                int red = 0;
-                switch (colorVal) {
-                    case 1:
-                        red = Color.red(input.getPixel(i, j));
-                        break;
-                    case 2:
-                        red = Color.green(input.getPixel(i, j));
-                        break;
-                    case 3:
-                        red = Color.blue(input.getPixel(i, j));
-                        break;
-                }
-                histogram[red]++;
+        @Override
+        protected Long doInBackground(Void... voids) {
+            long startTime = System.currentTimeMillis();
+            for (int j = 0; j < mSelectedAmount; j++) {
+                nativeStackBlur();
             }
+            long endTime = System.currentTimeMillis();
+
+            return endTime - startTime;
         }
-        return histogram;
+
+        @Override
+        protected void onPostExecute(Long runTime) {
+            mNativeStackBlurResultsLabel.setText(getString(R.string.native_stack_blur_result, mSelectedAmount, runTime));
+        }
     }
 
     private class HistogramEqualizationTask extends AsyncTask<Void, Void, Long> {
         @Override
         protected Long doInBackground(Void... voids) {
+            Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.landscape);
             long startTime = System.currentTimeMillis();
-            mAfterImage = Utils.histogramEqualization(mBeforeImage, getActivity());
+            Utils.histogramEqualization(image, getActivity());
             long endTime = System.currentTimeMillis();
 
             return endTime - startTime;
@@ -186,7 +152,6 @@ public class FilterFragment extends Fragment implements View.OnClickListener {
 
         @Override
         protected void onPostExecute(Long timeToComplete) {
-            setResultBitmap(timeToComplete);
         }
     }
 }

@@ -2,6 +2,7 @@ package com.example.jason.renderscripthelloworld;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -67,6 +68,77 @@ class Utils {
         renderScript.destroy();
 
         return bitmap;
+    }
+
+    public void slowEqualize(Bitmap src) {
+        float histogram[][];
+        histogram = new float[3][];
+
+        histogram[0] = getHistogramByColor(src, 1);
+        histogram[1] = getHistogramByColor(src, 2);
+        histogram[2] = getHistogramByColor(src, 3);
+
+        normalizedFunction(histogram[0], 0, histogram[0].length - 1);
+        normalizedFunction(histogram[1], 0, histogram[0].length - 1);
+        normalizedFunction(histogram[2], 0, histogram[0].length - 1);
+
+        javaHistogramEqualization(histogram[0], 0, 255);
+        javaHistogramEqualization(histogram[1], 0, 255);
+        javaHistogramEqualization(histogram[2], 0, 255);
+    }
+
+    private void javaHistogramEqualization(float histogram[], int low, int high) {
+
+        float sumr, sumrx;
+        sumr = 0;
+        for (int i = low; i <= high; i++) {
+            sumr += (histogram[i]);
+            sumrx = low + (high - low) * sumr;
+            int valr = (int) (sumrx);
+            if (valr > 255) {
+                histogram[i] = 255;
+            } else {
+                histogram[i] = valr;
+            }
+        }
+    }
+
+    private void normalizedFunction(float myArr[], int low, int high) {
+
+        float sumV = 0.0f;
+        for (int i = low; i <= high; i++) {
+            sumV = sumV + (myArr[i]);
+        }
+        for (int i = low; i <= high; i++) {
+            myArr[i] /= sumV;
+        }
+    }
+
+    private float[] getHistogramByColor(Bitmap input, int colorVal) {
+        // colorVal 1 -> RED     2 -> GREEN     3 -> BLUE
+        float[] histogram = new float[256];
+
+        for (int i = 0; i < histogram.length; i++) {
+            histogram[i] = 0.0f;
+        }
+        for (int i = 0; i < input.getWidth(); i++) {
+            for (int j = 0; j < input.getHeight(); j++) {
+                int red = 0;
+                switch (colorVal) {
+                    case 1:
+                        red = Color.red(input.getPixel(i, j));
+                        break;
+                    case 2:
+                        red = Color.green(input.getPixel(i, j));
+                        break;
+                    case 3:
+                        red = Color.blue(input.getPixel(i, j));
+                        break;
+                }
+                histogram[red]++;
+            }
+        }
+        return histogram;
     }
 
     static Bitmap gaussianBlur(Bitmap image, Context context, float blurRadius) {
