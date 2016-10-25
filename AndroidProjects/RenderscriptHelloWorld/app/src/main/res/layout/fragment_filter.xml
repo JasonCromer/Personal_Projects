@@ -25,7 +25,16 @@
         android:layout_height="wrap_content"
         android:padding="20dp"
         android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/spinner_label" />
+
+    <TextView
+        android:id="@+id/standard_gaussian_average_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/standard_gaussian_results_label" />
 
     <TextView
         android:id="@+id/native_stack_blur_results_label"
@@ -33,5 +42,14 @@
         android:layout_height="wrap_content"
         android:padding="20dp"
         android:layout_alignParentStart="true"
+        android:layout_alignEnd="@id/spinner_label"
+        android:layout_below="@+id/standard_gaussian_results_label"/>
+
+    <TextView
+        android:id="@+id/native_stack_blur_average_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:layout_toEndOf="@+id/standard_gaussian_results_label"
         android:layout_below="@+id/standard_gaussian_results_label"/>
 </RelativeLayout>

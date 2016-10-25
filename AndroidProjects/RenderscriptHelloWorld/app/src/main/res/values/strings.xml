@@ -4,4 +4,5 @@
     <string name="gaussian_blur_toolbar_title">Gaussian Blur Benchmark</string>
     <string name="standard_gaussian_result">Standard Gaussian Blur: %1$d runs in %2$d milliseconds</string>
     <string name="native_stack_blur_result">Native Stack Blur: %1$d runs in %2$d milliseconds</string>
+    <string name="average_label" formatted="false">Average: %.2f%n</string>
 </resources>

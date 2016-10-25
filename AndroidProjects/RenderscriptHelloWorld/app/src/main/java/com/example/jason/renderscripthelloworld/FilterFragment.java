@@ -25,7 +25,12 @@ public class FilterFragment extends Fragment implements AdapterView.OnItemSelect
 
     private Spinner mSpinner;
     private TextView mStandardGaussianResultsLabel;
+    private TextView mStandardGaussianAverageLabel;
     private TextView mNativeStackBlurResultsLabel;
+    private TextView mNativeStackBlurAverageLabel;
+
+    private double mStandardGaussianBlurTotal;
+    private double mNativeStackBlurTotal;
 
     private int mSelectedAmount;
 
@@ -46,16 +51,15 @@ public class FilterFragment extends Fragment implements AdapterView.OnItemSelect
         mSpinner = (Spinner) view.findViewById(R.id.spinner);
         mSpinner.setOnItemSelectedListener(this);
         mStandardGaussianResultsLabel = (TextView) view.findViewById(R.id.standard_gaussian_results_label);
+        mStandardGaussianAverageLabel = (TextView) view.findViewById(R.id.standard_gaussian_average_label);
         mNativeStackBlurResultsLabel = (TextView) view.findViewById(R.id.native_stack_blur_results_label);
+        mNativeStackBlurAverageLabel = (TextView) view.findViewById(R.id.native_stack_blur_average_label);
 
         // set toolbar title
         setToolbarTitle();
 
         // initialize spinner with items
         initSpinner();
-
-        // Equalize our before bitmap and set it to mAfterImageView
-        //new HistogramEqualizationTask().execute();
 
         return view;
     }
@@ -93,6 +97,10 @@ public class FilterFragment extends Fragment implements AdapterView.OnItemSelect
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         mSelectedAmount = (int) adapterView.getItemAtPosition(i);
+
+        // Reset totals
+        mStandardGaussianBlurTotal = 0;
+        mNativeStackBlurTotal = 0;
         new StandardGaussianTask().execute();
         new NativeStackBlurTask().execute();
     }
@@ -117,6 +125,11 @@ public class FilterFragment extends Fragment implements AdapterView.OnItemSelect
         @Override
         protected void onPostExecute(Long runTime) {
             mStandardGaussianResultsLabel.setText(getString(R.string.standard_gaussian_result, mSelectedAmount, runTime));
+            mStandardGaussianBlurTotal += runTime;
+
+            // Calculate average
+            final double average = mStandardGaussianBlurTotal / mSelectedAmount;
+            mStandardGaussianAverageLabel.setText(getString(R.string.average_label, average));
         }
     }
 
@@ -136,6 +149,11 @@ public class FilterFragment extends Fragment implements AdapterView.OnItemSelect
         @Override
         protected void onPostExecute(Long runTime) {
             mNativeStackBlurResultsLabel.setText(getString(R.string.native_stack_blur_result, mSelectedAmount, runTime));
+            mNativeStackBlurTotal += runTime;
+
+            // Calculate average
+            final double average = mNativeStackBlurTotal / mSelectedAmount;
+            mNativeStackBlurAverageLabel.setText(getString(R.string.average_label, average));
         }
     }
 
