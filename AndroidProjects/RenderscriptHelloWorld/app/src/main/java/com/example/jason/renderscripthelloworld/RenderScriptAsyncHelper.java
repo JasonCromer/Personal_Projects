@@ -39,7 +39,7 @@ class RenderScriptAsyncHelper extends AsyncTask<Void, Void, Long> {
 
     RenderScriptAsyncHelper(Context context) {
         mContext = context;
-    }g
+    }
 
     void init(@ScriptType int scriptType, int maxRuns, float blurRadius, TextView totalTimeLabel,
               TextView averageTimeLabel) {
