@@ -1,8 +1,5 @@
 package com.example.jason.renderscripthelloworld;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,10 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.commit451.nativestackblur.NativeStackBlur;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class FilterFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
@@ -28,11 +24,6 @@ public class FilterFragment extends Fragment implements AdapterView.OnItemSelect
     private TextView mStandardGaussianAverageLabel;
     private TextView mNativeStackBlurResultsLabel;
     private TextView mNativeStackBlurAverageLabel;
-
-    private double mStandardGaussianBlurTotal;
-    private double mNativeStackBlurTotal;
-
-    private int mSelectedAmount;
 
     public FilterFragment() {
         // Required empty constructor
@@ -65,111 +56,41 @@ public class FilterFragment extends Fragment implements AdapterView.OnItemSelect
     }
 
     private void setToolbarTitle() {
-        getActivity().setTitle(getString(R.string.gaussian_blur_toolbar_title));
+        getActivity().setTitle(getString(R.string.toolbar_title));
     }
 
     private void initSpinner() {
-        List<Integer> mSpinnerList = new ArrayList<>();
-        mSpinnerList.add(0);
-        mSpinnerList.add(1);
-        mSpinnerList.add(5);
-        mSpinnerList.add(10);
-        mSpinnerList.add(20);
-        mSpinnerList.add(30);
-        mSpinnerList.add(40);
-        mSpinnerList.add(50);
+        int[] runTimesList = new int[] {0, 1, 5, 10, 20, 30, 40, 50};
+        List<Integer> mSpinnerList =  IntStream.of(runTimesList).boxed().collect(Collectors.toList());
 
         ArrayAdapter<Integer> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, mSpinnerList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(adapter);
     }
 
-    private void standardGaussianBlur() {
-        Bitmap blurredImage = BitmapFactory.decodeResource(getResources(), R.drawable.landscape);
-        Utils.gaussianBlur(blurredImage, getContext(), BLUR_RADIUS);
-    }
-
-    private void nativeStackBlur() {
-        Bitmap blurredImage = BitmapFactory.decodeResource(getResources(), R.drawable.landscape);
-        NativeStackBlur.process(blurredImage, Math.round(BLUR_RADIUS));
-    }
-
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        mSelectedAmount = (int) adapterView.getItemAtPosition(i);
+        final int maxRuns = (int) adapterView.getItemAtPosition(i);
 
-        // Reset totals
-        mStandardGaussianBlurTotal = 0;
-        mNativeStackBlurTotal = 0;
-        new StandardGaussianTask().execute();
-        new NativeStackBlurTask().execute();
+        executeBenchmark(maxRuns, RenderScriptAsyncHelper.SCRIPT_TYPE_STANDARD_BLUR,
+                RenderScriptAsyncHelper.SCRIPT_TYPE_STACK_BLUR);
+
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
     }
 
-    private class StandardGaussianTask extends AsyncTask<Void, Void, Long> {
+    private void executeBenchmark(int maxRuns, @RenderScriptAsyncHelper.ScriptType int firstScriptType,
+                                  @RenderScriptAsyncHelper.ScriptType int secondScriptType) {
+        // Benchmark first algorithm
+        RenderScriptAsyncHelper mRenderScriptHelper = new RenderScriptAsyncHelper(getContext());
+        mRenderScriptHelper.init(firstScriptType, maxRuns, BLUR_RADIUS, mStandardGaussianResultsLabel, mStandardGaussianAverageLabel);
+        mRenderScriptHelper.execute();
 
-        @Override
-        protected Long doInBackground(Void... voids) {
-            long startTime = System.currentTimeMillis();
-            for (int j = 0; j < mSelectedAmount; j++) {
-                standardGaussianBlur();
-            }
-            long endTime = System.currentTimeMillis();
-
-            return endTime - startTime;
-        }
-
-        @Override
-        protected void onPostExecute(Long runTime) {
-            mStandardGaussianResultsLabel.setText(getString(R.string.standard_gaussian_result, mSelectedAmount, runTime));
-            mStandardGaussianBlurTotal += runTime;
-
-            // Calculate average
-            final double average = mStandardGaussianBlurTotal / mSelectedAmount;
-            mStandardGaussianAverageLabel.setText(getString(R.string.average_label, average));
-        }
-    }
-
-    private class NativeStackBlurTask extends AsyncTask<Void, Void, Long> {
-
-        @Override
-        protected Long doInBackground(Void... voids) {
-            long startTime = System.currentTimeMillis();
-            for (int j = 0; j < mSelectedAmount; j++) {
-                nativeStackBlur();
-            }
-            long endTime = System.currentTimeMillis();
-
-            return endTime - startTime;
-        }
-
-        @Override
-        protected void onPostExecute(Long runTime) {
-            mNativeStackBlurResultsLabel.setText(getString(R.string.native_stack_blur_result, mSelectedAmount, runTime));
-            mNativeStackBlurTotal += runTime;
-
-            // Calculate average
-            final double average = mNativeStackBlurTotal / mSelectedAmount;
-            mNativeStackBlurAverageLabel.setText(getString(R.string.average_label, average));
-        }
-    }
-
-    private class HistogramEqualizationTask extends AsyncTask<Void, Void, Long> {
-        @Override
-        protected Long doInBackground(Void... voids) {
-            Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.landscape);
-            long startTime = System.currentTimeMillis();
-            Utils.histogramEqualization(image, getActivity());
-            long endTime = System.currentTimeMillis();
-
-            return endTime - startTime;
-        }
-
-        @Override
-        protected void onPostExecute(Long timeToComplete) {
-        }
+        // Benchmark second algorithm
+        mRenderScriptHelper = new RenderScriptAsyncHelper(getContext());
+        mRenderScriptHelper.init(secondScriptType, maxRuns, BLUR_RADIUS, mNativeStackBlurResultsLabel, mNativeStackBlurAverageLabel);
+        mRenderScriptHelper.execute();
     }
 }
