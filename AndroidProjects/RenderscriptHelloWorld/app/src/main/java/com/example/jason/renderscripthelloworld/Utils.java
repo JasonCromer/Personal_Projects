@@ -153,4 +153,20 @@ class Utils {
 
         return image;
     }
+
+    static Bitmap invert(Context context, Bitmap image) {
+        RenderScript RS = RenderScript.create(context);
+        ScriptC_invert script = new ScriptC_invert(RS);
+
+        //Create allocations via our Bitmap
+        Allocation inputAllocation = Allocation.createFromBitmap(RS, image);
+
+        // Invoke our invert function
+        script.invoke_process(inputAllocation);
+
+        script.destroy();
+        RS.destroy();
+
+        return image;
+    }
 }
