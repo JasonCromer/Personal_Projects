@@ -1,5 +1,6 @@
 package com.example.jason.renderscripthelloworld;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -61,7 +63,15 @@ public class FilterFragment extends Fragment implements AdapterView.OnItemSelect
 
     private void initSpinner() {
         int[] runTimesList = new int[] {0, 1, 5, 10, 20, 30, 40, 50};
-        List<Integer> mSpinnerList =  IntStream.of(runTimesList).boxed().collect(Collectors.toList());
+        List<Integer> mSpinnerList = new ArrayList<>();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mSpinnerList = IntStream.of(runTimesList).boxed().collect(Collectors.toList());
+        } else {
+            for (int i : runTimesList) {
+                mSpinnerList.add(i);
+            }
+        }
 
         ArrayAdapter<Integer> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, mSpinnerList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
