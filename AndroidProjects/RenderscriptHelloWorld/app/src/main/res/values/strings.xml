@@ -2,6 +2,7 @@
     <string name="app_name">Renderscript Hello World</string>
     <string name="spinner_label">Choose number of runs:</string>
     <string name="toolbar_title">Renderscript Benchmarks</string>
+    <string name="picture_title">Image Result</string>
     <string name="standard_gaussian_result">Standard Gaussian Blur: %1$d runs in %2$d milliseconds</string>
     <string name="native_stack_blur_result">Native Stack Blur: %1$d runs in %2$d milliseconds</string>
     <string name="equalize_result">Equalize: %1$d runs in %2$d milliseconds</string>

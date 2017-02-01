@@ -27,47 +27,21 @@ class Utils {
     }
 
     static Bitmap histogramEqualization(Bitmap image, Context context) {
-        // Get image size
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        // Create new bitmap
-        Bitmap bitmap = image.copy(image.getConfig(), true /* isMutable */);
-
-        // Create renderscript
         RenderScript renderScript = RenderScript.create(context);
-
-        // Create allocation from Bitmap
-        Allocation allocationA = Allocation.createFromBitmap(renderScript, bitmap);
-
-        // Create allocation with same type
-        Allocation allocationB = Allocation.createTyped(renderScript, allocationA.getType());
-
-        // Create script from renderscript file
         ScriptC_histogramEqualizer histogramEqualizer = new ScriptC_histogramEqualizer(renderScript);
 
-        // Set size in script
-        histogramEqualizer.set_size(width * height);
+        // Create allocation from Bitmap
+        Allocation inputImage = Allocation.createFromBitmap(renderScript, image);
 
-        // Call the first kernel
-        histogramEqualizer.forEach_root(allocationA, allocationB);
+        // invoke our equalize function
+        histogramEqualizer.invoke_process(inputImage);
 
-        // Call the renderscript method to compute the remap array
-        histogramEqualizer.invoke_createRemapArray();
-
-        // Call second kernel
-        histogramEqualizer.forEach_remaptoRGB(allocationB, allocationA);
-
-        // Copy script result into our bitmap
-        allocationA.copyTo(bitmap);
-
-        // De-allocate memory usage
-        allocationA.destroy();
-        allocationB.destroy();
+        // clean up references
         histogramEqualizer.destroy();
         renderScript.destroy();
+        inputImage.destroy();
 
-        return bitmap;
+        return image;
     }
 
     public void slowEqualize(Bitmap src) {
@@ -164,6 +138,8 @@ class Utils {
         // Invoke our invert function
         script.invoke_process(inputAllocation);
 
+        // clean up references
+        inputAllocation.destroy();
         script.destroy();
         RS.destroy();
 

@@ -14,14 +14,15 @@ static float bound(float val) {
     return fmin(1.0f, m);
 }
 
-uchar4 __attribute__((kernel)) root(uchar4 in, uint32_t x, uint32_t y) {
+// First we convert the colorspace from RGBA to YUVA
+uchar4 RS_KERNEL convertRGBAToYUVA(uchar4 in) {
     // Convert input uchar4 to float4
     float4 f4 = rsUnpackColor8888(in);
 
     // Get YUV channel values
     float Y = 0.299f * f4.r + 0.587f * f4.g + 0.114f * f4.b;
-    float U = ((0.492f * (f4.b - Y))+1)/2;
-    float V = ((0.877f * (f4.r - Y))+1)/2;
+    float U = ((0.492f * (f4.b - Y)) + 1) / 2;
+    float V = ((0.877f * (f4.r - Y)) + 1) / 2;
 
     // Get y value between 0 and 255
     int32_t val = Y * 255;
@@ -33,7 +34,8 @@ uchar4 __attribute__((kernel)) root(uchar4 in, uint32_t x, uint32_t y) {
     return rsPackColorTo8888(Y, U, V, f4.a);
 }
 
-uchar4 __attribute__((kernel)) remaptoRGB(uchar4 in, uint32_t x, uint32_t y) {
+// Here we remap the Y channel according to the histogram and convert from YUVA back to RGBA
+uchar4 RS_KERNEL remapToRGBA(uchar4 in) {
     //Convert input uchar4 to float4
     float4 f4 = rsUnpackColor8888(in);
 
@@ -47,8 +49,8 @@ uchar4 __attribute__((kernel)) remaptoRGB(uchar4 in, uint32_t x, uint32_t y) {
     Y = remapArray[val];
 
     //Get value for U and V channel (back to their original values)
-    float U = (2*f4.g)-1;
-    float V = (2*f4.b)-1;
+    float U = (2 * f4.g) - 1;
+    float V = (2 * f4.b) - 1;
 
     //Compute values for red, green and blue channels
     float red = bound(Y + 1.14f * V);
@@ -59,14 +61,13 @@ uchar4 __attribute__((kernel)) remaptoRGB(uchar4 in, uint32_t x, uint32_t y) {
     return rsPackColorTo8888(red, green, blue, f4.a);
 }
 
-void init() {
+void initialize() {
     //init the array with zeros
     for (int i = 0; i < 256; i++) {
         histo[i] = 0;
         remapArray[i] = 0.0f;
     }
 }
-
 
 void createRemapArray() {
     //create map for y
@@ -75,4 +76,16 @@ void createRemapArray() {
         sum += histo[i];
         remapArray[i] = sum / (size);
     }
+}
+
+// Using a single source pattern
+void process(rs_allocation inputImage) {
+    const uint32_t imageWidth = rsAllocationGetDimX(inputImage);
+    const uint32_t imageHeight = rsAllocationGetDimY(inputImage);
+
+    initialize();
+    rs_allocation temp = rsCreateAllocation_uchar4(imageWidth, imageHeight);
+    rsForEach(convertRGBAToYUVA, inputImage, temp);
+    createRemapArray();
+    rsForEach(remapToRGBA, temp, inputImage);
 }

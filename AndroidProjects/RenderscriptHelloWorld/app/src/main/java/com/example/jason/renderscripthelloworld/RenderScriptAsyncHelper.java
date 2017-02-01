@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.annotation.IntDef;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.commit451.nativestackblur.NativeStackBlur;
@@ -24,6 +25,10 @@ class RenderScriptAsyncHelper extends AsyncTask<Void, Void, Long> {
     })
     @interface ScriptType {}
 
+    interface Listener {
+        void onImageResult(Bitmap result);
+    }
+
     static final int SCRIPT_TYPE_STANDARD_BLUR = 0;
     static final int SCRIPT_TYPE_STACK_BLUR = 1;
     static final int SCRIPT_TYPE_EQUALIZE = 2;
@@ -36,9 +41,22 @@ class RenderScriptAsyncHelper extends AsyncTask<Void, Void, Long> {
     private int mMaxRuns;
     private float mBlurRadius;
     private double mTotalRunTime;
+    private Listener mListener;
+    private Bitmap mImageResult;
 
     RenderScriptAsyncHelper(Context context) {
         mContext = context;
+    }
+
+    void init(@ScriptType int scriptType) {
+        mScriptType = scriptType;
+
+        try {
+            mListener = (Listener) mContext;
+        } catch (Exception e) {
+            Log.d("Error: ", "Class not does implement Listener");
+        }
+        init(scriptType, 1, 0, null, null);
     }
 
     void init(@ScriptType int scriptType, int maxRuns, float blurRadius, TextView totalTimeLabel,
@@ -62,7 +80,7 @@ class RenderScriptAsyncHelper extends AsyncTask<Void, Void, Long> {
                     nativeStackBlur(mBlurRadius);
                     break;
                 case SCRIPT_TYPE_EQUALIZE:
-                    equalize();
+                    mImageResult = equalize();
                     break;
                 case SCRIPT_TYPE_INVERT:
                     invert();
@@ -96,11 +114,28 @@ class RenderScriptAsyncHelper extends AsyncTask<Void, Void, Long> {
                 resultsLabelId = R.string.default_result;
         }
 
-        mTotalTimeLabel.setText(mContext.getString(resultsLabelId, mMaxRuns, runTime));
+        setImage();
 
-        // Calculate average
-        final double averageTime = mTotalRunTime / mMaxRuns;
-        mAverageTimeLabel.setText(mContext.getString(R.string.average_label, averageTime));
+        if (mTotalTimeLabel != null && mAverageTimeLabel != null) {
+            mTotalTimeLabel.setText(mContext.getString(resultsLabelId, mMaxRuns, runTime));
+
+            // Calculate average
+            final double averageTime = mTotalRunTime / mMaxRuns;
+            mAverageTimeLabel.setText(mContext.getString(R.string.average_label, averageTime));
+        }
+    }
+
+    private void setImage() {
+        if (mImageResult != null) {
+            Runnable imageRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    mListener.onImageResult(mImageResult);
+                }
+            };
+
+            imageRunnable.run();
+        }
     }
 
     private void standardGaussianBlur(float blurRadius) {
@@ -113,14 +148,13 @@ class RenderScriptAsyncHelper extends AsyncTask<Void, Void, Long> {
         NativeStackBlur.process(blurredImage, Math.round(blurRadius));
     }
 
-    private void equalize() {
+    private Bitmap equalize() {
         Bitmap equalizedImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.landscape);
-        Utils.histogramEqualization(equalizedImage, mContext);
+        return Utils.histogramEqualization(equalizedImage, mContext);
     }
 
     private void invert() {
         Bitmap invertedImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.landscape);
         Utils.invert(mContext, invertedImage);
     }
-
 }
