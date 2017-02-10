@@ -8,6 +8,7 @@ public class MainActivity extends AppCompatActivity implements RenderScriptAsync
 
     private static final String FRAG_TAG_FILTER_FRAGMENT = "filter_fragment";
     private static final String FRAG_TAG_PICTURE_FRAGMENT = "picture_fragment";
+    private static final String FRAG_TAG_RIPPLE_FRAGMENT = "ripple_fragment";
 
     private PictureFragment mPictureFragment;
 
@@ -17,7 +18,20 @@ public class MainActivity extends AppCompatActivity implements RenderScriptAsync
         setContentView(R.layout.activity_main);
 
 //        showFilterFragment();
-        showPictureFragment();
+//        showPictureFragment();
+        showRippleFragment();
+    }
+
+    private void showRippleFragment() {
+        RippleFragment rippleFragment = (RippleFragment) getSupportFragmentManager()
+                .findFragmentByTag(FRAG_TAG_RIPPLE_FRAGMENT);
+
+        if (rippleFragment == null) {
+            rippleFragment = RippleFragment.newInstance();
+        }
+
+        Utils.replaceFragment(getSupportFragmentManager(), R.id.activity_main, rippleFragment,
+                FRAG_TAG_RIPPLE_FRAGMENT, false /* addToBackStack */);
     }
 
     private void showFilterFragment() {
