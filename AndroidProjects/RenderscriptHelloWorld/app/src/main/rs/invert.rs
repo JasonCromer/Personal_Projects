@@ -4,7 +4,7 @@
 
 #include "rs_debug.rsh"
 
-uchar4 RS_KERNEL invert(uchar4 in) {
+uchar4 RS_KERNEL invert(uchar4 in, uint32_t x, uint32_t y) {
     uchar4 out = in;
     out.r = 255 - in.r;
     out.g = 255 - in.g;
@@ -14,10 +14,6 @@ uchar4 RS_KERNEL invert(uchar4 in) {
 }
 
 // Using a single source pattern
-void process(rs_allocation inputImage) {
-    const uint32_t imageWidth = rsAllocationGetDimX(inputImage);
-    const uint32_t imageHeight = rsAllocationGetDimY(inputImage);
-
-    rs_allocation temp = rsCreateAllocation_uchar4(imageWidth, imageHeight);
-    rsForEach(invert, inputImage, temp);
+void doubleTime(rs_allocation input, rs_allocation output) {
+    rsForEach(invert, input, output);
 }
