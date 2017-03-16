@@ -1,26 +1,34 @@
 package com.example.jason.renderscripthelloworld;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v8.renderscript.Allocation;
 import android.support.v8.renderscript.RenderScript;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 
-public class RippleFragment extends Fragment implements View.OnClickListener {
+public class RippleFragment extends Fragment implements View.OnTouchListener {
+
+    private static final float FREQUENCY_COEFFICIENT = .035f;
+    private static final float DAMPING_COEFFICIENT = .01f;
+    private static final float AMPLITUDE_COEFFICIENT = .025f;
 
     private ImageView mImage;
-    private SeekBar mAmplitude;
-    private SeekBar mDampening;
-    private SeekBar mFrequency;
+    private RenderScript mRenderscript;
+    private Allocation mAllocationIn;
+    private Allocation mAllocationOut;
+    ScriptC_imageRipple mImageRippleScript;
+    private AsyncTask<Void, Void, Void> mRippleTask;
+    private AsyncTask<Void, Void, Void> mFadeTask;
+    private float mCurrentDampening;
+    private Bitmap mResultBitmap;
 
     public RippleFragment() {
         // Required empty constructor
@@ -35,88 +43,134 @@ public class RippleFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ripple, container, false);
 
+        mRenderscript = RenderScript.create(getContext());
         mImage = (ImageView) view.findViewById(R.id.image);
-        mAmplitude = (SeekBar) view.findViewById(R.id.control_amplitude);
-        mDampening = (SeekBar) view.findViewById(R.id.control_dampening);
-        mFrequency = (SeekBar) view.findViewById(R.id.control_frequency);
-        view.findViewById(R.id.button_enhance).setOnClickListener(this);
+        mImage.setOnTouchListener(this);
         mImage.setImageResource(R.drawable.color_background);
+        mCurrentDampening = DAMPING_COEFFICIENT;
 
-        /*
-         * Settings Ranges:
-         * A = 0.01 - 1.0
-         * D = 0.0001 - 0.01
-         * F = 0.01 - 0.5
-         */
-
-        mAmplitude.setProgress(40);
-        mDampening.setProgress(20);
-        mDampening.setProgress(mDampening.getMax());
-
-        mFrequency.setProgress(10);
-        mFrequency.setMax(50);
+        initRippleScript();
 
         return view;
     }
 
-    @Override
-    public void onClick(View view) {
-        mDampening.setProgress(mDampening.getMax());
-        Handler handler = new Handler();
-        int delay = 500;
-
-        handler.postDelayed(new Runnable() {
-            int times = 0;
-            @Override
-            public void run() {
-                drawRipplesOnBackground(mImage, R.drawable.color_background);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    mDampening.setProgress(mDampening.getProgress() - 10, false);
-                } else {
-                    mDampening.setProgress(mDampening.getProgress() - 10);
-                }
-
-                if (times < 20 && mDampening.getProgress() > 0) {
-                    handler.postDelayed(this, delay);
-                }
-                times++;
-            }
-        }, delay);
+    private void initRippleScript() {
+        mImageRippleScript = new ScriptC_imageRipple(mRenderscript);
+        mImageRippleScript.set_minRadius(0f);
+        mImageRippleScript.set_amplitude(AMPLITUDE_COEFFICIENT);
+        mImageRippleScript.set_damper(DAMPING_COEFFICIENT);
+        mImageRippleScript.set_frequency(FREQUENCY_COEFFICIENT);
     }
 
-    private void drawRipplesOnBackground(ImageView imageView, int resId) {
-        Bitmap in = BitmapFactory.decodeResource(getResources(), resId);
-        Bitmap out = Bitmap.createBitmap(in.getWidth(), in.getHeight(), in.getConfig());
+    @Override
+    public void onDestroy() {
+        // Destroy Renderscript object
+        mRenderscript.destroy();
+        mAllocationIn.destroy();
+        mAllocationOut.destroy();
 
-        // Create Renderscript context
-        RenderScript rs = RenderScript.create(getContext());
+        if (mRippleTask != null) {
+            mRippleTask.cancel(true);
+        }
+        if (mFadeTask != null) {
+            mFadeTask.cancel(true);
+        }
+        super.onDestroy();
+    }
 
-        // Create Allocations from bitmaps
-        Allocation allocationIn = Allocation.createFromBitmap(rs, in, Allocation.MipmapControl.MIPMAP_NONE,
-                Allocation.USAGE_SCRIPT);
-        Allocation allocationOut = Allocation.createTyped(rs, allocationIn.getType());
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        mImage.setImageResource(R.drawable.color_background);
+        if (mRippleTask != null) {
+            mRippleTask.cancel(true);
+        }
+        if (mFadeTask != null) {
+            mFadeTask.cancel(true);
+        }
+        doRipple(motionEvent.getRawX(), motionEvent.getRawY());
+        return false;
+    }
 
-        // Create our Ripple script instance
-//        ScriptC_imageRipple imageRippleScript = new ScriptC_imageRipple(rs, getResources(), R.raw.wavy);
-        ScriptC_newImageRipple imageRippleScript = new ScriptC_newImageRipple(rs, getResources(), R.raw.ripple);
+    private void doRipple(float xPos, float yPos) {
+        mRippleTask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                drawRipplesOnBackground(mImage, xPos, yPos, mCurrentDampening, false);
+                return null;
+            }
 
-        imageRippleScript.set_centerX(in.getWidth() / 2);
-        imageRippleScript.set_centerY(in.getHeight() /2);
-        imageRippleScript.set_minRadius(0f);
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                setImage();
+                mCurrentDampening -= .001f;
 
-        float amplitude = Math.max(0.01f, mAmplitude.getProgress() / 100f);
-        imageRippleScript.set_scalar(amplitude);
-        float dampening = Math.max(0.0001f, mDampening.getProgress() / 10000f);
-        imageRippleScript.set_damper(dampening);
-        float frequency = Math.max(0.01f, mFrequency.getProgress() / 100f);
-        imageRippleScript.set_frequency(frequency);
+                if (mCurrentDampening > 0) {
+                    doRipple(xPos, yPos);
+                } else {
+                    doRippleFade(xPos, yPos);
+                }
+            }
+        };
+        mRippleTask.execute();
+    }
 
-        //Run the script
-        imageRippleScript.forEach_root(allocationIn, allocationOut);
+    private void doRippleFade(float xPos, float yPos) {
+        mFadeTask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                drawRipplesOnBackground(mImage, xPos, yPos, mCurrentDampening, true);
+                return null;
+            }
 
-        allocationOut.copyTo(out);
-        imageView.setImageBitmap(out);
-        //Tear down the RenderScript context
-        rs.destroy();
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                setImage();
+                mCurrentDampening += .001f;
+
+                if (mCurrentDampening <= DAMPING_COEFFICIENT) {
+                    doRippleFade(xPos, yPos);
+                }
+            }
+        };
+        mFadeTask.execute();
+    }
+
+    private void setImage() {
+        if (mResultBitmap != null) {
+            Runnable imageRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    mImage.setImageBitmap(mResultBitmap);
+                }
+            };
+            imageRunnable.run();
+        }
+    }
+
+    private void drawRipplesOnBackground(ImageView imageView, float xPos, float yPos, float dampening, boolean reverse) {
+        if (imageView != null && imageView.getDrawable() != null) {
+            Bitmap in = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            Bitmap out = Bitmap.createBitmap(in.getWidth(), in.getHeight(), in.getConfig());
+
+            // Create Allocations from bitmaps
+            mAllocationIn = Allocation.createFromBitmap(mRenderscript, in, Allocation.MipmapControl.MIPMAP_NONE,
+                    Allocation.USAGE_SCRIPT);
+            mAllocationOut = Allocation.createTyped(mRenderscript, mAllocationIn.getType());
+
+            // Multiply by two due to Emulator resolution scale vs bitmap resolution
+            mImageRippleScript.set_positionX(xPos * 2.0f);
+            mImageRippleScript.set_positionY(yPos * 2.0f);
+            mImageRippleScript.set_damper(dampening);
+
+            //Run the script
+            if (reverse) {
+                mImageRippleScript.forEach_unRipple(mAllocationIn, mAllocationOut);
+            } else {
+                mImageRippleScript.forEach_root(mAllocationIn, mAllocationOut);
+            }
+
+            mAllocationOut.copyTo(out);
+            mResultBitmap = out.copy(out.getConfig(), true);
+        }
     }
 }
