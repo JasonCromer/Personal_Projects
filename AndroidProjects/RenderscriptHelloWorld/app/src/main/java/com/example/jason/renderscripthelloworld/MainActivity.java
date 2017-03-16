@@ -18,8 +18,8 @@ public class MainActivity extends AppCompatActivity implements RenderScriptAsync
         setContentView(R.layout.activity_main);
 
 //        showFilterFragment();
-//        showPictureFragment();
-        showRippleFragment();
+        showPictureFragment();
+//        showRippleFragment();
     }
 
     private void showRippleFragment() {

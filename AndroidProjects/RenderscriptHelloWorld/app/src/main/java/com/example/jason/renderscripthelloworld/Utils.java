@@ -134,14 +134,39 @@ class Utils {
 
         //Create allocations via our Bitmap
         Allocation inputAllocation = Allocation.createFromBitmap(RS, image);
+        Allocation outputAllocation = Allocation.createTyped(RS, inputAllocation.getType());
 
         // Invoke our invert function
-        script.invoke_process(inputAllocation);
+        script.invoke_doubleTime(inputAllocation, outputAllocation);
+        outputAllocation.copyTo(image);
 
         // clean up references
         inputAllocation.destroy();
         script.destroy();
         RS.destroy();
+
+        return image;
+    }
+
+    static Bitmap changeNeighboringPixels(Context context, Bitmap image) {
+        RenderScript rs = RenderScript.create(context);
+        ScriptC_neighbors script = new ScriptC_neighbors(rs);
+
+        // Create allocation via our Bitmap
+        Allocation inputAllocation = Allocation.createFromBitmap(rs, image);
+        Allocation outputAllocation = Allocation.createTyped(rs, inputAllocation.getType());
+
+        // set global input allocation
+        script.set_input(inputAllocation);
+
+        // Invoke neighbors function
+        script.invoke_processImage(inputAllocation, outputAllocation);
+        outputAllocation.copyTo(image);
+
+        // clean up references
+        inputAllocation.destroy();
+        script.destroy();
+        rs.destroy();
 
         return image;
     }

@@ -30,7 +30,7 @@ public class PictureFragment extends Fragment {
         mImageView = (ImageView) view.findViewById(R.id.pictureView);
         setToolbarTitle();
 
-        executeAlgorithm(RenderScriptAsyncHelper.SCRIPT_TYPE_EQUALIZE);
+        executeAlgorithm(RenderScriptAsyncHelper.SCRIPT_TYPE_NEIGHBORS);
 
         return view;
     }

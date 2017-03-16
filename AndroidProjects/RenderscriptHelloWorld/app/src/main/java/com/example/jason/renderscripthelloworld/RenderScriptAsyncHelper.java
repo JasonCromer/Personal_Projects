@@ -21,7 +21,8 @@ class RenderScriptAsyncHelper extends AsyncTask<Void, Void, Long> {
             SCRIPT_TYPE_STANDARD_BLUR,
             SCRIPT_TYPE_STACK_BLUR,
             SCRIPT_TYPE_EQUALIZE,
-            SCRIPT_TYPE_INVERT
+            SCRIPT_TYPE_INVERT,
+            SCRIPT_TYPE_NEIGHBORS
     })
     @interface ScriptType {}
 
@@ -33,6 +34,7 @@ class RenderScriptAsyncHelper extends AsyncTask<Void, Void, Long> {
     static final int SCRIPT_TYPE_STACK_BLUR = 1;
     static final int SCRIPT_TYPE_EQUALIZE = 2;
     static final int SCRIPT_TYPE_INVERT = 3;
+    static final int SCRIPT_TYPE_NEIGHBORS = 4;
 
     private Context mContext;
     private TextView mTotalTimeLabel;
@@ -83,7 +85,10 @@ class RenderScriptAsyncHelper extends AsyncTask<Void, Void, Long> {
                     mImageResult = equalize();
                     break;
                 case SCRIPT_TYPE_INVERT:
-                    invert();
+                    mImageResult = invert();
+                    break;
+                case SCRIPT_TYPE_NEIGHBORS:
+                    mImageResult = performNeighborManipulation();
                     break;
             }
         }
@@ -109,6 +114,9 @@ class RenderScriptAsyncHelper extends AsyncTask<Void, Void, Long> {
                 break;
             case SCRIPT_TYPE_INVERT:
                 resultsLabelId = R.string.invert_result;
+                break;
+            case SCRIPT_TYPE_NEIGHBORS:
+                resultsLabelId = R.string.neighbors_result;
                 break;
             default:
                 resultsLabelId = R.string.default_result;
@@ -153,8 +161,13 @@ class RenderScriptAsyncHelper extends AsyncTask<Void, Void, Long> {
         return Utils.histogramEqualization(equalizedImage, mContext);
     }
 
-    private void invert() {
+    private Bitmap invert() {
         Bitmap invertedImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.landscape);
-        Utils.invert(mContext, invertedImage);
+        return Utils.invert(mContext, invertedImage);
+    }
+
+    private Bitmap performNeighborManipulation() {
+        Bitmap result = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.landscape);
+        return Utils.changeNeighboringPixels(mContext, result);
     }
 }

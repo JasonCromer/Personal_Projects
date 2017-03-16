@@ -7,6 +7,7 @@
     <string name="native_stack_blur_result">Native Stack Blur: %1$d runs in %2$d milliseconds</string>
     <string name="equalize_result">Equalize: %1$d runs in %2$d milliseconds</string>
     <string name="invert_result">Invert: %1$d runs in %2$d milliseconds</string>
+    <string name="neighbors_result">Neighbors: %1$d runs in %2$d milliseconds</string>
     <string name="default_result">%1$d runs in %2$d milliseconds</string>
     <string name="average_label" formatted="false">Average: %.2f%n</string>
 </resources>
