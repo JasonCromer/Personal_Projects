@@ -14,6 +14,7 @@ import android.widget.ImageView;
 public class PictureFragment extends Fragment {
 
     private ImageView mImageView;
+    GrayScottDiffusionReaction mGrayScottDiffusionReaction;
 
     public PictureFragment() {
         // Required Empty Constructor
@@ -30,7 +31,9 @@ public class PictureFragment extends Fragment {
         mImageView = (ImageView) view.findViewById(R.id.pictureView);
         setToolbarTitle();
 
-        executeAlgorithm(RenderScriptAsyncHelper.SCRIPT_TYPE_NEIGHBORS);
+//        executeAlgorithm(RenderScriptAsyncHelper.SCRIPT_TYPE_DIFFUSION_REACTION);
+        mGrayScottDiffusionReaction = new GrayScottDiffusionReaction(getContext(), 300);
+        executeGrayScottDiffusionReaction();
 
         return view;
     }
@@ -45,7 +48,17 @@ public class PictureFragment extends Fragment {
         mRenderScriptHelper.execute();
     }
 
+    private void executeGrayScottDiffusionReaction() {
+        mGrayScottDiffusionReaction.execute();
+    }
+
     public void setImageView(@NonNull Bitmap image) {
         mImageView.setImageBitmap(image);
+    }
+
+    @Override
+    public void onDestroy() {
+        mGrayScottDiffusionReaction.cleanRenderscriptObjects();
+        super.onDestroy();
     }
 }

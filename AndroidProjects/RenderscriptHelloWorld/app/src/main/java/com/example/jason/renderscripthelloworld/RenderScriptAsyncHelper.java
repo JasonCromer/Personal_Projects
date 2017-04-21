@@ -22,7 +22,7 @@ class RenderScriptAsyncHelper extends AsyncTask<Void, Void, Long> {
             SCRIPT_TYPE_STACK_BLUR,
             SCRIPT_TYPE_EQUALIZE,
             SCRIPT_TYPE_INVERT,
-            SCRIPT_TYPE_NEIGHBORS
+            SCRIPT_TYPE_NEIGHBORS,
     })
     @interface ScriptType {}
 
@@ -52,12 +52,6 @@ class RenderScriptAsyncHelper extends AsyncTask<Void, Void, Long> {
 
     void init(@ScriptType int scriptType) {
         mScriptType = scriptType;
-
-        try {
-            mListener = (Listener) mContext;
-        } catch (Exception e) {
-            Log.d("Error: ", "Class not does implement Listener");
-        }
         init(scriptType, 1, 0, null, null);
     }
 
@@ -68,6 +62,12 @@ class RenderScriptAsyncHelper extends AsyncTask<Void, Void, Long> {
         mBlurRadius = blurRadius;
         mTotalTimeLabel = totalTimeLabel;
         mAverageTimeLabel = averageTimeLabel;
+
+        try {
+            mListener = (Listener) mContext;
+        } catch (Exception e) {
+            Log.d("Error: ", "Class not does implement Listener");
+        }
     }
 
     @Override
@@ -121,7 +121,6 @@ class RenderScriptAsyncHelper extends AsyncTask<Void, Void, Long> {
             default:
                 resultsLabelId = R.string.default_result;
         }
-
         setImage();
 
         if (mTotalTimeLabel != null && mAverageTimeLabel != null) {
