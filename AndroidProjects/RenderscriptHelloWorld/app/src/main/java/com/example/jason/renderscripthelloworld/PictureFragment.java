@@ -12,9 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 public class PictureFragment extends Fragment {
+    private static final int GRAY_SCOTT_NUM_RUNS = 500;
 
     private ImageView mImageView;
-    GrayScottDiffusionReaction mGrayScottDiffusionReaction;
+    private GrayScottDiffusionReaction mGrayScottDiffusionReaction;
 
     public PictureFragment() {
         // Required Empty Constructor
@@ -32,7 +33,7 @@ public class PictureFragment extends Fragment {
         setToolbarTitle();
 
 //        executeAlgorithm(RenderScriptAsyncHelper.SCRIPT_TYPE_DIFFUSION_REACTION);
-        mGrayScottDiffusionReaction = new GrayScottDiffusionReaction(getContext(), 300);
+        mGrayScottDiffusionReaction = new GrayScottDiffusionReaction(getContext(), GRAY_SCOTT_NUM_RUNS);
         executeGrayScottDiffusionReaction();
 
         return view;

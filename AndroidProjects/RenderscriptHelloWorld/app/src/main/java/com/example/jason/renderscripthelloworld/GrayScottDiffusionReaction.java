@@ -10,28 +10,25 @@ import android.support.v8.renderscript.Element;
 import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.Type;
 import android.util.Log;
-
 import java.util.Arrays;
 
 class GrayScottDiffusionReaction extends AsyncTask<Void, Void, Long> {
 
     interface Listener {
-        void onDiffusionFinished(Bitmap result);
+        void onDiffusionImageLoaded(Bitmap image);
     }
 
-    private static final int IMAGE_WIDTH = 1000;
+    private static final int IMAGE_DIMENSION = 1000;
 
     private Context mContext;
     private int mMaxRuns;
     private Listener mListener;
-    private Bitmap mImageResult;
 
     // For diffusion reaction
-    private double[] mU0 = new double[IMAGE_WIDTH * IMAGE_WIDTH];
-    private double[] mV0 = new double[IMAGE_WIDTH * IMAGE_WIDTH];
-    private double[] mU1 = new double[IMAGE_WIDTH * IMAGE_WIDTH];
-    private double[] mV1 = new double[IMAGE_WIDTH * IMAGE_WIDTH];
-    private Bitmap mInputDummy;
+    private double[] mU0 = new double[IMAGE_DIMENSION * IMAGE_DIMENSION];
+    private double[] mV0 = new double[IMAGE_DIMENSION * IMAGE_DIMENSION];
+    private double[] mU1 = new double[IMAGE_DIMENSION * IMAGE_DIMENSION];
+    private double[] mV1 = new double[IMAGE_DIMENSION * IMAGE_DIMENSION];
 
     // Renderscript Objects
     private RenderScript mRenderscript;
@@ -45,15 +42,15 @@ class GrayScottDiffusionReaction extends AsyncTask<Void, Void, Long> {
 
     GrayScottDiffusionReaction(Context context, int iterations) {
         mContext = context;
-        mMaxRuns = iterations;
         initRenderscriptObjects();
-        initDiffusionReaction();
+        mMaxRuns = iterations;
 
         try {
             mListener = (Listener) mContext;
         } catch (Exception e) {
             Log.d("Error: ", "Class not does implement Listener");
         }
+        initDiffusionReaction();
     }
 
     private void initRenderscriptObjects() {
@@ -61,7 +58,7 @@ class GrayScottDiffusionReaction extends AsyncTask<Void, Void, Long> {
         mScript = new ScriptC_GrayScottDiffusionReaction(mRenderscript);
 
         // Create Allocations for arrays
-        Type t = new Type.Builder(mRenderscript, Element.F64(mRenderscript)).setX(1000 * 1000).create();
+        Type t = new Type.Builder(mRenderscript, Element.F64(mRenderscript)).setX(IMAGE_DIMENSION * IMAGE_DIMENSION).create();
         mU0Allocation = Allocation.createTyped(mRenderscript, t);
         mU1Allocation = Allocation.createTyped(mRenderscript, t);
         mV0Allocation = Allocation.createTyped(mRenderscript, t);
@@ -79,6 +76,7 @@ class GrayScottDiffusionReaction extends AsyncTask<Void, Void, Long> {
 
         for (int i = 0; i < mMaxRuns; i++) {
             updateReactionDiffusion();
+            setImageFromArray(mU0);
             tempArray = mU0;
             mU0 = mU1;
             mU1 = tempArray;
@@ -91,29 +89,14 @@ class GrayScottDiffusionReaction extends AsyncTask<Void, Void, Long> {
         return endTime - startTime;
     }
 
-    @Override
-    protected void onPostExecute(Long aLong) {
-        setImageFromArray(mU0);
-    }
-
     private void setImageFromArray(double[] input) {
         final int[] intArray = new int[input.length];
         for (int i = 0; i < intArray.length; ++i) {
             intArray[i] = Color.rgb((int) (input[i] * 255), (int) (input[i] * 255), (int) (input[i] * 255));
         }
 
-        mImageResult = Bitmap.createBitmap(intArray, 1000, 1000, Bitmap.Config.ARGB_8888);
-
-        if (mImageResult != null) {
-            Runnable imageRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    mListener.onDiffusionFinished(mImageResult);
-                }
-            };
-
-            imageRunnable.run();
-        }
+        Bitmap result = Bitmap.createBitmap(intArray, IMAGE_DIMENSION, IMAGE_DIMENSION, Bitmap.Config.ARGB_8888);
+        mListener.onDiffusionImageLoaded(result);
     }
 
     private void initDiffusionReaction() {
@@ -123,39 +106,39 @@ class GrayScottDiffusionReaction extends AsyncTask<Void, Void, Long> {
         Arrays.fill(mV1, 0);
 
         // set middle pixels
-        mU0[(500 * 1000) + 500] = .5;
-        mU1[(500 * 1000) + 500] = .5;
-        mV0[(500 * 1000) + 500] = .5;
-        mV1[(500 * 1000) + 500] = .5;
+        mU0[(500 * IMAGE_DIMENSION) + 500] = .5;
+        mU1[(500 * IMAGE_DIMENSION) + 500] = .5;
+        mV0[(500 * IMAGE_DIMENSION) + 500] = .5;
+        mV1[(500 * IMAGE_DIMENSION) + 500] = .5;
 
-        mU0[(500 * 1000) + 501] = .5;
-        mU1[(500 * 1000) + 501] = .5;
-        mV0[(500 * 1000) + 501] = .5;
-        mV1[(500 * 1000) + 501] = .5;
+        mU0[(500 * IMAGE_DIMENSION) + 501] = .5;
+        mU1[(500 * IMAGE_DIMENSION) + 501] = .5;
+        mV0[(500 * IMAGE_DIMENSION) + 501] = .5;
+        mV1[(500 * IMAGE_DIMENSION) + 501] = .5;
 
-        mU0[(501 * 1000) + 500] = .5;
-        mU1[(501 * 1000) + 500] = .5;
-        mV0[(501 * 1000) + 500] = .5;
-        mV1[(501 * 1000) + 500] = .5;
+        mU0[(501 * IMAGE_DIMENSION) + 500] = .5;
+        mU1[(501 * IMAGE_DIMENSION) + 500] = .5;
+        mV0[(501 * IMAGE_DIMENSION) + 500] = .5;
+        mV1[(501 * IMAGE_DIMENSION) + 500] = .5;
 
-        mU0[(501 * 1000) + 501] = .5;
-        mU1[(501 * 1000) + 501] = .5;
-        mV0[(501 * 1000) + 501] = .5;
-        mV1[(501 * 1000) + 501] = .5;
+        mU0[(501 * IMAGE_DIMENSION) + 501] = .5;
+        mU1[(501 * IMAGE_DIMENSION) + 501] = .5;
+        mV0[(501 * IMAGE_DIMENSION) + 501] = .5;
+        mV1[(501 * IMAGE_DIMENSION) + 501] = .5;
 
-        mU0[(502 * 1000) + 500] = .5;
-        mU1[(502 * 1000) + 500] = .5;
-        mV0[(502 * 1000) + 500] = .5;
-        mV1[(502 * 1000) + 500] = .5;
+        mU0[(502 * IMAGE_DIMENSION) + 500] = .5;
+        mU1[(502 * IMAGE_DIMENSION) + 500] = .5;
+        mV0[(502 * IMAGE_DIMENSION) + 500] = .5;
+        mV1[(502 * IMAGE_DIMENSION) + 500] = .5;
 
-        mU0[(502 * 1000) + 501] = .5;
-        mU1[(502 * 1000) + 501] = .5;
-        mV0[(502 * 1000) + 501] = .5;
-        mV1[(502 * 1000) + 501] = .5;
+        mU0[(502 * IMAGE_DIMENSION) + 501] = .5;
+        mU1[(502 * IMAGE_DIMENSION) + 501] = .5;
+        mV0[(502 * IMAGE_DIMENSION) + 501] = .5;
+        mV1[(502 * IMAGE_DIMENSION) + 501] = .5;
 
         // Create Allocation via our Bitmap. This serves as a dummy image to iterate over
         // while we operate on the u1 and v1 arrays
-        mInputDummy = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_8888);
+        Bitmap mInputDummy = Bitmap.createBitmap(IMAGE_DIMENSION, IMAGE_DIMENSION, Bitmap.Config.ARGB_8888);
         mInputAllocation = Allocation.createFromBitmap(mRenderscript, mInputDummy);
         mOutputAllocation = Allocation.createTyped(mRenderscript, mInputAllocation.getType());
     }
@@ -177,7 +160,7 @@ class GrayScottDiffusionReaction extends AsyncTask<Void, Void, Long> {
         mScript.get_v1().copyTo(mV1);
     }
 
-    public void cleanRenderscriptObjects() {
+    void cleanRenderscriptObjects() {
         mScript.destroy();
         mRenderscript.destroy();
         mInputAllocation.destroy();

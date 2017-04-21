@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements RenderScriptAsyncHelper.Listener,
         GrayScottDiffusionReaction.Listener {
 
@@ -60,9 +62,14 @@ public class MainActivity extends AppCompatActivity implements RenderScriptAsync
     }
 
     @Override
-    public void onDiffusionFinished(Bitmap result) {
-        if (result != null && mPictureFragment.isAdded()) {
-            mPictureFragment.setImageView(result);
+    public void onDiffusionImageLoaded(Bitmap image) {
+        if (image != null && mPictureFragment.isAdded()) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mPictureFragment.setImageView(image);
+                }
+            });
         }
     }
 
