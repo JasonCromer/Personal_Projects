@@ -64,12 +64,7 @@ public class MainActivity extends AppCompatActivity implements RenderScriptAsync
     @Override
     public void onDiffusionImageLoaded(Bitmap image) {
         if (image != null && mPictureFragment.isAdded()) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mPictureFragment.setImageView(image);
-                }
-            });
+            runOnUiThread(() -> mPictureFragment.setImageView(image));
         }
     }
 

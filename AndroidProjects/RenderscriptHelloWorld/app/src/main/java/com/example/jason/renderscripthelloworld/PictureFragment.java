@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 public class PictureFragment extends Fragment {
-    private static final int GRAY_SCOTT_NUM_RUNS = 500;
+    private static final int GRAY_SCOTT_NUM_RUNS = 8000;
 
     private ImageView mImageView;
     private GrayScottDiffusionReaction mGrayScottDiffusionReaction;
