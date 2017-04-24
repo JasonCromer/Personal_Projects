@@ -60,10 +60,10 @@ class GrayScottDiffusionReaction extends AsyncTask<Void, Void, Long> {
 
         // Create Allocations for arrays
         Type t = new Type.Builder(mRenderscript, Element.F64(mRenderscript)).setX(IMAGE_DIMENSION * IMAGE_DIMENSION).create();
-        mU0Allocation = Allocation.createTyped(mRenderscript, t);
-        mU1Allocation = Allocation.createTyped(mRenderscript, t);
-        mV0Allocation = Allocation.createTyped(mRenderscript, t);
-        mV1Allocation = Allocation.createTyped(mRenderscript, t);
+        mU0Allocation = Allocation.createTyped(mRenderscript, t, Allocation.USAGE_GRAPHICS_TEXTURE);
+        mU1Allocation = Allocation.createTyped(mRenderscript, t, Allocation.USAGE_GRAPHICS_TEXTURE);
+        mV0Allocation = Allocation.createTyped(mRenderscript, t, Allocation.USAGE_GRAPHICS_TEXTURE);
+        mV1Allocation = Allocation.createTyped(mRenderscript, t, Allocation.USAGE_GRAPHICS_TEXTURE);
         mScript.set_u0(mU0Allocation);
         mScript.set_u1(mU1Allocation);
         mScript.set_v0(mV0Allocation);
