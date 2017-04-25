@@ -13,11 +13,11 @@ rs_allocation v0;
 rs_allocation v1;
 
 static double elementAt(rs_allocation input, int x, int y) {
-    return rsGetElementAt_double(input, (x * 1000) + y);
+    return rsGetElementAt_double(input, (x * 500) + y);
 }
 
 static void setElementAt(rs_allocation input, double val, int x, int y) {
-    rsSetElementAt_double(input, val, (x * 1000) + y);
+    rsSetElementAt_double(input, val, (x * 500) + y);
 }
 
 uchar4 RS_KERNEL diffusionReaction(uchar4 in, uint32_t x, uint32_t y) {
