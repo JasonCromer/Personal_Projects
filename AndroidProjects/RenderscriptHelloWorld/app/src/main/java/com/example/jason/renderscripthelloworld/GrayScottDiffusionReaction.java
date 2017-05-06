@@ -75,8 +75,8 @@ class GrayScottDiffusionReaction extends AsyncTask<Void, Void, Long> {
         long startTime = System.currentTimeMillis();
         double[] tempArray;
         for (int i = 0; i < mMaxRuns; i++) {
-//            updateReactionDiffusion();
-            updateReactionDiffusionJava(mU0, mU1, mV0, mV1);
+            updateReactionDiffusion();
+//            updateReactionDiffusionJava(mU0, mU1, mV0, mV1);
             setImageFromArray(mV0);
             tempArray = mU0;
             mU0 = mU1;
@@ -141,6 +141,7 @@ class GrayScottDiffusionReaction extends AsyncTask<Void, Void, Long> {
 
     private void updateReactionDiffusion() {
         long start = System.currentTimeMillis();
+
         // Copy Java array contents to Renderscript allocations
         mU0Allocation.copyFrom(mU0);
         mU1Allocation.copyFrom(mU1);
@@ -155,6 +156,7 @@ class GrayScottDiffusionReaction extends AsyncTask<Void, Void, Long> {
         mScript.get_u1().copyTo(mU1);
         mScript.get_v0().copyTo(mV0);
         mScript.get_v1().copyTo(mV1);
+
         Log.d("TOTAL TIME: ", String.valueOf(System.currentTimeMillis() - start));
     }
 
