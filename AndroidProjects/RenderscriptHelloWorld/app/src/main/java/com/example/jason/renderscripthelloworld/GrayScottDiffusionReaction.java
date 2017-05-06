@@ -19,7 +19,7 @@ class GrayScottDiffusionReaction extends AsyncTask<Void, Void, Long> {
         void onDiffusionImageLoaded(Bitmap image);
     }
 
-    private static final int IMAGE_DIMENSION = 500;
+    private static final int IMAGE_DIMENSION = 512;
 
     private Context mContext;
     private int mMaxRuns;
@@ -75,8 +75,8 @@ class GrayScottDiffusionReaction extends AsyncTask<Void, Void, Long> {
         long startTime = System.currentTimeMillis();
         double[] tempArray;
         for (int i = 0; i < mMaxRuns; i++) {
-            updateReactionDiffusion();
-//            updateReactionDiffusionJava(mU0, mU1, mV0, mV1);
+//            updateReactionDiffusion();
+            updateReactionDiffusionJava(mU0, mU1, mV0, mV1);
             setImageFromArray(mV0);
             tempArray = mU0;
             mU0 = mU1;
@@ -107,45 +107,30 @@ class GrayScottDiffusionReaction extends AsyncTask<Void, Void, Long> {
         Arrays.fill(mV1, 0);
 
         // set middle pixels
-        mU0[(250 * IMAGE_DIMENSION) + 250] = .5;
-        mU1[(250 * IMAGE_DIMENSION) + 250] = .5;
-        mV0[(250 * IMAGE_DIMENSION) + 250] = .5;
-        mV1[(250 * IMAGE_DIMENSION) + 250] = .5;
+        mU0[((IMAGE_DIMENSION / 2) * IMAGE_DIMENSION) + (IMAGE_DIMENSION / 2)] = .5;
+        mU1[((IMAGE_DIMENSION / 2) * IMAGE_DIMENSION) + (IMAGE_DIMENSION / 2)] = .5;
+        mV0[((IMAGE_DIMENSION / 2) * IMAGE_DIMENSION) + (IMAGE_DIMENSION / 2)] = .5;
+        mV1[((IMAGE_DIMENSION / 2) * IMAGE_DIMENSION) + (IMAGE_DIMENSION / 2)] = .5;
 
-        mU0[(250 * IMAGE_DIMENSION) + 251] = .5;
-        mU1[(250 * IMAGE_DIMENSION) + 251] = .5;
-        mV0[(250 * IMAGE_DIMENSION) + 251] = .5;
-        mV1[(250 * IMAGE_DIMENSION) + 251] = .5;
+        mU0[((IMAGE_DIMENSION / 2) * IMAGE_DIMENSION) + ((IMAGE_DIMENSION / 2) + 1)] = .5;
+        mU1[((IMAGE_DIMENSION / 2) * IMAGE_DIMENSION) + ((IMAGE_DIMENSION / 2) + 1)] = .5;
+        mV0[((IMAGE_DIMENSION / 2) * IMAGE_DIMENSION) + ((IMAGE_DIMENSION / 2) + 1)] = .5;
+        mV1[((IMAGE_DIMENSION / 2) * IMAGE_DIMENSION) + ((IMAGE_DIMENSION / 2) + 1)] = .5;
 
-        mU0[(251 * IMAGE_DIMENSION) + 250] = .5;
-        mU1[(251 * IMAGE_DIMENSION) + 250] = .5;
-        mV0[(251 * IMAGE_DIMENSION) + 250] = .5;
-        mV1[(251 * IMAGE_DIMENSION) + 250] = .5;
+        mU0[(((IMAGE_DIMENSION / 2) + 1) * IMAGE_DIMENSION) + (IMAGE_DIMENSION / 2)] = .5;
+        mU1[(((IMAGE_DIMENSION / 2) + 1) * IMAGE_DIMENSION) + (IMAGE_DIMENSION / 2)] = .5;
+        mV0[(((IMAGE_DIMENSION / 2) + 1) * IMAGE_DIMENSION) + (IMAGE_DIMENSION / 2)] = .5;
+        mV1[(((IMAGE_DIMENSION / 2) + 1) * IMAGE_DIMENSION) + (IMAGE_DIMENSION / 2)] = .5;
 
-        mU0[(149 * IMAGE_DIMENSION) + 250] = .5;
-        mU1[(149 * IMAGE_DIMENSION) + 250] = .5;
-        mV0[(149 * IMAGE_DIMENSION) + 250] = .5;
-        mV1[(149 * IMAGE_DIMENSION) + 250] = .5;
+        mU0[(((IMAGE_DIMENSION / 2) - 1) * IMAGE_DIMENSION) + (IMAGE_DIMENSION / 2)] = .5;
+        mU1[(((IMAGE_DIMENSION / 2) - 1) * IMAGE_DIMENSION) + (IMAGE_DIMENSION / 2)] = .5;
+        mV0[(((IMAGE_DIMENSION / 2) - 1) * IMAGE_DIMENSION) + (IMAGE_DIMENSION / 2)] = .5;
+        mV1[(((IMAGE_DIMENSION / 2) - 1) * IMAGE_DIMENSION) + (IMAGE_DIMENSION / 2)] = .5;
 
-        mU0[(151 * IMAGE_DIMENSION) + 249] = .5;
-        mU1[(151 * IMAGE_DIMENSION) + 249] = .5;
-        mV0[(251 * IMAGE_DIMENSION) + 249] = .5;
-        mV1[(251 * IMAGE_DIMENSION) + 249] = .5;
-//
-//        mU0[(501 * IMAGE_DIMENSION) + 501] = .5;
-//        mU1[(501 * IMAGE_DIMENSION) + 501] = .5;
-//        mV0[(501 * IMAGE_DIMENSION) + 501] = .5;
-//        mV1[(501 * IMAGE_DIMENSION) + 501] = .5;
-
-//        mU0[(502 * IMAGE_DIMENSION) + 500] = .5;
-//        mU1[(502 * IMAGE_DIMENSION) + 500] = .5;
-//        mV0[(502 * IMAGE_DIMENSION) + 500] = .5;
-//        mV1[(502 * IMAGE_DIMENSION) + 500] = .5;
-//
-//        mU0[(502 * IMAGE_DIMENSION) + 501] = .5;
-//        mU1[(502 * IMAGE_DIMENSION) + 501] = .5;
-//        mV0[(502 * IMAGE_DIMENSION) + 501] = .5;
-//        mV1[(502 * IMAGE_DIMENSION) + 501] = .5;
+        mU0[(((IMAGE_DIMENSION / 2) + 1) * IMAGE_DIMENSION) + ((IMAGE_DIMENSION / 2) - 1)] = .5;
+        mU1[(((IMAGE_DIMENSION / 2) + 1) * IMAGE_DIMENSION) + ((IMAGE_DIMENSION / 2) - 1)] = .5;
+        mV0[(((IMAGE_DIMENSION / 2) + 1) * IMAGE_DIMENSION) + ((IMAGE_DIMENSION / 2) - 1)] = .5;
+        mV1[(((IMAGE_DIMENSION / 2) + 1) * IMAGE_DIMENSION) + ((IMAGE_DIMENSION / 2) - 1)] = .5;
 
         // Create Allocation via our Bitmap. This serves as a dummy image to iterate over
         // while we operate on the u1 and v1 arrays

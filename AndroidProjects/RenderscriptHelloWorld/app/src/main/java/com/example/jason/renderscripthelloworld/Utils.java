@@ -10,7 +10,6 @@ import android.support.v8.renderscript.Allocation;
 import android.support.v8.renderscript.Element;
 import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.ScriptIntrinsicBlur;
-import android.support.v8.renderscript.Type;
 
 class Utils {
 
@@ -45,7 +44,7 @@ class Utils {
         return image;
     }
 
-    public void slowEqualize(Bitmap src) {
+    static void slowEqualize(Bitmap src) {
         float histogram[][];
         histogram = new float[3][];
 
@@ -62,7 +61,7 @@ class Utils {
         javaHistogramEqualization(histogram[2], 0, 255);
     }
 
-    private void javaHistogramEqualization(float histogram[], int low, int high) {
+    private static void javaHistogramEqualization(float histogram[], int low, int high) {
 
         float sumr, sumrx;
         sumr = 0;
@@ -78,7 +77,7 @@ class Utils {
         }
     }
 
-    private void normalizedFunction(float myArr[], int low, int high) {
+    private static void normalizedFunction(float myArr[], int low, int high) {
 
         float sumV = 0.0f;
         for (int i = low; i <= high; i++) {
@@ -89,7 +88,7 @@ class Utils {
         }
     }
 
-    private float[] getHistogramByColor(Bitmap input, int colorVal) {
+    private static float[] getHistogramByColor(Bitmap input, int colorVal) {
         // colorVal 1 -> RED     2 -> GREEN     3 -> BLUE
         float[] histogram = new float[256];
 

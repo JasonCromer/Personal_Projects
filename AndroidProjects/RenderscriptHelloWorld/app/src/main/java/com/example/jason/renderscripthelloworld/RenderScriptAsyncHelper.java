@@ -82,7 +82,8 @@ class RenderScriptAsyncHelper extends AsyncTask<Void, Void, Long> {
                     nativeStackBlur(mBlurRadius);
                     break;
                 case SCRIPT_TYPE_EQUALIZE:
-                    mImageResult = equalize();
+//                    mImageResult = equalize();
+                    slowEqualize();
                     break;
                 case SCRIPT_TYPE_INVERT:
                     mImageResult = invert();
@@ -158,6 +159,11 @@ class RenderScriptAsyncHelper extends AsyncTask<Void, Void, Long> {
     private Bitmap equalize() {
         Bitmap equalizedImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.landscape);
         return Utils.histogramEqualization(equalizedImage, mContext);
+    }
+
+    private void slowEqualize() {
+        Bitmap equalizedImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.landscape);
+        Utils.slowEqualize(equalizedImage);
     }
 
     private Bitmap invert() {
